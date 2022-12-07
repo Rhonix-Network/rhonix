@@ -6,11 +6,11 @@ import io.rhonix.casper.genesis.contracts.{ProofOfStake, Registry, Validator, Va
 import io.rhonix.crypto.PublicKey
 import io.rhonix.rholang.interpreter.util.RevAddress
 
-import scala.collection.Seq
-
 object GenesisParams {
 
   val predefinedVaultsAmt = 900000000L
+  val posVK =
+    "04eccad1d78ea16046f4787ffba9b36bec5ef151aba14fa46aeca8e14b6e604812d7d1deb50e0931fa0dbac63dbe0f86bf61c3c93a69c17071427e1580260cbb8e"
 
   def genesisParameters(
       bondedValidators: Seq[Validator],
@@ -32,9 +32,9 @@ object GenesisParams {
         quarantineLength = 50000,
         numberOfActiveValidators = 100,
         validators = bondedValidators,
-        posMultiSigPublicKeys = List(),
+        posMultiSigPublicKeys = List(posVK),
         posMultiSigQuorum = 1,
-        posVaultPubKey = ""
+        posVaultPubKey = posVK
       ),
       vaults = genesisVaults.map(predefinedVault) ++
         bondedValidators.toList.map {
@@ -44,7 +44,7 @@ object GenesisParams {
         }.flattenOption,
       blockNumber = 0,
       sender = genesisVaults.head,
-      registry = Registry("")
+      registry = Registry(posVK)
     )
   }
 

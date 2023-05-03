@@ -1,5 +1,5 @@
-## RChain Node with Metric Collection and Display 
-RChain Docker Compose multi-container application for RChain peer-to-peer node using [Prometheus Server](https://github.com/prometheus/prometheus) and [Pushgateway](https://github.com/prometheus/pushgateway) for data collection and [Grafana](https://github.com/grafana/grafana) for visualization 
+## Rhonix Node with Metric Collection and Display 
+Rhonix Docker Compose multi-container application for Rhonix peer-to-peer node using [Prometheus Server](https://github.com/prometheus/prometheus) and [Pushgateway](https://github.com/prometheus/pushgateway) for data collection and [Grafana](https://github.com/grafana/grafana) for visualization 
 
 ### Working Docker Environments
 Every Docker environment can have its own unique settings. This has been tested on Docker running on Linux. You will always need the appropriate permissions for whatever you are doing in Docker.
@@ -18,7 +18,7 @@ docker-compose up -d
 ```
 
 * Login to http://localhost:3000/dashboards on you machine using user:pass admin:admin
-* Click on RChain dashboard (4 squares by name)
+* Click on Rhonix dashboard (4 squares by name)
 * View data. [Add another panel in dashboard and query](http://docs.grafana.org/guides/getting_started/#adding-editing-graphs-and-panels) as wanted.
  
 ```

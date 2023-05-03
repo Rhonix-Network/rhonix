@@ -20,7 +20,7 @@ import "RhoTypes.proto";
 import "google/protobuf/empty.proto";
 
 option (scalapb.options) = {
-  package_name: "coop.rchain.casper.protocol.deploy.v1"
+  package_name: "io.rhonix.casper.protocol.deploy.v1"
   flat_package: true
   single_file: true
   preserve_unknown_fields: false

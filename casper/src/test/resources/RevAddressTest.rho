@@ -1,4 +1,4 @@
-//scalapackage coop.rchain.rholang.rev
+//scalapackage io.rhonix.rholang.rev
 
 //requires RhoSpec
 new
@@ -114,7 +114,7 @@ in {
   } |
 
   contract test_fromDeployerId(rhoSpec, _, ackCh) = {
-    new deployerId(`rho:rchain:deployerId`), retCh in {
+    new deployerId(`rho:rhonix:deployerId`), retCh in {
       revAddress!("fromDeployerId", *deployerId, *retCh) |
       rhoSpec!("assert", ("11112VYAt8rUGNRRZX3eJdgagaAhtWTK8Js7F7X5iqddMVqyDTtYau", "== <-", *retCh), "correct RevAddress", *ackCh)
     }

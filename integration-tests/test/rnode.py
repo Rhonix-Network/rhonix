@@ -23,11 +23,11 @@ from typing import (
 )
 from dataclasses import dataclass
 import requests
-from rchain.client import RClient, RClientException
-from rchain.pb.DeployServiceCommon_pb2 import LightBlockInfo, BlockInfo
-from rchain.crypto import PrivateKey
-from rchain.certificate import get_node_id_raw
-from rchain.const import DEFAULT_PHLO_LIMIT, DEFAULT_PHLO_PRICE
+from rhonix.client import RClient, RClientException
+from rhonix.pb.DeployServiceCommon_pb2 import LightBlockInfo, BlockInfo
+from rhonix.crypto import PrivateKey
+from rhonix.certificate import get_node_id_raw
+from rhonix.const import DEFAULT_PHLO_LIMIT, DEFAULT_PHLO_PRICE
 from cryptography.hazmat.primitives.serialization import load_pem_private_key
 from cryptography.hazmat.backends import default_backend
 from docker.client import DockerClient
@@ -61,7 +61,7 @@ from .utils import (
     get_free_tcp_port
 )
 
-DEFAULT_IMAGE = os.environ.get("DEFAULT_IMAGE", "rchain-integration-tests:latest")
+DEFAULT_IMAGE = os.environ.get("DEFAULT_IMAGE", "rhonix-integration-tests:latest")
 _PB_REPEATED_STR_SEP = "#$"
 
 rnode_binary = '/opt/docker/bin/rnode'
@@ -151,7 +151,7 @@ class Node:
             resp = requests.get("http://{}:{}/metrics".format(self.get_self_host(), self.get_http_port()))
             result = ''
             for line in resp.content.decode('utf8').splitlines():
-                if line.startswith("rchain_comm_rp_connect_peers"):
+                if line.startswith("rhonix_comm_rp_connect_peers"):
                     result = line
                     break
             return result
@@ -425,7 +425,7 @@ def make_node( # pylint: disable=too-many-locals
 ) -> Node:
     assert isinstance(name, str)
     assert '_' not in name, 'Underscore is not allowed in host name'
-    deploy_dir = make_tempdir("rchain-integration-test")
+    deploy_dir = make_tempdir("rhonix-integration-test")
 
     hosts_allow_file_content = \
         "ALL:ALL" if allowed_peers is None else "\n".join("ALL: {}".format(peer) for peer in allowed_peers)
@@ -727,7 +727,7 @@ def make_random_network_name(context: TestingContext, length: int) -> str:
 
 @contextlib.contextmanager
 def docker_network(context: TestingContext, docker_client: DockerClient) -> Generator[str, None, None]:
-    network_name = "rchain-{}".format(make_random_network_name(context, 5))
+    network_name = "rhonix-{}".format(make_random_network_name(context, 5))
     docker_client.networks.create(network_name, driver="bridge")
     try:
         yield network_name

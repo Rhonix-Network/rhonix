@@ -14,7 +14,7 @@ import oyaml as yaml
 
 ########################################
 
-TMPDIR_PREFIX = 'rchain-genesis-setup_'
+TMPDIR_PREFIX = 'rhonix-genesis-setup_'
 PORT = 40400
 
 dockercli = docker.from_env()
@@ -136,11 +136,11 @@ parser.add_argument(
 parser.add_argument(
         '--image',
         type    = str,
-        default = 'coop.rchain/rnode:latest')
+        default = 'io.rhonix/rnode:latest')
 parser.add_argument(
         '--network',
         type    = str,
-        default = 'rchain.coop')
+        default = 'rhonix.io')
 parser.add_argument(
         '--rnode-directory',
         type    = str,

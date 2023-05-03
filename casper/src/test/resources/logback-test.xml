@@ -10,10 +10,10 @@
     </appender>
 
     <!--This is needed for RhoSpec tests output-->
-    <logger name="coop.rchain.casper.helper.RhoLoggerContract" level="info"/>
-    <logger name="coop.rchain.blockstorage" level="error"/>
-    <logger name="coop.rchain.rspace" level="error"/>
-    <logger name="coop.rchain.rspace.merger" level="debug"/>
+    <logger name="io.rhonix.casper.helper.RhoLoggerContract" level="info"/>
+    <logger name="io.rhonix.blockstorage" level="error"/>
+    <logger name="io.rhonix.rspace" level="error"/>
+    <logger name="io.rhonix.rspace.merger" level="debug"/>
 
     <root level="warn">
         <appender-ref ref="STDOUT"/>

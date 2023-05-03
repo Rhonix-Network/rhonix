@@ -1,4 +1,4 @@
-# GitHub Actions workflow for RChain continuous integration.
+# GitHub Actions workflow for Rhonix continuous integration.
 #
 # For information GitHub Actions see:
 # https://help.github.com/en/actions/automating-your-workflow-with-github-actions/getting-started-with-github-actions
@@ -28,17 +28,17 @@ env:
 
 jobs:
 
-  # Most jobs run in rchain/buildenv Docker container. This container image has
-  # everything needed to build RChain and run unit and integration tests. For
+  # Most jobs run in rhonix/buildenv Docker container. This container image has
+  # everything needed to build Rhonix and run unit and integration tests. For
   # more information about the image see
   # https://github.com/rchain/buildenv/blob/master/Dockerfile
 
 
-  # Build RChain and save it for next jobs.
+  # Build Rhonix and save it for next jobs.
   build_base:
     name: Build Base
     runs-on: ubuntu-latest
-    container: rchain/buildenv
+    container: rhonix/buildenv
     outputs:
       VERSION: ${{ env.VERSION }}
       BRANCH: ${{ env.BRANCH }}
@@ -90,21 +90,21 @@ jobs:
           sbt update scalafmtCheckAll compile
 
       - name: Pack Working Tree
-        run: tar -H posix -czf ../rchain-worktree.tar.gz .
+        run: tar -H posix -czf ../rhonix-worktree.tar.gz .
 
       - name: Save Working Tree
         uses: actions/upload-artifact@v1
         with:
-          name: rchain-worktree
-          path: ../rchain-worktree.tar.gz
+          name: rhonix-worktree
+          path: ../rhonix-worktree.tar.gz
 
 
-  # Get compiled RChain and run unit tests.
+  # Get compiled Rhonix and run unit tests.
   run_unit_tests:
     name: Unit Tests
     needs: build_base
     runs-on: ubuntu-latest
-    container: rchain/buildenv
+    container: rhonix/buildenv
     strategy:
       fail-fast: false
       matrix:
@@ -118,16 +118,16 @@ jobs:
         #
         # To learn about REMAINDER, see .github/run-unit-test-selection.
         tests:
-          - "'casper/test:testOnly coop.rchain.casper.addblock.*'"
-          - "'casper/test:testOnly coop.rchain.casper.api.*'"
-          - "'casper/test:testOnly coop.rchain.casper.batch1.*'"
-          - "'casper/test:testOnly coop.rchain.casper.batch2.*'"
-          - "'casper/test:testOnly coop.rchain.casper.engine.*'"
-          - "'casper/test:testOnly coop.rchain.casper.genesis.*'"
-          - "'casper/test:testOnly coop.rchain.casper.merging.*'"
-          - "'casper/test:testOnly coop.rchain.casper.rholang.*'"
-          - "'casper/test:testOnly coop.rchain.casper.util.*'"
-          - "'casper/test:testOnly coop.rchain.casper.sync.*'"
+          - "'casper/test:testOnly io.rhonix.casper.addblock.*'"
+          - "'casper/test:testOnly io.rhonix.casper.api.*'"
+          - "'casper/test:testOnly io.rhonix.casper.batch1.*'"
+          - "'casper/test:testOnly io.rhonix.casper.batch2.*'"
+          - "'casper/test:testOnly io.rhonix.casper.engine.*'"
+          - "'casper/test:testOnly io.rhonix.casper.genesis.*'"
+          - "'casper/test:testOnly io.rhonix.casper.merging.*'"
+          - "'casper/test:testOnly io.rhonix.casper.rholang.*'"
+          - "'casper/test:testOnly io.rhonix.casper.util.*'"
+          - "'casper/test:testOnly io.rhonix.casper.sync.*'"
           - REMAINDER # Do not modify/remove!
     env:
       TESTS: ${{ matrix.tests }}
@@ -138,10 +138,10 @@ jobs:
       - name: Load Working Tree
         uses: actions/download-artifact@v1
         with:
-          name: rchain-worktree
+          name: rhonix-worktree
 
       - name: Restore Working Tree
-        run: tar -H posix -xzf rchain-worktree/rchain-worktree.tar.gz
+        run: tar -H posix -xzf rhonix-worktree/rhonix-worktree.tar.gz
 
       - name: Initialize Environment
         run: ./.github/init-environment
@@ -159,20 +159,20 @@ jobs:
           ./.github/run-unit-test-selection
 
 
-  # Get compiled RChain, build Docker image, and save it for next jobs.
+  # Get compiled Rhonix, build Docker image, and save it for next jobs.
   build_docker_image:
     name: Build Docker Image
     needs: build_base
     runs-on: ubuntu-latest
-    container: rchain/buildenv
+    container: rhonix/buildenv
     steps:
       - name: Load Working Tree
         uses: actions/download-artifact@v1
         with:
-          name: rchain-worktree
+          name: rhonix-worktree
 
       - name: Restore Working Tree
-        run: tar -H posix -xzf rchain-worktree/rchain-worktree.tar.gz
+        run: tar -H posix -xzf rhonix-worktree/rhonix-worktree.tar.gz
 
       - name: Initialize Environment
         run: ./.github/init-environment
@@ -191,7 +191,7 @@ jobs:
         run: |
           mkdir ../artifacts
           git describe --tags --always >../artifacts/version.txt
-          docker image save coop.rchain/rnode \
+          docker image save io.rhonix/rnode \
               | gzip >../artifacts/rnode-docker.tar.gz
 
       - name: Save Docker Image
@@ -201,21 +201,21 @@ jobs:
           path: ../artifacts/
 
 
-  # Get compiled RChain, build distro packages, and save them for next jobs.
+  # Get compiled Rhonix, build distro packages, and save them for next jobs.
   build_packages:
     name: Build Packages
     needs: build_base
     if: "github.event_name != 'pull_request'"
     runs-on: ubuntu-latest
-    container: rchain/buildenv
+    container: rhonix/buildenv
     steps:
       - name: Load Working Tree
         uses: actions/download-artifact@v1
         with:
-          name: rchain-worktree
+          name: rhonix-worktree
 
       - name: Restore Working Tree
-        run: tar -H posix -xzf rchain-worktree/rchain-worktree.tar.gz
+        run: tar -H posix -xzf rhonix-worktree/rhonix-worktree.tar.gz
 
       - name: Initialize Environment
         run: ./.github/init-environment
@@ -257,10 +257,10 @@ jobs:
   # is broken[1] and we need to mount host's /tmp onto container's /tmp (see
   # "Running from Docker" in integration-tests/README.md). The host doesn't have
   # everything we need (pipenv, pyenv), so we're going to run integration tests
-  # in rchain/buildenv container started manually as the last step.
+  # in rhonix/buildenv container started manually as the last step.
   #
   # The problem is that host's runner runs everything under a non-privileged
-  # account, whereas the rchain/buildenv container runs as root by default. The
+  # account, whereas the rhonix/buildenv container runs as root by default. The
   # container image does not have an account corresponding to the host's
   # unprivileged account UID, so we're going to run it as root and do some
   # workarounds (see below).
@@ -299,7 +299,7 @@ jobs:
       TESTS: ${{ matrix.tests }}
       # We don't use $CACHE_ROOT in host because it may not be (it is not)
       # writeable by host runner unprivileged account. See note above.
-      HOST_CACHE_ROOT: /tmp/rchain-build-cache
+      HOST_CACHE_ROOT: /tmp/rhonix-build-cache
       # In integration tests multiple RNode instances are created so memory
       # limit in lower to prevent sporadic crashes.
       _JAVA_OPTIONS: -XX:MaxRAMPercentage=35.0
@@ -329,7 +329,7 @@ jobs:
 
       # The cached files are owned by host runner unprivileged user. See comment
       # in "Fix Cache Permissions (Post)" step for details. Some programs
-      # running in rchain/buildenv container as root may be unhappy about that
+      # running in rhonix/buildenv container as root may be unhappy about that
       # (pip issues a warning). Change ownership to root to avoid possible
       # problems. There are not that many cached files for integration tests so
       # performance impact is likely minimal.
@@ -348,9 +348,9 @@ jobs:
               -e TESTS="$TESTS" \
               -e _JAVA_OPTIONS="$_JAVA_OPTIONS" \
               -w /work \
-              rchain/buildenv ./.github/run-integration-test-selection
+              rhonix/buildenv ./.github/run-integration-test-selection
 
-      # Files created in rchain/buildenv container are owned by root, so we need
+      # Files created in rhonix/buildenv container are owned by root, so we need
       # to change ownership to host runner unprivileged account here, because
       # right after this step, the runner is going to save cache preserving file
       # attributes, and it would fail to restore them in "Restore Cache" above
@@ -432,12 +432,12 @@ jobs:
           img_latest="$image_name:latest"
 
           # Release Docker image
-          docker tag coop.rchain/rnode:latest $img_version
+          docker tag io.rhonix/rnode:latest $img_version
           docker push $img_version
 
           # Tag Docker image as latest if tag is the latest on dev branch
           if [[ $GITHUB_REF =~ ^refs/tags/ ]] && [[ $DEV_LATEST_TAG =~ $VERSION ]]; then
-            docker tag coop.rchain/rnode:latest $img_latest
+            docker tag io.rhonix/rnode:latest $img_latest
             docker push $img_latest
           fi
 

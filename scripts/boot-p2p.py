@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.6
 """
-This is a simple script to boot a rchain p2p network using bootstrap/peer/bond named containers
+This is a simple script to boot a rhonix p2p network using bootstrap/peer/bond named containers
 It deletes bootstrap/peer named containers before it creates them leaving other named containers
 
 Usage:
@@ -10,11 +10,11 @@ Options:
  -c --cpuset-cpus=C   set docker cpuset-cpus for all nodes. Allows limiting execution in specific CPUs
                       [default: 0]
  -i --image=I         source repo for docker image
-                      [default: coop.rchain/rnode:latest]
+                      [default: io.rhonix/rnode:latest]
  -m --memory=M        set docker memory limit for all nodes
                       [default: 2048m]
  -n --network=N       set docker network name
-                      [default: rchain.coop]
+                      [default: rhonix.io]
  -p --peers-amount=N  set total amount of peers for network
                       [default: 2]
  -r --remove          forcibly remove containers that start with bootstrap and peer associated to network name
@@ -31,7 +31,7 @@ Return code of 0 is success on test and 1 is fail.
 
 Example below shows how to boot network with 3 nodes, including bootstrap, and run specific test
 
-sudo ./boot-p2p.py -m 34360m -c 1 -p 3  --genesis --sigs 2 --bonds <bond_file_path> --wallet <wallet_file_path> -i rchain-integration-tests:latest --remove
+sudo ./boot-p2p.py -m 34360m -c 1 -p 3  --genesis --sigs 2 --bonds <bond_file_path> --wallet <wallet_file_path> -i rhonix-integration-tests:latest --remove
 
 """
 # This requires Python 3.6 to be installed for f-string. Install dependencies via pip
@@ -64,7 +64,7 @@ def main(argv, cwd,
     if args.network not in networks:
         client.networks.create(args.network)
     if args.remove:
-        # only removes boostrap/peer.rchain.coop or .network nodes
+        # only removes boostrap/peer.rhonix.io or .network nodes
         remove_resources_by_network(client.containers, args.network)
 
     image = DockerImage(client.containers,

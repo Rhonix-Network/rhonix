@@ -6,13 +6,13 @@
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     },
     "version": "0.9.25.4-1-g49ba198",
-    "title": "RChain node API",
+    "title": "Rhonix node API",
     "contact": {
-      "name": "RChain Cooperative",
-      "url": "https://rchain.coop",
-      "email": "info@rchain.coop"
+      "name": "Rhonix Labs",
+      "url": "https://rhonix.io",
+      "email": "info@rhonix.io"
     },
-    "description": "Build dApps for RChain, a decentralized, economically sustainable public compute infrastructure.\n\n For background, see [test_web_api.py etc. in PR 2811 / RCHAIN-3935 released in RNode-0.9.19 2020-01-16 d581015](https://github.com/rchain/rchain/blob/dev/integration-tests/test/test_web_api.py)"
+    "description": "Build dApps for Rhonix, a decentralized, economically sustainable public compute infrastructure.\n\n For background, see [test_web_api.py etc. in PR 2811 / RCHAIN-3935 released in RNode-0.9.19 2020-01-16 d581015](https://github.com/rhonixlabs/rhonix/blob/dev/integration-tests/test/test_web_api.py)"
   },
   "tags": [
     {
@@ -25,10 +25,10 @@
     }
   ],
   "externalDocs": {
-    "description": "RChain Developer",
-    "url": "https://developer.rchain.coop/"
+    "description": "Rhonix Developer",
+    "url": "https://developer.rhonix.io/"
   },
-  "host": "observer.testnet.rchain.coop",
+  "host": "observer.testnet.rhonix.io",
   "basePath": "/api",
   "paths": {
     "/blocks": {
@@ -36,7 +36,7 @@
         "description": "get block hash etc. for the most recent block seen by this node",
         "externalDocs": {
           "description": "WebApi.scala",
-          "url": "https://github.com/rchain/rchain/blob/dev/node/src/main/scala/coop/rchain/node/api/WebApi.scala"
+          "url": "https://github.com/rhonixlabs/rhonix/blob/dev/node/src/main/scala/io/rhonix/node/api/WebApi.scala"
         },
         "tags": ["blocks"],
         "operationId": "getBlocks",
@@ -52,7 +52,7 @@
                   "seqNum": 94997,
                   "sig": "304502210085d6e576d1e050f15148290a956fb05f787df0071c8f170e00d8e9d903c8ff7a02205e29da8ba9551ca65e017a93efe9840bdf401384b39f1c23f7bb387c1777ed30",
                   "sigAlgorithm": "secp256k1",
-                  "shardId": "rchain",
+                  "shardId": "rhonix",
                   "extraBytes": "",
                   "version": 1,
                   "timestamp": 1600728957494,
@@ -122,7 +122,7 @@
         "description": "get info on recent blocks up to some depth",
         "externalDocs": {
           "description": "WebApi.scala",
-          "url": "https://github.com/rchain/rchain/blob/dev/node/src/main/scala/coop/rchain/node/api/WebApi.scala"
+          "url": "https://github.com/rhonixlabs/rhonix/blob/dev/node/src/main/scala/io/rhonix/node/api/WebApi.scala"
         },
         "tags": ["blocks"],
         "operationId": "getBlocks-int",
@@ -153,7 +153,7 @@
       "get": {
         "externalDocs": {
           "description": "WebApi.scala",
-          "url": "https://github.com/rchain/rchain/blob/dev/node/src/main/scala/coop/rchain/node/api/WebApi.scala"
+          "url": "https://github.com/rhonixlabs/rhonix/blob/dev/node/src/main/scala/io/rhonix/node/api/WebApi.scala"
         },
         "tags": ["blocks"],
         "operationId": "getBlocks-int-int",
@@ -190,7 +190,7 @@
       "get": {
         "externalDocs": {
           "description": "WebApi.scala",
-          "url": "https://github.com/rchain/rchain/blob/dev/node/src/main/scala/coop/rchain/node/api/WebApi.scala"
+          "url": "https://github.com/rhonixlabs/rhonix/blob/dev/node/src/main/scala/io/rhonix/node/api/WebApi.scala"
         },
         "tags": ["blocks"],
         "operationId": "getDeploy-string",
@@ -214,7 +214,7 @@
                 "seqNum": 94554,
                 "sig": "304402200390f7df4530ce9444533dc6ed9bff0fd8f7d41ccabecb52ca0747201a9c2701022069419a5d3cad82dffed4b9e987ccea165b5ff1ae38e0ac73f1e7fe212db1af39",
                 "sigAlgorithm": "secp256k1",
-                "shardId": "rchain",
+                "shardId": "rhonix",
                 "extraBytes": "",
                 "version": 1,
                 "timestamp": 1600740298952,
@@ -285,7 +285,7 @@
       "get": {
         "externalDocs": {
           "description": "WebApi.scala",
-          "url": "https://github.com/rchain/rchain/blob/dev/node/src/main/scala/coop/rchain/node/api/WebApi.scala"
+          "url": "https://github.com/rhonixlabs/rhonix/blob/dev/node/src/main/scala/io/rhonix/node/api/WebApi.scala"
         },
         "tags": ["blocks"],
         "operationId": "getBlock-string",
@@ -310,7 +310,7 @@
                   "seqNum": 95051,
                   "sig": "304502210082ee3896ca5610e8c75a243d80d4c095a95be298d5fa8edbe1c6585b6458decf02207df0d201d977b675137560722aa7135b7622de619ad9d0068bc4a64c46663116",
                   "sigAlgorithm": "secp256k1",
-                  "shardId": "rchain",
+                  "shardId": "rhonix",
                   "extraBytes": "",
                   "version": 1,
                   "timestamp": 1600735422804,
@@ -407,7 +407,7 @@
       "get": {
         "externalDocs": {
           "description": "WebApi.scala",
-          "url": "https://github.com/rchain/rchain/blob/dev/node/src/main/scala/coop/rchain/node/api/WebApi.scala"
+          "url": "https://github.com/rhonixlabs/rhonix/blob/dev/node/src/main/scala/io/rhonix/node/api/WebApi.scala"
         },
         "tags": ["blocks"],
         "operationId": "getIs-finalized-string",
@@ -545,7 +545,7 @@
                   "seqNum": 94989,
                   "sig": "3045022100f36533f52ba93e1d1ef4c521a146b4bb15d1f4c636ab0f7bd75ab2ef011d68f402204104b86224f58cf74ec889db2293e00b94ab83d0a9abbd7092473b5528da2d03",
                   "sigAlgorithm": "secp256k1",
-                  "shardId": "rchain",
+                  "shardId": "rhonix",
                   "extraBytes": "",
                   "version": 1,
                   "timestamp": 1600791827635,
@@ -671,7 +671,7 @@
         "description": "Request execution of a rholang term on the RhoVM.",
         "externalDocs": {
           "description": "DeployValidationSpec.scala",
-          "url": "https://github.com/rchain/rchain/blob/dev/casper/src/test/scala/coop/rchain/casper/util/DeployValidationSpec.scala"
+          "url": "https://github.com/rhonixlabs/rhonix/blob/dev/casper/src/test/scala/io/rhonix/casper/util/DeployValidationSpec.scala"
         },
         "operationId": "postDeploy-body",
         "consumes": ["application/json"],
@@ -736,7 +736,7 @@
       "get": {
         "externalDocs": {
           "description": "WebApi.scala",
-          "url": "https://github.com/rchain/rchain/blob/dev/node/src/main/scala/coop/rchain/node/api/WebApi.scala"
+          "url": "https://github.com/rhonixlabs/rhonix/blob/dev/node/src/main/scala/io/rhonix/node/api/WebApi.scala"
         },
         "tags": [
           "blocks"

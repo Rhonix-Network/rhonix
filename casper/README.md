@@ -1,4 +1,4 @@
-# RChain Node
+# Rhonix Node
 
 ## slowcooker
 
@@ -9,6 +9,6 @@ command:
 
 ### The idea
 
-- have a set of commands that are valid actions on RChain
+- have a set of commands that are valid actions on Rhonix
 - have mechanics that generate and run these commands
 - gather results and validate those

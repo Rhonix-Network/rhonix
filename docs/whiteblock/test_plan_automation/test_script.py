@@ -1,5 +1,5 @@
-# Test Script for RChain based on the test plan in this link:
-# https://github.com/rchain/rchain/blob/dev/docs/whiteblock-test-plan.md
+# Test Script for Rhonix based on the test plan in this link:
+# https://github.com/rhonixlabs/rhonix/blob/dev/docs/whiteblock-test-plan.md
 # This can be modifid later for a generic test automation
 
 #!/usr/bin/env python
@@ -47,8 +47,8 @@ class TestPlanWorker:
 
         # Network Build
         print "Building the Network ..."
-        print('whiteblock build -n ' + str(total_num_nodes) + ' -v ' + str(validator) + ' -b rchain -y')
-        os.system('whiteblock build -n ' + str(total_num_nodes) + ' -v ' + str(validator) + ' -b rchain -y')
+        print('whiteblock build -n ' + str(total_num_nodes) + ' -v ' + str(validator) + ' -b rhonix -y')
+        os.system('whiteblock build -n ' + str(total_num_nodes) + ' -v ' + str(validator) + ' -b rhonix -y')
         print "Finish Building the Network."
 
         # Network Config
@@ -106,7 +106,7 @@ if __name__ == '__main__':
 
     optparser = OptionParser()
     optparser.add_option('-f', '--inputFile', dest='input', help='filename containing yaml')
-    optparser.add_option('-n', '--testName', dest='test_name', help='teat name', default="RChain Perfromance Test")
+    optparser.add_option('-n', '--testName', dest='test_name', help='teat name', default="Rhonix Perfromance Test")
     optparser.add_option('-p', '--testPeriod', dest='test_period', help='teat period', default=300)
 
     (options, args) = optparser.parse_args()

@@ -1,5 +1,5 @@
 new
-  deployId(`rho:rchain:deployId`),
+  deployId(`rho:rhonix:deployId`),
   updateContract,
   NewAuthKey,
   AuthStateCh,
@@ -8,7 +8,7 @@ new
   _authKey,
   stdout(`rho:io:stdout`),
   updateRet,
-  deployerID(`rho:rchain:deployerId`),
+  deployerID(`rho:rhonix:deployerId`),
   oldStateCh,
   configPublicKeyCheckCh
 in {
@@ -50,7 +50,7 @@ in {
   } |
   stdout!(("propose start!!!!!"))|
   rl!(`rho:registry:systemContractManager`, *rlret)|
-  rl!(`rho:rchain:configPublicKeyCheck`, *configPublicKeyCheckCh)|
+  rl!(`rho:rhonix:configPublicKeyCheck`, *configPublicKeyCheckCh)|
   for(@(_, systemContractManager) <- rlret & @(_, configPublicKeyCheck)<- configPublicKeyCheckCh){
     stdout!(("propose get multisig ok", systemContractManager))|
     contract @(*NewAuthKey, "securityCheck")(@deployerId, ret) = {
@@ -58,7 +58,7 @@ in {
     } |
     @systemContractManager!("update",
                   *deployerID,
-                  `rho:rchain:authKey`,
+                  `rho:rhonix:authKey`,
                   *updateContract,
                   *updateRet)|
     for (@result <- updateRet){

@@ -20,7 +20,7 @@ new
   MergeableTag,       // Indirection for mergeability
   rs(`rho:registry:insertSigned:secp256k1`),
   uriOut,
-  deployerId(`rho:rchain:deployerId`)
+  deployerId(`rho:rhonix:deployerId`)
 in {
   contract NonNegativeNumber(@init, return) = {
     new this, valueStore in {

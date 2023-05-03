@@ -1,4 +1,4 @@
-//scalapackage coop.rchain.rholang.mint
+//scalapackage io.rhonix.rholang.mint
 
 //requires Pos, RhoSpec
 
@@ -30,12 +30,12 @@ match (
       test_dont_reward_inactive_validators,
       test_bonding_failure,
       test_slashing_vaults_and_state,
-      getPosBalance, getCoopBalance,
+      getPosBalance, getRhonixLabsBalance,
       closeBlock
     in {
       revAddressOps!("fromPublicKey", posPubKey, *posRevAddressCh) |
-      rl!(`rho:rchain:revVault`, *RevVaultCh) |
-      rl!(`rho:rchain:pos`, *PoSCh) |
+      rl!(`rho:rhonix:revVault`, *RevVaultCh) |
+      rl!(`rho:rhonix:pos`, *PoSCh) |
       rl!(`rho:lang:listOps`, *ListOpsCh) |
       rl!(`rho:id:zphjgsfy13h1k85isc8rtwtgt3t9zzt5pjd5ihykfmyapfc4wt3x5h`, *RhoSpecCh) |
       makeSysAuthToken!(*sysAuthTokenCh) |
@@ -143,18 +143,18 @@ match (
           contract test_bonding_succeeds(rhoSpec, _, ackCh) = {
             new setupCh, retCh, initialPosBalanceCh, finalPosBalanceCh,
                 initialUserBalanceCh, finalUserBalanceCh,
-                initialCoopBalanceCh, finalCoopBalanceCh,
+                initialRhonixLabsBalanceCh, finalRhonixLabsBalanceCh,
                 initialBondsCh, finalBondsCh, rewardsCh
             in {
               prepareUser!("1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111", *setupCh) |
               for (@userPubKey, _, @userVault, @userDeployerId <- setupCh) {
                 getPosBalance!(*initialPosBalanceCh) |
-                getCoopBalance!(*initialCoopBalanceCh) |
+                getRhonixLabsBalance!(*initialRhonixLabsBalanceCh) |
                 @userVault!("balance", *initialUserBalanceCh) |
                 @PoS!("getBonds", *initialBondsCh) |
                 for (@initialPosBalance  <- initialPosBalanceCh &
                      @initialUserBalance <- initialUserBalanceCh &
-                     @initialCoopBalance <- initialCoopBalanceCh &
+                     @initialRhonixLabsBalance <- initialRhonixLabsBalanceCh &
                      @initialBonds       <- initialBondsCh) {
                   match 100 {
                     bondAmt => {
@@ -162,12 +162,12 @@ match (
                       for (@(true, _) <- retCh) {
                         @PoS!("getBonds", *finalBondsCh) |
                         getPosBalance!(*finalPosBalanceCh) |
-                        getCoopBalance!(*finalCoopBalanceCh) |
+                        getRhonixLabsBalance!(*finalRhonixLabsBalanceCh) |
                         @userVault!("balance", *finalUserBalanceCh) |
                         @PoS!("getRewards", *rewardsCh) |
                         for (@finalPosBalance  <- finalPosBalanceCh &
                              @finalUserBalance <- finalUserBalanceCh &
-                             @finalCoopBalance <- finalCoopBalanceCh &
+                             @finalRhonixLabsBalance <- finalRhonixLabsBalanceCh &
                              @finalBonds       <- finalBondsCh &
                              @rewards          <- rewardsCh) {
                           rhoSpec!("assertMany",
@@ -175,7 +175,7 @@ match (
                               ((bondAmt, "==", finalBonds.get(userPubKey)), "the user's bond is expected in the final map"),
                               ((bondAmt, "==", initialUserBalance - finalUserBalance), "the user account decreases accordingly"),
                               ((bondAmt, "==", finalPosBalance - initialPosBalance), "the PoS account increases accordingly"),
-                              ((finalCoopBalance, "==", initialCoopBalance), "Coop vault balance does not change"),
+                              ((finalRhonixLabsBalance, "==", initialRhonixLabsBalance), "RhonixLabs vault balance does not change"),
                               ((Nil, "==", initialBonds.get(userPubKey)), "the user's bond is not expected in the initial map"),
                               ((0, "==", rewards.getOrElse(userPubKey, 0)), "new validator should not have any rewards")
                             ],
@@ -377,17 +377,17 @@ match (
                 user1BondCh, user2BondCh, initialBondsCh, finalBondsCh,
                 initialUser1BalanceCh, finalUser1BalanceCh,
                 initialUser2BalanceCh, finalUser2BalanceCh,
-                initialCoopBalanceCh, finalCoopBalanceCh
+                initialRhonixLabsBalanceCh, finalRhonixLabsBalanceCh
             in {
               prepareUser!("2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222", *setupCh) |
               for (@user1PubKey, _, @user1Vault, @user1DeployerId <- setupCh) {
                 getPosBalance!(*initialPosBalanceCh) |
-                getCoopBalance!(*initialCoopBalanceCh) |
+                getRhonixLabsBalance!(*initialRhonixLabsBalanceCh) |
                 @PoS!("getBonds", *initialBondsCh) |
                 @user1Vault!("balance", *initialUser1BalanceCh) |
                 for (@initialPosBalance   <- initialPosBalanceCh &
                      @initialUser1Balance <- initialUser1BalanceCh &
-                     @initialCoopBalance  <- initialCoopBalanceCh &
+                     @initialRhonixLabsBalance  <- initialRhonixLabsBalanceCh &
                      @initialBonds        <- initialBondsCh) {
                   match (100, 200) {
                     (user1Bond, user2Bond) => {
@@ -402,13 +402,13 @@ match (
                             for (@(true, _) <- user2BondCh) {
                               @PoS!("getBonds", *finalBondsCh) |
                               getPosBalance!(*finalPosBalanceCh) |
-                              getCoopBalance!(*finalCoopBalanceCh) |
+                              getRhonixLabsBalance!(*finalRhonixLabsBalanceCh) |
                               @user1Vault!("balance", *finalUser1BalanceCh) |
                               @user2Vault!("balance", *finalUser2BalanceCh) |
                               for (@finalPosBalance   <- finalPosBalanceCh &
                                    @finalUser1Balance <- finalUser1BalanceCh &
                                    @finalUser2Balance <- finalUser2BalanceCh &
-                                   @finalCoopBalance  <- finalCoopBalanceCh &
+                                   @finalRhonixLabsBalance  <- finalRhonixLabsBalanceCh &
                                    @finalBonds        <- finalBondsCh) {
                                 rhoSpec!("assertMany",
                                   [
@@ -418,7 +418,7 @@ match (
                                     ((user2Bond, "==", finalBonds.get(user2PubKey)), "user2's bond is expected in the final map"),
                                     ((user1Bond, "==", initialUser1Balance - finalUser1Balance), "user1's account decreases as expected"),
                                     ((user2Bond, "==", initialUser2Balance - finalUser2Balance), "user2's account decreases as expected"),
-                                    ((finalCoopBalance, "==", initialCoopBalance), "Coop vault balance does not change"),
+                                    ((finalRhonixLabsBalance, "==", initialRhonixLabsBalance), "RhonixLabs vault balance does not change"),
                                     ((user1Bond + user2Bond, "==", finalPosBalance - initialPosBalance), "the PoS account increases as expected")
                                   ],
                                   *ackCh
@@ -717,11 +717,11 @@ match (
             }
           } |
 
-          contract getCoopBalance(returnCh) = {
+          contract getRhonixLabsBalance(returnCh) = {
             new retCh in {
-              @PoS!("getCoopVault", *retCh) |
-              for (@(_, _, coopVault) <- retCh) {
-                @coopVault!("balance", *returnCh)
+              @PoS!("getRhonixLabsVault", *retCh) |
+              for (@(_, _, rhonixLabsVault) <- retCh) {
+                @rhonixLabsVault!("balance", *returnCh)
               }
             }
           } |
@@ -766,10 +766,10 @@ match (
               }
             }
           } |
-          // Checks that the slashed validator's bond and rewards are moved from the PoS vault to the Coop vault and
+          // Checks that the slashed validator's bond and rewards are moved from the PoS vault to the Rhonix Labs vault and
           // reduced to 0 in the bond and committedRewards maps and that they are immediately moved to the withdrawers map.
           contract test_slashing_vaults_and_state(rhoSpec, _, ackCh) = {
-            new initialBondSumCh, chargeCh, refundCh, initialCoopBalanceCh, finalCoopBalanceCh,
+            new initialBondSumCh, chargeCh, refundCh, initialRhonixLabsBalanceCh, finalRhonixLabsBalanceCh,
                 setupCh, slashCh, activeValidatorsCh, withdrawersCh,
                 initialPosBalanceCh, finalPosBalanceCh,
                 initialUserBalanceCh, finalUserBalanceCh,
@@ -780,10 +780,10 @@ match (
               for (_, _, @userVault, @userDeployerId <- setupCh) {
                 @PoS!("getActiveValidators", *activeValidatorsCh) |
                 @PoS!("getBonds", *initialBondsCh) |
-                getCoopBalance!(*initialCoopBalanceCh) |
+                getRhonixLabsBalance!(*initialRhonixLabsBalanceCh) |
                 for (@activeValidators   <- activeValidatorsCh &
                      @initialBonds       <- initialBondsCh &
-                     @initialCoopBalance <- initialCoopBalanceCh) {
+                     @initialRhonixLabsBalance <- initialRhonixLabsBalanceCh) {
                   match (100, 0) {
                     (chargeAmt, refundAmt) => {
                       @PoS!("chargeDeploy", userDeployerId, chargeAmt, sysAuthToken, *chargeCh) |
@@ -805,20 +805,20 @@ match (
                                 @userVault!("balance", *finalUserBalanceCh) |
                                 @PoS!("getRewards", *finalRewardsCh) |
                                 @PoS!("getWithdrawers", *withdrawersCh) |
-                                getCoopBalance!(*finalCoopBalanceCh) |
+                                getRhonixLabsBalance!(*finalRhonixLabsBalanceCh) |
                                 for (@finalPosBalance  <- finalPosBalanceCh &
                                       @finalUserBalance <- finalUserBalanceCh &
                                       @finalBonds       <- finalBondsCh &
                                       @finalRewards     <- finalRewardsCh &
                                       @withdrawers      <- withdrawersCh &
-                                      @finalCoopBalance <- finalCoopBalanceCh) {
+                                      @finalRhonixLabsBalance <- finalRhonixLabsBalanceCh) {
                                   stdlog!("info", (initialBonds, finalBonds,slashedValidator)) |
                                   rhoSpec!("assertMany",
                                     [
                                       ((finalBonds, "==", initialBonds.set(slashedValidator, 0)), "Slashed validator's bond is reduced to 0"),
                                       ((0, "==", finalRewards.get(slashedValidator)), "Slashed validator's rewards are reduced to 0"),
                                       ((finalPosBalance, "==", initialPosBalance - initialBonds.get(slashedValidator)), "Slashed validator's funds are transferred out of the PoS vault"),
-                                      ((finalCoopBalance, "==", initialCoopBalance + initialBonds.get(slashedValidator)), "Slashed validator's funds are transferred to the Coop vault")
+                                      ((finalRhonixLabsBalance, "==", initialRhonixLabsBalance + initialBonds.get(slashedValidator)), "Slashed validator's funds are transferred to the Rhonix Labs vault")
                                     ],
                                     *ackCh
                                   )

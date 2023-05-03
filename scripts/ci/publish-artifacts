@@ -11,7 +11,7 @@ if [[ $DRONE_BRANCH == "staging" ]]; then
 	# All artifacts produced in those builds should be uploaded as if they were built on the PR's base/target branch.
 	COMMIT_MSG=$( git log -1 --pretty=format:%s )
 	PR_NUMBER=$( echo "$COMMIT_MSG" | sed -r 's/^Merge #([0-9]+).*$/\1/' )
-	branch=$( curl -s https://api.github.com/repos/rchain/rchain/pulls/$PR_NUMBER | jq -r '.base.ref' )
+	branch=$( curl -s https://api.github.com/repos/rhonixlabs/rhonix/pulls/$PR_NUMBER | jq -r '.base.ref' )
 else
 	branch=$DRONE_BRANCH
 fi
@@ -28,7 +28,7 @@ else
 	upload_prefix=branches/$branch/
 fi
 
-# Upload packages to build.rchain-dev.tk
+# Upload packages to build.rhonix-dev.tk
 
 (
 umask 077
@@ -39,7 +39,7 @@ echo "$SSH_PRIVATE_KEY" | base64 -d | tr -d '\r' >~/.ssh/id_rsa
 # We don't check host keys because artifacts are public.
 rsync -avrz --delete -e "ssh -p 22 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
     artifacts/*.deb artifacts/*.rpm artifacts/*.tgz \
-    inbound@build.rchain-dev.tk:/srv/inbound/$upload_prefix
+    inbound@build.rhonix-dev.tk:/srv/inbound/$upload_prefix
 
 # Upload Docker image
 
@@ -48,12 +48,12 @@ builtin echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdi
 # There's a slight race condition between tag and push. Tag is fast, but what
 # can happen if some other jobs tags with latest while push is in progress?
 
-docker tag coop.rchain/rnode:DRONE-$DRONE_BUILD_NUMBER rchain/rnode:$branch
-docker push rchain/rnode:$branch
+docker tag io.rhonix/rnode:DRONE-$DRONE_BUILD_NUMBER rhonix/rnode:$branch
+docker push rhonix/rnode:$branch
 
 if [[ -n $tag ]]; then
-	docker tag coop.rchain/rnode:DRONE-$DRONE_BUILD_NUMBER rchain/rnode:$tag
-	docker push rchain/rnode:$tag
-	docker tag coop.rchain/rnode:DRONE-$DRONE_BUILD_NUMBER rchain/rnode:latest
-	docker push rchain/rnode:latest
+	docker tag io.rhonix/rnode:DRONE-$DRONE_BUILD_NUMBER rhonix/rnode:$tag
+	docker push rhonix/rnode:$tag
+	docker tag io.rhonix/rnode:DRONE-$DRONE_BUILD_NUMBER rhonix/rnode:latest
+	docker push rhonix/rnode:latest
 fi

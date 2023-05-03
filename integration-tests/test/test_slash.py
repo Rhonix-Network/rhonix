@@ -9,9 +9,9 @@ from contextlib import contextmanager
 import logging
 import pytest
 from docker.client import DockerClient
-from rchain.crypto import PrivateKey
-from rchain.pb.CasperMessage_pb2 import BlockMessageProto as BlockMessage
-from rchain.util import create_deploy_data
+from rhonix.crypto import PrivateKey
+from rhonix.pb.CasperMessage_pb2 import BlockMessageProto as BlockMessage
+from rhonix.util import create_deploy_data
 
 
 from . import conftest

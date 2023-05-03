@@ -1,4 +1,4 @@
-package coop.rchain.scalapb
+package io.rhonix.scalapb
 
 import com.google.protobuf.Descriptors.FieldDescriptor.Type
 import com.google.protobuf.Descriptors._
@@ -85,7 +85,7 @@ class StacksafeMessagePrinter(
     val lensDef   = s"scalapb.lenses.Updatable[${scalaType}]"
     val extended = value.replace(
       s"extends scalapb.GeneratedMessage with $lensDef",
-      s"extends coop.rchain.models.StacksafeMessage[$scalaType] with $lensDef"
+      s"extends io.rhonix.models.StacksafeMessage[$scalaType] with $lensDef"
     )
     new FunctionalPrinter(Vector(extended), printer.indentLevel)
   }
@@ -102,12 +102,12 @@ class StacksafeMessagePrinter(
     super
       .generateSerializedSize(message)(withEqualsAndHashCode)
       .newline
-      .add("@transient var _serializedSizeM: coop.rchain.models.Memo[Int] = null")
+      .add("@transient var _serializedSizeM: io.rhonix.models.Memo[Int] = null")
       .newline
-      .add("def serializedSizeM: coop.rchain.models.Memo[Int] = synchronized {")
+      .add("def serializedSizeM: io.rhonix.models.Memo[Int] = synchronized {")
       .add("  if(_serializedSizeM == null) {")
       .add(
-        "    _serializedSizeM = new coop.rchain.models.Memo(coop.rchain.models.ProtoM.serializedSize(this))"
+        "    _serializedSizeM = new io.rhonix.models.Memo(io.rhonix.models.ProtoM.serializedSize(this))"
       )
       .add("    _serializedSizeM")
       .add("  } else _serializedSizeM")
@@ -120,7 +120,7 @@ class StacksafeMessagePrinter(
   ): FunctionalPrinter = {
     val myFullScalaName = message.scalaType.fullNameWithMaybeRoot(message)
     fp.add(
-        s"override def equals(x: Any): Boolean = coop.rchain.models.EqualM[$myFullScalaName].equals[monix.eval.Coeval](this, x).value"
+        s"override def equals(x: Any): Boolean = io.rhonix.models.EqualM[$myFullScalaName].equals[monix.eval.Coeval](this, x).value"
       )
       .newline
   }
@@ -133,7 +133,7 @@ class StacksafeMessagePrinter(
 
     val printer = fp
       .add(
-        s"override def hashCode(): Int = coop.rchain.models.HashM[$myFullScalaName].hash[monix.eval.Coeval](this).value"
+        s"override def hashCode(): Int = io.rhonix.models.HashM[$myFullScalaName].hash[monix.eval.Coeval](this).value"
       )
 
     // In new version of scalapb (0.10.8) `merge` method is moved to companion object
@@ -215,7 +215,7 @@ class StacksafeMessagePrinter(
                   (mappedType + s".getOrElse($defInstance)")
                 else mappedType
               }
-            s"coop.rchain.models.SafeParser.readMessage(_input__, $baseInstance)"
+            s"io.rhonix.models.SafeParser.readMessage(_input__, $baseInstance)"
           } else if (field.isEnum)
             throw new UnsupportedOperationException("Enums are not supported")
           else if (field.getType == Type.STRING)

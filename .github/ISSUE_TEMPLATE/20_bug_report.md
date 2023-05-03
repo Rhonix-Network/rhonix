@@ -1,6 +1,6 @@
 ---
 name: Report a bug
-about: Create a bug report to help us improve RChain platform
+about: Create a bug report to help us improve Rhonix platform
 labels: bug
 ---
 

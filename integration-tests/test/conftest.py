@@ -17,7 +17,7 @@ import pytest
 from _pytest.terminal import TerminalReporter
 from _pytest.reports import TestReport
 from _pytest.config.argparsing import Parser
-from rchain.crypto import PrivateKey
+from rhonix.crypto import PrivateKey
 import docker as docker_py
 from docker.client import DockerClient
 
@@ -85,7 +85,7 @@ def command_line_options(request: Any) -> Generator[CommandLineOptions, None, No
 
 @contextlib.contextmanager
 def temporary_bonds_file(validator_bonds_dict: Dict[PrivateKey, int]) -> Generator[str, None, None]:
-    (fd, file) = tempfile.mkstemp(prefix="rchain-bonds-file-", suffix=".txt")
+    (fd, file) = tempfile.mkstemp(prefix="rhonix-bonds-file-", suffix=".txt")
     try:
         with os.fdopen(fd, "w") as f:
             for private_key, bond in validator_bonds_dict.items():
@@ -106,7 +106,7 @@ def make_wallets_file_lines(wallet_balance_from_private_key: Dict[PrivateKey, in
 @contextlib.contextmanager
 def temporary_wallets_file(dwallet_balance_from_private_key: Dict[PrivateKey, int]) -> Generator[str, None, None]:
     lines = make_wallets_file_lines(dwallet_balance_from_private_key)
-    (fd, file) = tempfile.mkstemp(prefix="rchain-wallets-file-", suffix=".txt")
+    (fd, file) = tempfile.mkstemp(prefix="rhonix-wallets-file-", suffix=".txt")
     try:
         with os.fdopen(fd, "w") as f:
             for line in lines:

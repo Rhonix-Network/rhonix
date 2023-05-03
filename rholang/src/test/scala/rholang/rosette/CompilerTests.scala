@@ -1,11 +1,11 @@
 package rholang.rosette
 
-import coop.rchain.metrics
-import coop.rchain.metrics.{Metrics, NoopSpan, Span}
-import coop.rchain.rholang.Resources.mkRuntime
-import coop.rchain.rholang.interpreter.EvaluateResult
-import coop.rchain.rholang.syntax._
-import coop.rchain.shared.Log
+import io.rhonix.metrics
+import io.rhonix.metrics.{Metrics, NoopSpan, Span}
+import io.rhonix.rholang.Resources.mkRuntime
+import io.rhonix.rholang.interpreter.EvaluateResult
+import io.rhonix.rholang.syntax._
+import io.rhonix.shared.Log
 import monix.eval.Task
 import monix.execution.Scheduler.Implicits.global
 import org.scalatest.funsuite.AnyFunSuite

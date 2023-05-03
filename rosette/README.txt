@@ -15,9 +15,9 @@ Welcome to Rosette.
 Installing
 
     Compiled binaries and packages for your OS distribution may be available on
-    RChain's developer web site at:
+    Rhonix's developer web site at:
 
-        https://developer.rchain.coop.
+        https://developer.rhonix.io.
 
 Compiling Rosette
 

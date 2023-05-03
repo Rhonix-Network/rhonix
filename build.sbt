@@ -12,7 +12,7 @@ Global / conflictManager := ConflictManager.strict
 Global / dependencyOverrides := Dependencies.overrides
 
 lazy val projectSettings = Seq(
-  organization := "coop.rchain",
+  organization := "io.rhonix",
   scalaVersion := "2.12.15",
   version := "0.1.0-SNAPSHOT",
   resolvers ++=
@@ -240,7 +240,7 @@ lazy val models = (project in file("models"))
       scalapbRuntimegGrpc
     ),
     Compile / PB.targets := Seq(
-      coop.rchain.scalapb.gen(flatPackage = true, grpc = false) -> (Compile / sourceManaged).value,
+      _root_.io.rhonix.scalapb.gen(flatPackage = true, grpc = false) -> (Compile / sourceManaged).value,
       grpcmonix.generators.gen()                                -> (Compile / sourceManaged).value
     )
   )
@@ -257,9 +257,9 @@ lazy val node = (project in file("node"))
       v
     }),
     name := "rnode",
-    maintainer := "RChain Cooperative https://www.rchain.coop/",
-    packageSummary := "RChain Node",
-    packageDescription := "RChain Node - the RChain blockchain node server software.",
+    maintainer := "Rhonix Labs https://www.rhonix.io/",
+    packageSummary := "Rhonix Node",
+    packageDescription := "Rhonix Node - the Rhonix blockchain node server software.",
     libraryDependencies ++=
       apiServerDependencies ++ commonDependencies ++ kamonDependencies ++ protobufDependencies ++ Seq(
         catsCore,
@@ -280,9 +280,9 @@ lazy val node = (project in file("node"))
       grpcmonix.generators.gen() -> (Compile / sourceManaged).value / "protobuf"
     ),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion, git.gitHeadCommit),
-    buildInfoPackage := "coop.rchain.node",
-    Compile / mainClass := Some("coop.rchain.node.Main"),
-    assembly / mainClass := Some("coop.rchain.node.Main"),
+    buildInfoPackage := "io.rhonix.node",
+    Compile / mainClass := Some("io.rhonix.node.Main"),
+    assembly / mainClass := Some("io.rhonix.node.Main"),
     assembly / assemblyMergeStrategy := {
       case x if x.endsWith("io.netty.versions.properties") => MergeStrategy.first
       case x =>
@@ -375,8 +375,8 @@ lazy val node = (project in file("node"))
      *   http://ftp.rpm.org/max-rpm/ch-rpm-file-format.html
      */
     Rpm / version := version.value.replace('-', '.'),
-    rpmVendor := "rchain.coop",
-    rpmUrl := Some("https://rchain.coop"),
+    rpmVendor := "rhonix.io",
+    rpmUrl := Some("https://rhonix.io"),
     rpmLicense := Some("Apache 2.0"),
     Rpm / packageArchitecture := "noarch",
     Rpm / maintainerScripts := maintainerScriptsAppendFromFile((Rpm/maintainerScripts).value)(
@@ -424,7 +424,7 @@ lazy val rholang = (project in file("rholang"))
       catsMtlLawsTest
     ),
     // TODO: investigate if still needed?
-    // mainClass in assembly := Some("coop.rchain.rho2rose.Rholang2RosetteCompiler"),
+    // mainClass in assembly := Some("io.rhonix.rho2rose.Rholang2RosetteCompiler"),
     coverageExcludedFiles := Seq(
       (Compile / javaSource).value,
       (BNFCConfig / bnfcGrammarDir).value,
@@ -445,7 +445,7 @@ lazy val rholang = (project in file("rholang"))
 lazy val rholangCLI = (project in file("rholang-cli"))
   .settings(commonSettings: _*)
   .settings(
-    assembly / mainClass := Some("coop.rchain.rholang.interpreter.RholangCLI"),
+    assembly / mainClass := Some("io.rhonix.rholang.interpreter.RholangCLI"),
     assembly / assemblyMergeStrategy := {
       case path if path.endsWith("module-info.class") => MergeStrategy.discard
       case path                                       => MergeStrategy.defaultMergeStrategy(path)
@@ -486,7 +486,7 @@ lazy val rspace = (project in file("rspace"))
     /* Tutorial */
     /* Publishing Settings */
     scmInfo := Some(
-      ScmInfo(url("https://github.com/rchain/rchain"), "git@github.com:rchain/rchain.git")
+      ScmInfo(url("https://github.com/rhonixlabs/rhonix"), "git@github.com:rhonixlabs/rhonix.git")
     ),
     git.remoteRepo := scmInfo.value.get.connection,
     pomIncludeRepository := { _ =>
@@ -502,7 +502,7 @@ lazy val rspace = (project in file("rspace"))
     },
     Test / publishArtifact := false,
     licenses := Seq("Apache-2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0")),
-    homepage := Some(url("https://www.rchain.coop"))
+    homepage := Some(url("https://www.rhonix.io"))
   )
   .dependsOn(shared % "compile->compile;test->test", crypto)
 
@@ -524,7 +524,7 @@ lazy val rspaceBench = (project in file("rspace-bench"))
   .enablePlugins(JmhPlugin)
   .dependsOn(rspace % "test->test", rholang % "test->test", models % "test->test")
 
-lazy val rchain = (project in file("."))
+lazy val rhonix = (project in file("."))
   .settings(commonSettings: _*)
   .aggregate(
     blockStorage,

@@ -2,9 +2,9 @@ import time
 from dataclasses import dataclass
 from typing import Optional, List, Union, Dict
 import requests
-from rchain.crypto import PrivateKey
-from rchain.pb.CasperMessage_pb2 import DeployDataProto
-from rchain.util import sign_deploy_data
+from rhonix.crypto import PrivateKey
+from rhonix.pb.CasperMessage_pb2 import DeployDataProto
+from rhonix.util import sign_deploy_data
 
 class HttpRequestException(Exception):
    def __init__(self, status_code: int, content: str):

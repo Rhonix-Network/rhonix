@@ -9,7 +9,7 @@
     </encoder>
   </appender>
 
-  <logger name="coop.rchain.rspace" level="warn" />
+  <logger name="io.rhonix.rspace" level="warn" />
   
   <root level="info">
     <appender-ref ref="STDOUT" />

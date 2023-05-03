@@ -1,4 +1,4 @@
-//scalapackage coop.rchain.rholang
+//scalapackage io.rhonix.rholang
 
 new rl(`rho:registry:lookup`),
     RhoSpecCh,

@@ -23,7 +23,7 @@ new
   assert(`rho:test:assertAck`),
   testSuiteCompleted(`rho:test:testSuiteCompleted`),
   uriOut,
-  deployerId(`rho:rchain:deployerId`)
+  deployerId(`rho:rhonix:deployerId`)
 in {
   stdlog!("debug", "Loading RhoSpec") |
   rl!(`rho:lang:listOps`, *ListOpsCh) |

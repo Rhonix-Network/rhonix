@@ -76,7 +76,7 @@ object BNFC {
   lazy val bnfcSettings = {
     inConfig(BNFCConfig)(
       Defaults.configSettings ++ Seq(
-        bnfcNamespace  := "coop.rchain.rholang.ast",
+        bnfcNamespace  := "io.rhonix.rholang.ast",
         bnfcGrammarDir := baseDirectory.value / "src" / "main" / "bnfc",
         bnfcOutputDir  := (sourceManaged in Compile).value,
         generate := {

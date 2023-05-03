@@ -1,7 +1,7 @@
 from random import Random
 import re
 
-from rchain.crypto import PrivateKey
+from rhonix.crypto import PrivateKey
 from docker.client import DockerClient
 
 from .conftest import (

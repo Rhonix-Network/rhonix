@@ -1,5 +1,5 @@
 [Unit]
-Description=RChain Node
+Description=Rhonix Node
 After=network.target
 
 [Service]

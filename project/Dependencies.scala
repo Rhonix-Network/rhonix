@@ -54,8 +54,8 @@ object Dependencies {
   val jline               = ("org.scala-lang"             % "jline"                     % "2.10.7")
     .exclude("org.fusesource.jansi", "jansi")
   val julToSlf4j          = "org.slf4j"                   % "jul-to-slf4j"              % slf4jVersion
-  // see https://jitpack.io/#rchain/kalium
-  val kalium              = "com.github.rchain"           % "kalium"                    % "0.8.1"
+  // see https://jitpack.io/#rhonix/kalium
+  val kalium              = "com.github.rhonixlabs"           % "kalium"                    % "0.8.1"
   val kamonCore           = "io.kamon"                   %% "kamon-core"                % kamonVersion
   val kamonSystemMetrics  = "io.kamon"                   %% "kamon-system-metrics"      % "1.0.1"
   val kamonPrometheus     = "io.kamon"                   %% "kamon-prometheus"          % "1.1.2"
@@ -94,8 +94,8 @@ object Dependencies {
   val scodecCore          = "org.scodec"                 %% "scodec-core"               % "1.11.7"
   val scodecCats          = "org.scodec"                 %% "scodec-cats"               % "1.1.0-M4"
   val scodecBits          = "org.scodec"                 %% "scodec-bits"               % "1.1.23"
-  // see https://jitpack.io/#rchain/secp256k1-java
-  val secp256k1Java       = "com.github.rchain"           % "secp256k1-java"            % "0.1"
+  // see https://jitpack.io/#rhonix/secp256k1-java
+  val secp256k1Java       = "com.github.rhonixlabs"           % "secp256k1-java"            % "0.1"
   val shapeless           = "com.chuusai"                %% "shapeless"                 % "2.3.8"
   val slf4j               = "org.slf4j"                   % "slf4j-api"                 % slf4jVersion
   val weupnp              = "org.bitlet"                  % "weupnp"                    % "0.1.4"

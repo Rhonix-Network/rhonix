@@ -1,6 +1,6 @@
-# RChain Node
+# Rhonix Node
 
-Rchain Node is a module that gathers all other subprojects into final executable.
+Rhonix Node is a module that gathers all other subprojects into final executable.
 
 ## 1. Building from source
    
@@ -17,11 +17,11 @@ Run:
 sudo sbt -Dsbt.log.noformat=true clean rholang/bnfc:generate casper/test:compile node/docker:publishLocal
 ```
 
-To test if the image is available to use, simply run `docker images`, `coop.rchain/rnode` should be on the list of available images.
+To test if the image is available to use, simply run `docker images`, `io.rhonix/rnode` should be on the list of available images.
 
 ```
-hideout:rchain rabbit$ docker images | grep rchain
-coop.rchain/rnode                               latest              b1af7024d9bf        6 minutes ago       131MB
+hideout:rhonix rabbit$ docker images | grep rhonix
+io.rhonix/rnode                               latest              b1af7024d9bf        6 minutes ago       131MB
 ```
 
 
@@ -35,7 +35,7 @@ By default when you execute the program, it will fire up a running node instance
 
 Node will instantiate a peer-to-peer network. It will either connect to some already existing node in the network (called bootstrap node) or will create a new network (essentially acting as bootstrap node). __Note__ This release prints a great deal of diagnostic information.
 
-An RChain node is addressed by an "rnode address", which has the following form
+An Rhonix node is addressed by an "rnode address", which has the following form
 
 ```
 rnode://<address-key>@<host-or-ip>:<tcp-port>
@@ -45,13 +45,13 @@ This version generates (non-cryptographically) random address keys of 128 bits, 
 essentially). Future releases will generate full-length 256- or 512-bit rnode addresses, but for demonstration purposes,
 128 bits is about the limit of manageability.
 
-By default - when run without any flag - the communication system attempts to connect itself to the test RChain network by bootstrapping from a known node in that network. 
+By default - when run without any flag - the communication system attempts to connect itself to the test Rhonix network by bootstrapping from a known node in that network. 
 
 Using flags you can specify which bootstrapping node should be used or if the node should create its own network (become a bootstrap node).
 
 #### 2.1.1 gRPC API
 
-Node exposes its API via gRPC services, which are exposed on `grpc-port`. To see the list of all available services, RPC calls, possible requests and responses, please see [node/src/main/protobuf/rnode.proto](https://github.com/rchain/rchain/blob/master/node/src/main/protobuf/rnode.proto)
+Node exposes its API via gRPC services, which are exposed on `grpc-port`. To see the list of all available services, RPC calls, possible requests and responses, please see [node/src/main/protobuf/rnode.proto](https://github.com/rhonixlabs/rhonix/blob/master/node/src/main/protobuf/rnode.proto)
 
 #### 2.1.2 Data directory
 
@@ -66,12 +66,12 @@ RNode runs as a server, and requires a specific network configuration.  Please r
 
 An easy way to run RNode is by using Docker. Use this pull command in Docker to get the current version of RNode
 
-```docker pull rchain/rnode```
+```docker pull rhonix/rnode```
 
 You can also [build a docker image yourself](#building-via-docker) and then run it.  The Docker image requires the folder `var/lib/rnode` to be present and accessible at runtime.  
 
 ```
-$ docker run -ti -v "$HOME/rnode":/var/lib/rnode rchain/rnode run 
+$ docker run -ti -v "$HOME/rnode":/var/lib/rnode rhonix/rnode run 
 17:12:21.938 [main] INFO main - uPnP: Some(/192.168.1.123) -> Some(93.158.233.123)
 17:12:22.450 [kamon.prometheus.PrometheusReporter] INFO kamon.prometheus.PrometheusReporter - Started the embedded HTTP server on http://0.0.0.0:40403
 17:12:22.850 [main] INFO org.http4s.blaze.channel.nio1.NIO1SocketServerGroup - Service bound to address /127.0.0.1:8080
@@ -92,9 +92,9 @@ To use the REPL capabilities of RNode, two containers running RNode need to be c
 ```bash
 > docker network create rnode-net
 
-> docker run -dit --name rnode0 --network rnode-net rchain/rnode:latest run -s
+> docker run -dit --name rnode0 --network rnode-net rhonix/rnode:latest run -s
 
-> docker run -it --name rnode-repl --network rnode-net rchain/rnode:latest --grpc-host rnode0 repl
+> docker run -it --name rnode-repl --network rnode-net rhonix/rnode:latest --grpc-host rnode0 repl
 ```
 
 ##### 2.1.2.2 Running RNode directly from Packages
@@ -127,7 +127,7 @@ In REPL mode users have the ability to execute Rholang commands in REPL environm
 Assuming you have a RNode running in Docker, use the command below to run the node in REPL mode.
 
 ```
-$ docker run -ti rchain/rnode repl
+$ docker run -ti rhonix/rnode repl
 ```
 
 #### 2.2.2 Running from Packages
@@ -148,7 +148,7 @@ $ ./bin/rnode eval <path to filename>
 This assumes you have a RNode running in Docker. To run Rholang that is stored in a plain text file (filename.rho), use
 
 ```
-docker run -it --mount type=bind,source="$(pwd)"/file_directory,target=/tmp rchain/rnode eval /tmp/filename.rho
+docker run -it --mount type=bind,source="$(pwd)"/file_directory,target=/tmp rhonix/rnode eval /tmp/filename.rho
 ```
 
 This command will run the node in interpreter mode and will make a directory on the local system available to the interpreter as a location where Rholang contracts can be executed. When running your docker container, be aware of your current path - the 'pwd' command sticks your current path in the bind command.
@@ -168,13 +168,13 @@ By default it uses TCP port 40400. This is also how more than one node may be ru
 ports. Remember that if using Docker, ports may have to be properly mapped and forwarded. For example, if we want to connect on the test net on TCP port 12345 and our machine's public IP address is 1.2.3.4, we could do it like so:
 
 ```
-$ docker run -ti -p 12345:12345 rchain/rnode:latest run -p 12345 --host 1.2.3.4
+$ docker run -ti -p 12345:12345 rhonix/rnode:latest run -p 12345 --host 1.2.3.4
 ```
 
 or perhaps by causing docker to use the host network and not its own bridge: Note: This does NOT work on MacOSX
 
 ```
-$ docker run -ti --network=host rchain/rnode:latest run -p 12345
+$ docker run -ti --network=host rhonix/rnode:latest run -p 12345
 ```
 
 This may take some experimentation to find combinations of arguments that work for any given setup.
@@ -184,7 +184,7 @@ Read more than you want to know about Docker networking starting about
 
 ### 3.2 Bootstrapping a Private Network
 
-It is possible to set up a private RChain network by running a standalone node and using it for bootstrapping other nodes. Here we run one on port 4000:
+It is possible to set up a private Rhonix network by running a standalone node and using it for bootstrapping other nodes. Here we run one on port 4000:
 
 ```
 $ ./bin/rnode run -s -p 4000
@@ -238,7 +238,7 @@ where bootstrapped node will log
 ```
 
 ### 3.3 Metrics
-The current version of the node produces metrics on some communications-related activities in Prometheus format. A local node and metrics visualizer may be started by following the instructions found [here](https://github.com/rchain/rchain/blob/master/docker/node/README.md).
+The current version of the node produces metrics on some communications-related activities in Prometheus format. A local node and metrics visualizer may be started by following the instructions found [here](https://github.com/rhonixlabs/rhonix/blob/master/docker/node/README.md).
 
 ### 3.4 Caveats
 

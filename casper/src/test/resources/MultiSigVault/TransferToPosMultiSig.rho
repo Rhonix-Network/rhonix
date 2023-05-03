@@ -1,18 +1,18 @@
 new RevVaultCh, PosCh, multiSigCh,
     deployerAuthCh, rl(`rho:registry:lookup`), vaultCh, 
-    deployerId(`rho:rchain:deployerId`), stdout(`rho:io:stdout`),
+    deployerId(`rho:rhonix:deployerId`), stdout(`rho:io:stdout`),
     transferRet in {
-  rl!(`rho:rchain:revVault`, *RevVaultCh) |
-  rl!(`rho:rchain:pos`, *PosCh) |
+  rl!(`rho:rhonix:revVault`, *RevVaultCh) |
+  rl!(`rho:rhonix:pos`, *PosCh) |
   for (@(_, RevVault) <- RevVaultCh ; @(_, Pos) <- PosCh) {
-    @Pos!("getCoopVault", *multiSigCh)|
-    stdout!(("transfer to coop get lib right"))|
+    @Pos!("getRhonixLabsVault", *multiSigCh)|
+    stdout!(("transfer to rhonix get lib right"))|
     @RevVault!("findOrCreate", "$$from$$", *vaultCh) |
     @RevVault!("deployerAuthKey", *deployerId, *deployerAuthCh) |
     for (@(multiSigVault, addr, vault) <- multiSigCh ; authKey <- deployerAuthCh ; @(true, fromVault) <- vaultCh){
       @fromVault!("transfer", addr, $$amount$$, *authKey, *transferRet) |
       for (@res <- transferRet) { 
-        stdout!(("transfer to coop res", res))
+        stdout!(("transfer to rhonix res", res))
       }
     }
   }

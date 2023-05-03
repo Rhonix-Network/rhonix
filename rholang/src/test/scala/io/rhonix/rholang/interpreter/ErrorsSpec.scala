@@ -1,0 +1,28 @@
+package io.rhonix.rholang.interpreter
+import java.io.{ByteArrayOutputStream, PrintStream}
+
+import io.rhonix.rholang.interpreter.errors.{InterpreterError, UnrecognizedInterpreterError}
+import org.scalacheck.ScalacheckShapeless._
+import org.scalatest.Assertion
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
+
+class ErrorsSpec extends AnyFlatSpec with Matchers with ScalaCheckDrivenPropertyChecks {
+
+  "Using Throwable methods on InterpreterError" should "not cause exceptions itself" in {
+    forAll { e: InterpreterError =>
+      checkThrowableMethodsAreSafe(e)
+      checkThrowableMethodsAreSafe(UnrecognizedInterpreterError(e))
+    }
+  }
+
+  private def checkThrowableMethodsAreSafe[T <: Throwable](e: T): Assertion =
+    noException should be thrownBy {
+      e.toString
+      e.getMessage
+      e.getCause
+      val devNull = new PrintStream(new ByteArrayOutputStream())
+      e.printStackTrace(devNull /* avoid garbage output in tests */ )
+    }
+}

@@ -11,8 +11,8 @@ This will print the hash of our program `(1)` :
 
 2. We need pair of keys, let's generate some with `Ed25519` available in the project. In scala console:
 ```
-import coop.rchain.crypto.signatures._
-import coop.rchain.crypto.codec._
+import io.rhonix.crypto.signatures._
+import io.rhonix.crypto.codec._
 
 val keyPair = Ed25519.newKeyPair
 val secKey = Base16.encode(keyPair._1)

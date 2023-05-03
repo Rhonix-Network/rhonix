@@ -11,5 +11,5 @@ system. That is the most recent version of the K-Framework.
  but did not have time to implement it fully. Treat this as sort of a brain dump. Here you can find
  the exposition of the structural type system and some guidance for future work.
 
- Please do not hesitate to reach out to me with questions on the RChain Discord at `@Derek` or at
+ Please do not hesitate to reach out to me with questions on the Rhonix Discord at `@Derek` or at
  derek AT pyrofex DOT net.

@@ -419,7 +419,7 @@
             ],
             "version": "==2.4.7"
         },
-        "pyrchain": {
+        "pyrhonix": {
             "hashes": [
                 "sha256:e85dd0003872be6736a53829a8cde49146e5845cb08389d9ca062cbc6a195452",
                 "sha256:f73a6b5fd35a7bacf0ef8ce152aa1a517e7bd59b5b9e3f407ca2e5be4b8e1451"

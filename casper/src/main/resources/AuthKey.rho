@@ -20,7 +20,7 @@ new
   rs(`rho:registry:insertSigned:secp256k1`),
   uriOut,
   _authKey,
-  deployerId(`rho:rchain:deployerId`),
+  deployerId(`rho:rhonix:deployerId`),
   rl(`rho:registry:lookup`),
   systemContractManagerCh,
   dispatcherCh,
@@ -77,7 +77,7 @@ in {
   }  |
 
   rl!(`rho:registry:systemContractManager`, *systemContractManagerCh)|
-  rl!(`rho:rchain:configPublicKeyCheck`, *configPublicKeyCheckCh)|
+  rl!(`rho:rhonix:configPublicKeyCheck`, *configPublicKeyCheckCh)|
   for (@(_, systemContractManager) <- systemContractManagerCh & @(_, configPublicKeyCheck)<- configPublicKeyCheckCh){
     @systemContractManager!("createDispatcher", *AuthKey, *dispatcherCh)|
     contract @(*AuthKey, "securityCheck")(@deployerId, ret) = {

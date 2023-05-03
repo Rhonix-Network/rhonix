@@ -9,10 +9,10 @@ Rholang is completely asynchronous, in the sense that while you can read a messa
 ## Getting started
 
 Get started with Rholang by selecting one of the options below.
-* __Run Rholang on RNode__ - Write Rholang contracts in an editor of your choice and run them on RNode using either the REPL or EVAL modes. [Get started](https://github.com/rchain/rchain/releases) with the latest version of RNode.
-* __Run Rholang on a web interface__ - This [web interface](http://rchain.cloud) was created by a RChain community member.
+* __Run Rholang on RNode__ - Write Rholang contracts in an editor of your choice and run them on RNode using either the REPL or EVAL modes. [Get started](https://github.com/rhonixlabs/rhonix/releases) with the latest version of RNode.
+* __Run Rholang on a web interface__ - This [web interface](http://rhonix.cloud) was created by a Rhonix community member.
 * __Run Rholang using Cryptofex IDE__ - This closed source [IDE](http://cryptofex.io/download) was created by Pyrofex.
-* __Write Rholang using an IntelliJ plugin__ - This [Rholang IntelliJ plugin](https://github.com/tgrospic/rholang-idea) was created by a RChain community member.
+* __Write Rholang using an IntelliJ plugin__ - This [Rholang IntelliJ plugin](https://github.com/tgrospic/rholang-idea) was created by a Rhonix community member.
 
 ## Summary of the language constructs
 Rholang has two kinds of values: processes and names.
@@ -678,8 +678,8 @@ new x, y, stdout(`rho:io:stdout`) in {
 2. We need a pair of keys; let's generate some with `Ed25519`, available in the project. In the scala console, we enter the following:
 
   ```scala
-  import coop.rchain.crypto.signatures._
-  import coop.rchain.crypto.codec._
+  import io.rhonix.crypto.signatures._
+  import io.rhonix.crypto.codec._
 
   val keyPair = Ed25519.newKeyPair
   val secKey = Base16.encode(keyPair._1)
@@ -859,7 +859,7 @@ A sealer/unsealer pair gives the same functionality as public keys, but without 
 
 ### Beware of sending attenuators
 
-A basic principle to keep in mind with RChain processes is one that is similar to more traditional web applications: whatever code you send to another party can be disassembled.  Ever since the late 1990s when buying things over the web became possible, [there have been e-commerce platforms](https://blog.detectify.com/2016/11/17/7-most-common-e-commerce-security-mistakes/) where the platform relied on the users' browsers to send the correct price of the item back to it.  The authors didn't think about the user opening the developer tools and changing the price before it got sent back.  The right way to build an e-commerce platform is to store the prices on the server and check them there.
+A basic principle to keep in mind with Rhonix processes is one that is similar to more traditional web applications: whatever code you send to another party can be disassembled.  Ever since the late 1990s when buying things over the web became possible, [there have been e-commerce platforms](https://blog.detectify.com/2016/11/17/7-most-common-e-commerce-security-mistakes/) where the platform relied on the users' browsers to send the correct price of the item back to it.  The authors didn't think about the user opening the developer tools and changing the price before it got sent back.  The right way to build an e-commerce platform is to store the prices on the server and check them there.
 
 Suppose that Bob is willing to run some code for Alice; he has a contract that says something like, "Get a process from this channel and run it."
 

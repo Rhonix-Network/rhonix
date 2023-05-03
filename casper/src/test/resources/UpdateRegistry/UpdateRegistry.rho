@@ -1,11 +1,11 @@
 new
-  deployId(`rho:rchain:deployId`),
+  deployId(`rho:rhonix:deployId`),
   updateContract,
   rl(`rho:registry:lookup`),
   rlret,
   stdout(`rho:io:stdout`),
   updateRet,
-  deployerID(`rho:rchain:deployerId`),
+  deployerID(`rho:rhonix:deployerId`),
   systemContractManager2,
   oldStateCh
 in {

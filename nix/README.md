@@ -1,6 +1,6 @@
-# RChain project setup/build using *nix*
+# Rhonix project setup/build using *nix*
 
-This document describes developer setup and build commands for RChain project using _nix_ package manager to install additional tools.
+This document describes developer setup and build commands for Rhonix project using _nix_ package manager to install additional tools.
 
 **Note:** _default.nix_ file in this directory is not part of this document.
 
@@ -69,7 +69,7 @@ sbt compile
 sbt test:compile
 
 # Compile and create local executable
-# path: rchain/node/target/universal/stage/bin/rnode
+# path: rhonix/node/target/universal/stage/bin/rnode
 sbt stage
 
 # Compile Docker image
@@ -95,7 +95,7 @@ export SBT_OPTS="-Xmx4g -Xss2m -Dsbt.supershell=false"
 sbt
 
 # sbt entering interactive mode
-# sbt:rchain>
+# sbt:rhonix>
 
 # Compile
 compile

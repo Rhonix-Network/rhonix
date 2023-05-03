@@ -9,7 +9,7 @@ package repl;
 import "scalapb/scalapb.proto";
 
 option (scalapb.options) = {
-  package_name: "coop.rchain.node.model"
+  package_name: "io.rhonix.node.model"
 };
 
 service Repl {

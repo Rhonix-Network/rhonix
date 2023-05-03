@@ -1,4 +1,4 @@
-# RChain Test Plan
+# Rhonix Test Plan
 
 ## Overview
 
@@ -31,9 +31,9 @@ The proposed testing initiatives will be conducted within using the Whiteblock S
 
 ## Contracts Used
 The following contracts will be deployed within the various test cases outlined in this document:
-- [dupe.rho](https://github.com/rchain/rchain/blob/dev/rholang/examples/dupe.rho)
-- [shortslow.rho](https://github.com/rchain/rchain/blob/dev/rholang/examples/shortslow.rho)
-- [shortfast.rho](https://github.com/rchain/rchain/blob/dev/rholang/examples/shortfast.rho)
+- [dupe.rho](https://github.com/rhonixlabs/rhonix/blob/dev/rholang/examples/dupe.rho)
+- [shortslow.rho](https://github.com/rhonixlabs/rhonix/blob/dev/rholang/examples/shortslow.rho)
+- [shortfast.rho](https://github.com/rhonixlabs/rhonix/blob/dev/rholang/examples/shortfast.rho)
 
 ## Performance Metrics
 

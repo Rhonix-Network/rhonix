@@ -2,7 +2,7 @@ import os
 from random import Random
 
 from docker.client import DockerClient
-from rchain.crypto import PrivateKey
+from rhonix.crypto import PrivateKey
 
 from . import conftest
 from .common import (

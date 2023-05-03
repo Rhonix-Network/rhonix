@@ -217,7 +217,7 @@ in {
           tryIt!(0, true)
         }
       } |
-      // introduce this test because of https://github.com/rchain/rchain/pull/3629
+      // introduce this test because of https://github.com/rhonixlabs/rhonix/pull/3629
       // get and set and the same time would throw exception
       contract test_set_and_get_on_same_key(rhoSpec, _, ackCh) = {
           new out(`rho:io:stdlog`), mapCh in {

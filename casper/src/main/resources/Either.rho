@@ -21,7 +21,7 @@ new
   uriOut,
   rl(`rho:registry:lookup`),
   ListOpsCh,
-  deployerId(`rho:rchain:deployerId`)
+  deployerId(`rho:rhonix:deployerId`)
 in {
   rl!(`rho:lang:listOps`, *ListOpsCh) |
   for(@(_, ListOps) <- ListOpsCh) {

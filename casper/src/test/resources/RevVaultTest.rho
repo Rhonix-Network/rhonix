@@ -59,7 +59,7 @@ match (
 
       contract setup(_, ret) = {
         new RevVaultCh in {
-          rl!(`rho:rchain:revVault`, *RevVaultCh) |
+          rl!(`rho:rhonix:revVault`, *RevVaultCh) |
           for (@(_, RevVault) <- RevVaultCh) {
             ret!(RevVault)
           }
@@ -89,7 +89,7 @@ match (
       } |
 
       contract testCreateVault(rhoSpec, RevVault, ackCh) = {
-        new aliceVaultCh, deployerId(`rho:rchain:deployerId`), genesisAuthKeyCh, balanceCh, transferCh in {
+        new aliceVaultCh, deployerId(`rho:rhonix:deployerId`), genesisAuthKeyCh, balanceCh, transferCh in {
           RevVault!("findOrCreate", aliceRevAddress, *aliceVaultCh) |
           //as per `setup`, the deployer is `genesis` and shouldn't be able to access the vault
           RevVault!("deployerAuthKey", *deployerId, *genesisAuthKeyCh) |
@@ -179,7 +179,7 @@ match (
       } |
 
       contract testUnfBoundVault(rhoSpec, RevVault, ackCh) = {
-        new RevAddress(`rho:rev:address`), deployerId(`rho:rchain:deployerId`),
+        new RevAddress(`rho:rev:address`), deployerId(`rho:rhonix:deployerId`),
             unf, unfRevAddrCh, unfAuthKeyCh, unfVaultCh,
             genesisVaultCh, initTransferCh, transferCh
         in {
@@ -201,7 +201,7 @@ match (
       } |
 
       new RevVaultCh in {
-        rl!(`rho:rchain:revVault`, *RevVaultCh) |
+        rl!(`rho:rhonix:revVault`, *RevVaultCh) |
         for (@(_, RevVault) <- RevVaultCh) {
 
           contract withVaultAndIdentityOf(@pubKey, ret) = {

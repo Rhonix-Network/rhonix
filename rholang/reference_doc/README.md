@@ -20,5 +20,5 @@ Table of contents are preliminary and subject to change.
 * [Data Structures](data_structures/)
 
 ## Related Resources
-* Rholang's [Formal Symantics](https://github.com/rchain/rchain/tree/dev/rholang/src/main/formal_verification/k) in K-Framework.
+* Rholang's [Formal Symantics](https://github.com/rhonixlabs/rhonix/tree/dev/rholang/src/main/formal_verification/k) in K-Framework.
 * A gentler [rholang tutorial](https://github.com/JoshOrndorff/LearnRholangByExample)

@@ -2,9 +2,9 @@ from random import Random
 import pytest
 from docker.client import DockerClient
 
-from rchain.crypto import PrivateKey
-from rchain.client import RClientException
-from rchain.pb.DeployServiceCommon_pb2 import BlockInfo
+from rhonix.crypto import PrivateKey
+from rhonix.client import RClientException
+from rhonix.pb.DeployServiceCommon_pb2 import BlockInfo
 from . import conftest
 from .common import (
     CommandLineOptions,
@@ -32,7 +32,7 @@ def get_total_cost_from_block(block_info: BlockInfo) -> int:
         total_cost += deploy.cost
     return total_cost
 
-# TODO https://github.com/rchain/rchain/issues/3572
+# TODO https://github.com/rhonixlabs/rhonix/issues/3572
 # pylint: disable=too-many-locals
 @pytest.mark.skip
 def test_unbond_validator_and_reward(command_line_options: CommandLineOptions, random_generator: Random,

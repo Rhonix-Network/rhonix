@@ -39,13 +39,13 @@ $ env PYENV_VERSION=3.7.3 ~/.pyenv/shims/python -m pipenv sync
 ## Step 4: Create the rnode docker image
 
 Tests use RNode Docker image. If environment variable `${DRONE_BUILD_NUMBER}` is
-defined, then `coop.rchain/rnode:DRONE-${DRONE_BUILD_NUMBER}` image is used.
+defined, then `io.rhonix/rnode:DRONE-${DRONE_BUILD_NUMBER}` image is used.
 These are created on Drone CI in order to use have image per build. If the
-variable is undefined, `coop.rchain/rnode:latest` is used.
+variable is undefined, `io.rhonix/rnode:latest` is used.
 
 When the tests are run against the current source code one should build the
 docker image and publish it locally. For details see [the developer
-information](https://github.com/rchain/rchain/blob/dev/DEVELOPER.md)
+information](https://github.com/rhonixlabs/rhonix/blob/dev/DEVELOPER.md)
 
 # Running the tests
 ## Configuration

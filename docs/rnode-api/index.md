@@ -4,46 +4,46 @@
 ## Table of Contents
 
 - [CasperMessage.proto](#CasperMessage.proto)
-    - [ApprovedBlock](#coop.rchain.casper.protocol.ApprovedBlock)
-    - [ApprovedBlockCandidate](#coop.rchain.casper.protocol.ApprovedBlockCandidate)
-    - [ApprovedBlockRequest](#coop.rchain.casper.protocol.ApprovedBlockRequest)
-    - [BlockApproval](#coop.rchain.casper.protocol.BlockApproval)
-    - [BlockInfo](#coop.rchain.casper.protocol.BlockInfo)
-    - [LightBlockInfo](#coop.rchain.casper.protocol.LightBlockInfo)
-    - [BlockMessage](#coop.rchain.casper.protocol.BlockMessage)
-    - [BlockQuery](#coop.rchain.casper.protocol.BlockQuery)
-    - [BlockQueryResponse](#coop.rchain.casper.protocol.BlockQueryResponse)
-    - [BlockRequest](#coop.rchain.casper.protocol.BlockRequest)
-    - [BlocksQuery](#coop.rchain.casper.protocol.BlocksQuery)
-    - [Body](#coop.rchain.casper.protocol.Body)
-    - [Bond](#coop.rchain.casper.protocol.Bond)
-    - [CommEvent](#coop.rchain.casper.protocol.CommEvent)
-    - [ConsumeEvent](#coop.rchain.casper.protocol.ConsumeEvent)
-    - [ContinuationAtNameQuery](#coop.rchain.casper.protocol.ContinuationAtNameQuery)
-    - [ContinuationsWithBlockInfo](#coop.rchain.casper.protocol.ContinuationsWithBlockInfo)
-    - [DataAtNameQuery](#coop.rchain.casper.protocol.DataAtNameQuery)
-    - [DataWithBlockInfo](#coop.rchain.casper.protocol.DataWithBlockInfo)
-    - [Deploy](#coop.rchain.casper.protocol.Deploy)
-    - [DeployData](#coop.rchain.casper.protocol.DeployData)
-    - [DeployServiceResponse](#coop.rchain.casper.protocol.DeployServiceResponse)
-    - [Event](#coop.rchain.casper.protocol.Event)
-    - [FindDeployInBlockQuery](#coop.rchain.casper.protocol.FindDeployInBlockQuery)
-    - [Header](#coop.rchain.casper.protocol.Header)
-    - [Justification](#coop.rchain.casper.protocol.Justification)
-    - [ListeningNameContinuationResponse](#coop.rchain.casper.protocol.ListeningNameContinuationResponse)
-    - [ListeningNameDataResponse](#coop.rchain.casper.protocol.ListeningNameDataResponse)
-    - [MaybeBlockMessage](#coop.rchain.casper.protocol.MaybeBlockMessage)
-    - [NoApprovedBlockAvailable](#coop.rchain.casper.protocol.NoApprovedBlockAvailable)
-    - [ProcessedDeploy](#coop.rchain.casper.protocol.ProcessedDeploy)
-    - [ProduceEvent](#coop.rchain.casper.protocol.ProduceEvent)
-    - [RChainState](#coop.rchain.casper.protocol.RChainState)
-    - [Signature](#coop.rchain.casper.protocol.Signature)
-    - [UnapprovedBlock](#coop.rchain.casper.protocol.UnapprovedBlock)
-    - [WaitingContinuationInfo](#coop.rchain.casper.protocol.WaitingContinuationInfo)
+    - [ApprovedBlock](#io.rhonix.casper.protocol.ApprovedBlock)
+    - [ApprovedBlockCandidate](#io.rhonix.casper.protocol.ApprovedBlockCandidate)
+    - [ApprovedBlockRequest](#io.rhonix.casper.protocol.ApprovedBlockRequest)
+    - [BlockApproval](#io.rhonix.casper.protocol.BlockApproval)
+    - [BlockInfo](#io.rhonix.casper.protocol.BlockInfo)
+    - [LightBlockInfo](#io.rhonix.casper.protocol.LightBlockInfo)
+    - [BlockMessage](#io.rhonix.casper.protocol.BlockMessage)
+    - [BlockQuery](#io.rhonix.casper.protocol.BlockQuery)
+    - [BlockQueryResponse](#io.rhonix.casper.protocol.BlockQueryResponse)
+    - [BlockRequest](#io.rhonix.casper.protocol.BlockRequest)
+    - [BlocksQuery](#io.rhonix.casper.protocol.BlocksQuery)
+    - [Body](#io.rhonix.casper.protocol.Body)
+    - [Bond](#io.rhonix.casper.protocol.Bond)
+    - [CommEvent](#io.rhonix.casper.protocol.CommEvent)
+    - [ConsumeEvent](#io.rhonix.casper.protocol.ConsumeEvent)
+    - [ContinuationAtNameQuery](#io.rhonix.casper.protocol.ContinuationAtNameQuery)
+    - [ContinuationsWithBlockInfo](#io.rhonix.casper.protocol.ContinuationsWithBlockInfo)
+    - [DataAtNameQuery](#io.rhonix.casper.protocol.DataAtNameQuery)
+    - [DataWithBlockInfo](#io.rhonix.casper.protocol.DataWithBlockInfo)
+    - [Deploy](#io.rhonix.casper.protocol.Deploy)
+    - [DeployData](#io.rhonix.casper.protocol.DeployData)
+    - [DeployServiceResponse](#io.rhonix.casper.protocol.DeployServiceResponse)
+    - [Event](#io.rhonix.casper.protocol.Event)
+    - [FindDeployInBlockQuery](#io.rhonix.casper.protocol.FindDeployInBlockQuery)
+    - [Header](#io.rhonix.casper.protocol.Header)
+    - [Justification](#io.rhonix.casper.protocol.Justification)
+    - [ListeningNameContinuationResponse](#io.rhonix.casper.protocol.ListeningNameContinuationResponse)
+    - [ListeningNameDataResponse](#io.rhonix.casper.protocol.ListeningNameDataResponse)
+    - [MaybeBlockMessage](#io.rhonix.casper.protocol.MaybeBlockMessage)
+    - [NoApprovedBlockAvailable](#io.rhonix.casper.protocol.NoApprovedBlockAvailable)
+    - [ProcessedDeploy](#io.rhonix.casper.protocol.ProcessedDeploy)
+    - [ProduceEvent](#io.rhonix.casper.protocol.ProduceEvent)
+    - [RhonixState](#io.rhonix.casper.protocol.RhonixState)
+    - [Signature](#io.rhonix.casper.protocol.Signature)
+    - [UnapprovedBlock](#io.rhonix.casper.protocol.UnapprovedBlock)
+    - [WaitingContinuationInfo](#io.rhonix.casper.protocol.WaitingContinuationInfo)
 
 
 
-    - [DeployService](#coop.rchain.casper.protocol.DeployService)
+    - [DeployService](#io.rhonix.casper.protocol.DeployService)
 
 
 - [RhoTypes.proto](#RhoTypes.proto)
@@ -99,21 +99,21 @@
 
 
 - [diagnostics.proto](#diagnostics.proto)
-    - [GarbageCollector](#coop.rchain.node.model.GarbageCollector)
-    - [GarbageCollectors](#coop.rchain.node.model.GarbageCollectors)
-    - [Memory](#coop.rchain.node.model.Memory)
-    - [MemoryPool](#coop.rchain.node.model.MemoryPool)
-    - [MemoryPools](#coop.rchain.node.model.MemoryPools)
-    - [MemoryUsage](#coop.rchain.node.model.MemoryUsage)
-    - [NodeCoreMetrics](#coop.rchain.node.model.NodeCoreMetrics)
-    - [Peer](#coop.rchain.node.model.Peer)
-    - [Peers](#coop.rchain.node.model.Peers)
-    - [ProcessCpu](#coop.rchain.node.model.ProcessCpu)
-    - [Threads](#coop.rchain.node.model.Threads)
+    - [GarbageCollector](#io.rhonix.node.model.GarbageCollector)
+    - [GarbageCollectors](#io.rhonix.node.model.GarbageCollectors)
+    - [Memory](#io.rhonix.node.model.Memory)
+    - [MemoryPool](#io.rhonix.node.model.MemoryPool)
+    - [MemoryPools](#io.rhonix.node.model.MemoryPools)
+    - [MemoryUsage](#io.rhonix.node.model.MemoryUsage)
+    - [NodeCoreMetrics](#io.rhonix.node.model.NodeCoreMetrics)
+    - [Peer](#io.rhonix.node.model.Peer)
+    - [Peers](#io.rhonix.node.model.Peers)
+    - [ProcessCpu](#io.rhonix.node.model.ProcessCpu)
+    - [Threads](#io.rhonix.node.model.Threads)
 
 
 
-    - [Diagnostics](#coop.rchain.node.model.Diagnostics)
+    - [Diagnostics](#io.rhonix.node.model.Diagnostics)
 
 
 - [Scalar Value Types](#scalar-value-types)
@@ -127,7 +127,7 @@
 The main API is `DeployService`.
 
 
-<a name="coop.rchain.casper.protocol.ApprovedBlock"/>
+<a name="io.rhonix.casper.protocol.ApprovedBlock"/>
 
 ### ApprovedBlock
 
@@ -135,15 +135,15 @@ The main API is `DeployService`.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| candidate | [ApprovedBlockCandidate](#coop.rchain.casper.protocol.ApprovedBlockCandidate) |  |  |
-| sigs | [Signature](#coop.rchain.casper.protocol.Signature) | repeated |  |
+| candidate | [ApprovedBlockCandidate](#io.rhonix.casper.protocol.ApprovedBlockCandidate) |  |  |
+| sigs | [Signature](#io.rhonix.casper.protocol.Signature) | repeated |  |
 
 
 
 
 
 
-<a name="coop.rchain.casper.protocol.ApprovedBlockCandidate"/>
+<a name="io.rhonix.casper.protocol.ApprovedBlockCandidate"/>
 
 ### ApprovedBlockCandidate
 ---------- Signing Protocol ---------
@@ -151,7 +151,7 @@ The main API is `DeployService`.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| block | [BlockMessage](#coop.rchain.casper.protocol.BlockMessage) |  |  |
+| block | [BlockMessage](#io.rhonix.casper.protocol.BlockMessage) |  |  |
 | requiredSigs | [int32](#int32) |  |  |
 
 
@@ -159,7 +159,7 @@ The main API is `DeployService`.
 
 
 
-<a name="coop.rchain.casper.protocol.ApprovedBlockRequest"/>
+<a name="io.rhonix.casper.protocol.ApprovedBlockRequest"/>
 
 ### ApprovedBlockRequest
 
@@ -174,7 +174,7 @@ The main API is `DeployService`.
 
 
 
-<a name="coop.rchain.casper.protocol.BlockApproval"/>
+<a name="io.rhonix.casper.protocol.BlockApproval"/>
 
 ### BlockApproval
 
@@ -182,15 +182,15 @@ The main API is `DeployService`.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| candidate | [ApprovedBlockCandidate](#coop.rchain.casper.protocol.ApprovedBlockCandidate) |  |  |
-| sig | [Signature](#coop.rchain.casper.protocol.Signature) |  |  |
+| candidate | [ApprovedBlockCandidate](#io.rhonix.casper.protocol.ApprovedBlockCandidate) |  |  |
+| sig | [Signature](#io.rhonix.casper.protocol.Signature) |  |  |
 
 
 
 
 
 
-<a name="coop.rchain.casper.protocol.BlockInfo"/>
+<a name="io.rhonix.casper.protocol.BlockInfo"/>
 
 ### BlockInfo
 For node clients, see BlockMessage for actual Casper protocol Block representation
@@ -216,7 +216,7 @@ For node clients, see BlockMessage for actual Casper protocol Block representati
 
 
 
-<a name="coop.rchain.casper.protocol.LightBlockInfo"/>
+<a name="io.rhonix.casper.protocol.LightBlockInfo"/>
 
 ### LightBlockInfo
 
@@ -240,7 +240,7 @@ For node clients, see BlockMessage for actual Casper protocol Block representati
 
 
 
-<a name="coop.rchain.casper.protocol.BlockMessage"/>
+<a name="io.rhonix.casper.protocol.BlockMessage"/>
 
 ### BlockMessage
 --------- Core Protocol  --------
@@ -249,9 +249,9 @@ For node clients, see BlockMessage for actual Casper protocol Block representati
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | blockHash | [bytes](#bytes) |  | obtained by hashing the information in the header |
-| header | [Header](#coop.rchain.casper.protocol.Header) |  |  |
-| body | [Body](#coop.rchain.casper.protocol.Body) |  |  |
-| justifications | [Justification](#coop.rchain.casper.protocol.Justification) | repeated | map of all validators to latest blocks based on current view |
+| header | [Header](#io.rhonix.casper.protocol.Header) |  |  |
+| body | [Body](#io.rhonix.casper.protocol.Body) |  |  |
+| justifications | [Justification](#io.rhonix.casper.protocol.Justification) | repeated | map of all validators to latest blocks based on current view |
 | sender | [bytes](#bytes) |  | public key of the validator that created the block |
 | seqNum | [int32](#int32) |  | number of blocks created by the validator |
 | sig | [bytes](#bytes) |  | signature generated by signing `hash(hash(justification) concat blockHash)`. |
@@ -264,7 +264,7 @@ For node clients, see BlockMessage for actual Casper protocol Block representati
 
 
 
-<a name="coop.rchain.casper.protocol.BlockQuery"/>
+<a name="io.rhonix.casper.protocol.BlockQuery"/>
 
 ### BlockQuery
 
@@ -279,7 +279,7 @@ For node clients, see BlockMessage for actual Casper protocol Block representati
 
 
 
-<a name="coop.rchain.casper.protocol.BlockQueryResponse"/>
+<a name="io.rhonix.casper.protocol.BlockQueryResponse"/>
 
 ### BlockQueryResponse
 
@@ -288,14 +288,14 @@ For node clients, see BlockMessage for actual Casper protocol Block representati
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | status | [string](#string) |  |  |
-| blockInfo | [BlockInfo](#coop.rchain.casper.protocol.BlockInfo) |  |  |
+| blockInfo | [BlockInfo](#io.rhonix.casper.protocol.BlockInfo) |  |  |
 
 
 
 
 
 
-<a name="coop.rchain.casper.protocol.BlockRequest"/>
+<a name="io.rhonix.casper.protocol.BlockRequest"/>
 
 ### BlockRequest
 
@@ -311,7 +311,7 @@ For node clients, see BlockMessage for actual Casper protocol Block representati
 
 
 
-<a name="coop.rchain.casper.protocol.BlocksQuery"/>
+<a name="io.rhonix.casper.protocol.BlocksQuery"/>
 
 ### BlocksQuery
 
@@ -326,7 +326,7 @@ For node clients, see BlockMessage for actual Casper protocol Block representati
 
 
 
-<a name="coop.rchain.casper.protocol.Body"/>
+<a name="io.rhonix.casper.protocol.Body"/>
 
 ### Body
 
@@ -334,8 +334,8 @@ For node clients, see BlockMessage for actual Casper protocol Block representati
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| state | [RChainState](#coop.rchain.casper.protocol.RChainState) |  |  |
-| deploys | [ProcessedDeploy](#coop.rchain.casper.protocol.ProcessedDeploy) | repeated |  |
+| state | [RhonixState](#io.rhonix.casper.protocol.RhonixState) |  |  |
+| deploys | [ProcessedDeploy](#io.rhonix.casper.protocol.ProcessedDeploy) | repeated |  |
 | extraBytes | [bytes](#bytes) |  |  |
 
 
@@ -343,7 +343,7 @@ For node clients, see BlockMessage for actual Casper protocol Block representati
 
 
 
-<a name="coop.rchain.casper.protocol.Bond"/>
+<a name="io.rhonix.casper.protocol.Bond"/>
 
 ### Bond
 
@@ -359,7 +359,7 @@ For node clients, see BlockMessage for actual Casper protocol Block representati
 
 
 
-<a name="coop.rchain.casper.protocol.CommEvent"/>
+<a name="io.rhonix.casper.protocol.CommEvent"/>
 
 ### CommEvent
 
@@ -367,15 +367,15 @@ For node clients, see BlockMessage for actual Casper protocol Block representati
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| consume | [ConsumeEvent](#coop.rchain.casper.protocol.ConsumeEvent) |  |  |
-| produces | [ProduceEvent](#coop.rchain.casper.protocol.ProduceEvent) | repeated |  |
+| consume | [ConsumeEvent](#io.rhonix.casper.protocol.ConsumeEvent) |  |  |
+| produces | [ProduceEvent](#io.rhonix.casper.protocol.ProduceEvent) | repeated |  |
 
 
 
 
 
 
-<a name="coop.rchain.casper.protocol.ConsumeEvent"/>
+<a name="io.rhonix.casper.protocol.ConsumeEvent"/>
 
 ### ConsumeEvent
 
@@ -392,7 +392,7 @@ For node clients, see BlockMessage for actual Casper protocol Block representati
 
 
 
-<a name="coop.rchain.casper.protocol.ContinuationAtNameQuery"/>
+<a name="io.rhonix.casper.protocol.ContinuationAtNameQuery"/>
 
 ### ContinuationAtNameQuery
 
@@ -408,7 +408,7 @@ For node clients, see BlockMessage for actual Casper protocol Block representati
 
 
 
-<a name="coop.rchain.casper.protocol.ContinuationsWithBlockInfo"/>
+<a name="io.rhonix.casper.protocol.ContinuationsWithBlockInfo"/>
 
 ### ContinuationsWithBlockInfo
 
@@ -416,15 +416,15 @@ For node clients, see BlockMessage for actual Casper protocol Block representati
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| postBlockContinuations | [WaitingContinuationInfo](#coop.rchain.casper.protocol.WaitingContinuationInfo) | repeated |  |
-| block | [LightBlockInfo](#coop.rchain.casper.protocol.LightBlockInfo) |  |  |
+| postBlockContinuations | [WaitingContinuationInfo](#io.rhonix.casper.protocol.WaitingContinuationInfo) | repeated |  |
+| block | [LightBlockInfo](#io.rhonix.casper.protocol.LightBlockInfo) |  |  |
 
 
 
 
 
 
-<a name="coop.rchain.casper.protocol.DataAtNameQuery"/>
+<a name="io.rhonix.casper.protocol.DataAtNameQuery"/>
 
 ### DataAtNameQuery
 
@@ -440,7 +440,7 @@ For node clients, see BlockMessage for actual Casper protocol Block representati
 
 
 
-<a name="coop.rchain.casper.protocol.DataWithBlockInfo"/>
+<a name="io.rhonix.casper.protocol.DataWithBlockInfo"/>
 
 ### DataWithBlockInfo
 
@@ -449,14 +449,14 @@ For node clients, see BlockMessage for actual Casper protocol Block representati
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | postBlockData | [Par](#Par) | repeated |  |
-| block | [LightBlockInfo](#coop.rchain.casper.protocol.LightBlockInfo) |  |  |
+| block | [LightBlockInfo](#io.rhonix.casper.protocol.LightBlockInfo) |  |  |
 
 
 
 
 
 
-<a name="coop.rchain.casper.protocol.Deploy"/>
+<a name="io.rhonix.casper.protocol.Deploy"/>
 
 ### Deploy
 
@@ -465,14 +465,14 @@ For node clients, see BlockMessage for actual Casper protocol Block representati
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | term | [Par](#Par) |  | rholang term to deploy |
-| raw | [DeployData](#coop.rchain.casper.protocol.DeployData) |  |  |
+| raw | [DeployData](#io.rhonix.casper.protocol.DeployData) |  |  |
 
 
 
 
 
 
-<a name="coop.rchain.casper.protocol.DeployData"/>
+<a name="io.rhonix.casper.protocol.DeployData"/>
 
 ### DeployData
 Note: deploys are uniquely keyed by `user`, `timestamp`.
@@ -497,7 +497,7 @@ Note: deploys are uniquely keyed by `user`, `timestamp`.
 
 
 
-<a name="coop.rchain.casper.protocol.DeployServiceResponse"/>
+<a name="io.rhonix.casper.protocol.DeployServiceResponse"/>
 
 ### DeployServiceResponse
 
@@ -513,7 +513,7 @@ Note: deploys are uniquely keyed by `user`, `timestamp`.
 
 
 
-<a name="coop.rchain.casper.protocol.Event"/>
+<a name="io.rhonix.casper.protocol.Event"/>
 
 ### Event
 
@@ -521,16 +521,16 @@ Note: deploys are uniquely keyed by `user`, `timestamp`.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| produce | [ProduceEvent](#coop.rchain.casper.protocol.ProduceEvent) |  |  |
-| consume | [ConsumeEvent](#coop.rchain.casper.protocol.ConsumeEvent) |  |  |
-| comm | [CommEvent](#coop.rchain.casper.protocol.CommEvent) |  |  |
+| produce | [ProduceEvent](#io.rhonix.casper.protocol.ProduceEvent) |  |  |
+| consume | [ConsumeEvent](#io.rhonix.casper.protocol.ConsumeEvent) |  |  |
+| comm | [CommEvent](#io.rhonix.casper.protocol.CommEvent) |  |  |
 
 
 
 
 
 
-<a name="coop.rchain.casper.protocol.FindDeployInBlockQuery"/>
+<a name="io.rhonix.casper.protocol.FindDeployInBlockQuery"/>
 
 ### FindDeployInBlockQuery
 
@@ -546,7 +546,7 @@ Note: deploys are uniquely keyed by `user`, `timestamp`.
 
 
 
-<a name="coop.rchain.casper.protocol.Header"/>
+<a name="io.rhonix.casper.protocol.Header"/>
 
 ### Header
 
@@ -567,7 +567,7 @@ Note: deploys are uniquely keyed by `user`, `timestamp`.
 
 
 
-<a name="coop.rchain.casper.protocol.Justification"/>
+<a name="io.rhonix.casper.protocol.Justification"/>
 
 ### Justification
 
@@ -583,7 +583,7 @@ Note: deploys are uniquely keyed by `user`, `timestamp`.
 
 
 
-<a name="coop.rchain.casper.protocol.ListeningNameContinuationResponse"/>
+<a name="io.rhonix.casper.protocol.ListeningNameContinuationResponse"/>
 
 ### ListeningNameContinuationResponse
 
@@ -592,7 +592,7 @@ Note: deploys are uniquely keyed by `user`, `timestamp`.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | status | [string](#string) |  |  |
-| blockResults | [ContinuationsWithBlockInfo](#coop.rchain.casper.protocol.ContinuationsWithBlockInfo) | repeated |  |
+| blockResults | [ContinuationsWithBlockInfo](#io.rhonix.casper.protocol.ContinuationsWithBlockInfo) | repeated |  |
 | length | [int32](#int32) |  |  |
 
 
@@ -600,7 +600,7 @@ Note: deploys are uniquely keyed by `user`, `timestamp`.
 
 
 
-<a name="coop.rchain.casper.protocol.ListeningNameDataResponse"/>
+<a name="io.rhonix.casper.protocol.ListeningNameDataResponse"/>
 
 ### ListeningNameDataResponse
 
@@ -609,7 +609,7 @@ Note: deploys are uniquely keyed by `user`, `timestamp`.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | status | [string](#string) |  |  |
-| blockResults | [DataWithBlockInfo](#coop.rchain.casper.protocol.DataWithBlockInfo) | repeated |  |
+| blockResults | [DataWithBlockInfo](#io.rhonix.casper.protocol.DataWithBlockInfo) | repeated |  |
 | length | [int32](#int32) |  |  |
 
 
@@ -617,7 +617,7 @@ Note: deploys are uniquely keyed by `user`, `timestamp`.
 
 
 
-<a name="coop.rchain.casper.protocol.MaybeBlockMessage"/>
+<a name="io.rhonix.casper.protocol.MaybeBlockMessage"/>
 
 ### MaybeBlockMessage
 
@@ -625,14 +625,14 @@ Note: deploys are uniquely keyed by `user`, `timestamp`.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| block | [BlockMessage](#coop.rchain.casper.protocol.BlockMessage) |  |  |
+| block | [BlockMessage](#io.rhonix.casper.protocol.BlockMessage) |  |  |
 
 
 
 
 
 
-<a name="coop.rchain.casper.protocol.NoApprovedBlockAvailable"/>
+<a name="io.rhonix.casper.protocol.NoApprovedBlockAvailable"/>
 
 ### NoApprovedBlockAvailable
 
@@ -648,7 +648,7 @@ Note: deploys are uniquely keyed by `user`, `timestamp`.
 
 
 
-<a name="coop.rchain.casper.protocol.ProcessedDeploy"/>
+<a name="io.rhonix.casper.protocol.ProcessedDeploy"/>
 
 ### ProcessedDeploy
 
@@ -656,9 +656,9 @@ Note: deploys are uniquely keyed by `user`, `timestamp`.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| deploy | [Deploy](#coop.rchain.casper.protocol.Deploy) |  |  |
+| deploy | [Deploy](#io.rhonix.casper.protocol.Deploy) |  |  |
 | cost | [PCost](#PCost) |  |  |
-| log | [Event](#coop.rchain.casper.protocol.Event) | repeated | the new terms and comm. rule reductions from this deploy |
+| log | [Event](#io.rhonix.casper.protocol.Event) | repeated | the new terms and comm. rule reductions from this deploy |
 | errored | [bool](#bool) |  | true if deploy encountered a user error |
 
 
@@ -666,7 +666,7 @@ Note: deploys are uniquely keyed by `user`, `timestamp`.
 
 
 
-<a name="coop.rchain.casper.protocol.ProduceEvent"/>
+<a name="io.rhonix.casper.protocol.ProduceEvent"/>
 
 ### ProduceEvent
 
@@ -683,9 +683,9 @@ Note: deploys are uniquely keyed by `user`, `timestamp`.
 
 
 
-<a name="coop.rchain.casper.protocol.RChainState"/>
+<a name="io.rhonix.casper.protocol.RhonixState"/>
 
-### RChainState
+### RhonixState
 
 
 
@@ -693,7 +693,7 @@ Note: deploys are uniquely keyed by `user`, `timestamp`.
 | ----- | ---- | ----- | ----------- |
 | preStateHash | [bytes](#bytes) |  | hash of the tuplespace contents before new deploys |
 | postStateHash | [bytes](#bytes) |  | hash of the tuplespace contents after new deploys |
-| bonds | [Bond](#coop.rchain.casper.protocol.Bond) | repeated | Internals of what will be the &#34;blessed&#34; PoS contract (which will be part of the tuplespace in the real implementation). |
+| bonds | [Bond](#io.rhonix.casper.protocol.Bond) | repeated | Internals of what will be the &#34;blessed&#34; PoS contract (which will be part of the tuplespace in the real implementation). |
 | blockNumber | [int64](#int64) |  |  |
 
 
@@ -701,7 +701,7 @@ Note: deploys are uniquely keyed by `user`, `timestamp`.
 
 
 
-<a name="coop.rchain.casper.protocol.Signature"/>
+<a name="io.rhonix.casper.protocol.Signature"/>
 
 ### Signature
 
@@ -718,7 +718,7 @@ Note: deploys are uniquely keyed by `user`, `timestamp`.
 
 
 
-<a name="coop.rchain.casper.protocol.UnapprovedBlock"/>
+<a name="io.rhonix.casper.protocol.UnapprovedBlock"/>
 
 ### UnapprovedBlock
 
@@ -726,7 +726,7 @@ Note: deploys are uniquely keyed by `user`, `timestamp`.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| candidate | [ApprovedBlockCandidate](#coop.rchain.casper.protocol.ApprovedBlockCandidate) |  |  |
+| candidate | [ApprovedBlockCandidate](#io.rhonix.casper.protocol.ApprovedBlockCandidate) |  |  |
 | timestamp | [int64](#int64) |  |  |
 | duration | [int64](#int64) |  |  |
 
@@ -735,7 +735,7 @@ Note: deploys are uniquely keyed by `user`, `timestamp`.
 
 
 
-<a name="coop.rchain.casper.protocol.WaitingContinuationInfo"/>
+<a name="io.rhonix.casper.protocol.WaitingContinuationInfo"/>
 
 ### WaitingContinuationInfo
 
@@ -757,7 +757,7 @@ Note: deploys are uniquely keyed by `user`, `timestamp`.
 
 
 
-<a name="coop.rchain.casper.protocol.DeployService"/>
+<a name="io.rhonix.casper.protocol.DeployService"/>
 
 ### DeployService
 Use `DoDeploy` to queue deployments of Rholang code and then
@@ -768,14 +768,14 @@ To get results back, use `listenForDataAtName`.
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| DoDeploy | [DeployData](#coop.rchain.casper.protocol.DeployData) | [DeployServiceResponse](#coop.rchain.casper.protocol.DeployData) | Queue deployment of Rholang code (or fail to parse). |
+| DoDeploy | [DeployData](#io.rhonix.casper.protocol.DeployData) | [DeployServiceResponse](#io.rhonix.casper.protocol.DeployData) | Queue deployment of Rholang code (or fail to parse). |
 | createBlock | [.google.protobuf.Empty](#google.protobuf.Empty) | [DeployServiceResponse](#google.protobuf.Empty) | Add a block including all pending deploys. |
-| getBlock | [BlockQuery](#coop.rchain.casper.protocol.BlockQuery) | [BlockQueryResponse](#coop.rchain.casper.protocol.BlockQuery) | Get details about a particular block. |
-| showMainChain | [BlocksQuery](#coop.rchain.casper.protocol.BlocksQuery) | [LightBlockInfo](#coop.rchain.casper.protocol.BlocksQuery) |  |
-| getBlocks | [BlocksQuery](#coop.rchain.casper.protocol.BlocksQuery) | [LightBlockInfo](#coop.rchain.casper.protocol.BlocksQuery) | Get a summary of blocks on the blockchain. |
-| listenForDataAtName | [DataAtNameQuery](#coop.rchain.casper.protocol.DataAtNameQuery) | [ListeningNameDataResponse](#coop.rchain.casper.protocol.DataAtNameQuery) | Find data sent to a name. |
-| listenForContinuationAtName | [ContinuationAtNameQuery](#coop.rchain.casper.protocol.ContinuationAtNameQuery) | [ListeningNameContinuationResponse](#coop.rchain.casper.protocol.ContinuationAtNameQuery) | Find processes receiving on a name. |
-| findBlockWithDeploy | [FindDeployInBlockQuery](#coop.rchain.casper.protocol.FindDeployInBlockQuery) | [BlockQueryResponse](#coop.rchain.casper.protocol.FindDeployInBlockQuery) | Find block from a deploy. |
+| getBlock | [BlockQuery](#io.rhonix.casper.protocol.BlockQuery) | [BlockQueryResponse](#io.rhonix.casper.protocol.BlockQuery) | Get details about a particular block. |
+| showMainChain | [BlocksQuery](#io.rhonix.casper.protocol.BlocksQuery) | [LightBlockInfo](#io.rhonix.casper.protocol.BlocksQuery) |  |
+| getBlocks | [BlocksQuery](#io.rhonix.casper.protocol.BlocksQuery) | [LightBlockInfo](#io.rhonix.casper.protocol.BlocksQuery) | Get a summary of blocks on the blockchain. |
+| listenForDataAtName | [DataAtNameQuery](#io.rhonix.casper.protocol.DataAtNameQuery) | [ListeningNameDataResponse](#io.rhonix.casper.protocol.DataAtNameQuery) | Find data sent to a name. |
+| listenForContinuationAtName | [ContinuationAtNameQuery](#io.rhonix.casper.protocol.ContinuationAtNameQuery) | [ListeningNameContinuationResponse](#io.rhonix.casper.protocol.ContinuationAtNameQuery) | Find processes receiving on a name. |
+| findBlockWithDeploy | [FindDeployInBlockQuery](#io.rhonix.casper.protocol.FindDeployInBlockQuery) | [BlockQueryResponse](#io.rhonix.casper.protocol.FindDeployInBlockQuery) | Find block from a deploy. |
 
 
 
@@ -1625,7 +1625,7 @@ These are DeBruijn levels
 
 
 
-<a name="coop.rchain.node.model.GarbageCollector"/>
+<a name="io.rhonix.node.model.GarbageCollector"/>
 
 ### GarbageCollector
 
@@ -1645,7 +1645,7 @@ These are DeBruijn levels
 
 
 
-<a name="coop.rchain.node.model.GarbageCollectors"/>
+<a name="io.rhonix.node.model.GarbageCollectors"/>
 
 ### GarbageCollectors
 
@@ -1653,14 +1653,14 @@ These are DeBruijn levels
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| garbageCollectors | [GarbageCollector](#coop.rchain.node.model.GarbageCollector) | repeated |  |
+| garbageCollectors | [GarbageCollector](#io.rhonix.node.model.GarbageCollector) | repeated |  |
 
 
 
 
 
 
-<a name="coop.rchain.node.model.Memory"/>
+<a name="io.rhonix.node.model.Memory"/>
 
 ### Memory
 
@@ -1678,7 +1678,7 @@ These are DeBruijn levels
 
 
 
-<a name="coop.rchain.node.model.MemoryPool"/>
+<a name="io.rhonix.node.model.MemoryPool"/>
 
 ### MemoryPool
 
@@ -1688,15 +1688,15 @@ These are DeBruijn levels
 | ----- | ---- | ----- | ----------- |
 | name | [string](#string) |  | name representing this memory pool |
 | poolType | [string](#string) |  | type of this memory pool |
-| usage | [Memory](#coop.rchain.node.model.Memory) |  | memory pool usage |
-| peakUsage | [Memory](#coop.rchain.node.model.Memory) |  | peak memory usage |
+| usage | [Memory](#io.rhonix.node.model.Memory) |  | memory pool usage |
+| peakUsage | [Memory](#io.rhonix.node.model.Memory) |  | peak memory usage |
 
 
 
 
 
 
-<a name="coop.rchain.node.model.MemoryPools"/>
+<a name="io.rhonix.node.model.MemoryPools"/>
 
 ### MemoryPools
 
@@ -1704,14 +1704,14 @@ These are DeBruijn levels
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| memoryPools | [MemoryPool](#coop.rchain.node.model.MemoryPool) | repeated |  |
+| memoryPools | [MemoryPool](#io.rhonix.node.model.MemoryPool) | repeated |  |
 
 
 
 
 
 
-<a name="coop.rchain.node.model.MemoryUsage"/>
+<a name="io.rhonix.node.model.MemoryUsage"/>
 
 ### MemoryUsage
 
@@ -1719,15 +1719,15 @@ These are DeBruijn levels
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| heap | [Memory](#coop.rchain.node.model.Memory) |  | memory currently used by the Java heap for object allocation |
-| nonHeap | [Memory](#coop.rchain.node.model.Memory) |  | current non-heap memory usage of the JVM |
+| heap | [Memory](#io.rhonix.node.model.Memory) |  | memory currently used by the Java heap for object allocation |
+| nonHeap | [Memory](#io.rhonix.node.model.Memory) |  | current non-heap memory usage of the JVM |
 
 
 
 
 
 
-<a name="coop.rchain.node.model.NodeCoreMetrics"/>
+<a name="io.rhonix.node.model.NodeCoreMetrics"/>
 
 ### NodeCoreMetrics
 
@@ -1750,7 +1750,7 @@ These are DeBruijn levels
 
 
 
-<a name="coop.rchain.node.model.Peer"/>
+<a name="io.rhonix.node.model.Peer"/>
 
 ### Peer
 
@@ -1767,7 +1767,7 @@ These are DeBruijn levels
 
 
 
-<a name="coop.rchain.node.model.Peers"/>
+<a name="io.rhonix.node.model.Peers"/>
 
 ### Peers
 
@@ -1775,14 +1775,14 @@ These are DeBruijn levels
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| peers | [Peer](#coop.rchain.node.model.Peer) | repeated |  |
+| peers | [Peer](#io.rhonix.node.model.Peer) | repeated |  |
 
 
 
 
 
 
-<a name="coop.rchain.node.model.ProcessCpu"/>
+<a name="io.rhonix.node.model.ProcessCpu"/>
 
 ### ProcessCpu
 
@@ -1798,7 +1798,7 @@ These are DeBruijn levels
 
 
 
-<a name="coop.rchain.node.model.Threads"/>
+<a name="io.rhonix.node.model.Threads"/>
 
 ### Threads
 
@@ -1822,7 +1822,7 @@ These are DeBruijn levels
 
 
 
-<a name="coop.rchain.node.model.Diagnostics"/>
+<a name="io.rhonix.node.model.Diagnostics"/>
 
 ### Diagnostics
 

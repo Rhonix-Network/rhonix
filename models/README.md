@@ -1,6 +1,6 @@
 # Models
 
-Common data model types common for the RChain blockchain.
+Common data model types common for the Rhonix blockchain.
 
 ### Prerequisites
 

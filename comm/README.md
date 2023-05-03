@@ -1,6 +1,6 @@
-# RChain Communication Subsystem
+# Rhonix Communication Subsystem
 
-Network related operations for RChain. 
+Network related operations for Rhonix. 
 
 ## Build from the source
 

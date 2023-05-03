@@ -8,10 +8,10 @@ let
 
 in rec {
 
-  rchainEnv = pkgs.buildFHSUserEnv {
-    name = "rchain";
-    targetPkgs = ps: rchainPackages;
+  rhonixEnv = pkgs.buildFHSUserEnv {
+    name = "rhonix";
+    targetPkgs = ps: rhonixLabsPackages;
   };
 
-  rchainPackages = with pkgs; [ haskellPackages.BNFC git jflex sbt jdk ];
+  rhonixLabsPackages = with pkgs; [ haskellPackages.BNFC git jflex sbt jdk ];
 }

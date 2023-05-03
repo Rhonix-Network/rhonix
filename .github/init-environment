@@ -2,12 +2,12 @@
 set -eu -o pipefail
 
 # This script initializes the environment for running other tasks on GitHub
-# CI runners. It's mostly run from rchain/buildenv container but can be
+# CI runners. It's mostly run from rhonix/buildenv container but can be
 # used on runner host as well. See comments in code for further info.
 
 
 # This directory is cached by actions/cache GitHub action in the workflow.
-CACHE_ROOT=/var/cache/rchain-build
+CACHE_ROOT=/var/cache/rhonix-build
 
 
 # It may happen that we inadvertently cache something bad or the cache grows too
@@ -32,7 +32,7 @@ CACHE_KEY_PREFIX_PYTHON=python-$cache_epoch_python-
 #
 # Before creating the cache directory, it tries to move first existing target to
 # it, to preserve existing content. For instance, ~/.sbt is already populated in
-# rchain/buildenv Docker image and we want to preserve it in cache.
+# rhonix/buildenv Docker image and we want to preserve it in cache.
 link_from_cache()
 {
 	local cache_path=$CACHE_ROOT/$1
@@ -104,7 +104,7 @@ print_env()
 #   jobs:
 #     foo:
 #       name: Do foo
-#       container: rchain/buildenv
+#       container: rhonix/buildenv
 #       steps:
 #         - ...
 # GitHub CI sets the HOME variable in the container to /github/home. However,
@@ -123,7 +123,7 @@ project_root=${GITHUB_WORKSPACE:-$(readlink -e "$(dirname "${BASH_SOURCE[0]}")/.
 # Initialize the cache. Move directories with build dependencies into the cache.
 #
 # Some of these directories may be unused (yet), but that's OK. Current version
-# of sbt used by RChain build (specified in project/build.properties), 1.2.8,
+# of sbt used by Rhonix build (specified in project/build.properties), 1.2.8,
 # uses Ivy to fetch dependencies, but version 1.3 and onwards, use Coursier,
 # which saves files into ~/.cache/coursier. So let's leave whole ~/.cache there
 # just in case.

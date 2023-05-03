@@ -4,18 +4,18 @@ If you've run RNode previously, delete the pre-existing configuration files.
 
     rm -rf ~/.rnode/
     
-From the `rchain` directory, build RNode.
+From the `rhonix` directory, build RNode.
 
     sbt node/universal:stage
     
 From `node/target/universal/stage`, start RNode.
 
-    ./bin/rnode run -s --wallets-file $HOME/IdeaProjects/rchain/rholang/examples/wallets.txt
+    ./bin/rnode run -s --wallets-file $HOME/IdeaProjects/rhonix/rholang/examples/wallets.txt
     
 This generates a random Secp256k1 private key corresponding to a validator. Next, terminate RNode and restart as one of 
 the randomly generated validators.
 
-    ./bin/rnode run -s --validator-private-key $(cat ~/.rnode/genesis/*.sk | tail -1) --wallets-file $HOME/IdeaProjects/rchain/rholang/examples/wallets.txt
+    ./bin/rnode run -s --validator-private-key $(cat ~/.rnode/genesis/*.sk | tail -1) --wallets-file $HOME/IdeaProjects/rhonix/rholang/examples/wallets.txt
 
 Open a new terminal and navigate to `rholang/examples`, then add simulated user credentials to bash environment.
 

@@ -4,7 +4,7 @@
 
 ## Structure
 
-Broadly speaking, the Mercury RChain network is a directed acyclic graph ("dag") labeled by complete lattices.  The **organizational dag** is a rooted dag formed by superimposing a collection of trees.  Each **organizational tree** in the collection has a collection of vertices, called **locales**; locales may be shared between different organizational trees.  Each locale has a collection of **regions** that form the basis of a complete lattice of **regional namespaces**.  Each regional namespace has a countably infinite collection of **names** formed by quoting Rholang processes.
+Broadly speaking, the Mercury Rhonix network is a directed acyclic graph ("dag") labeled by complete lattices.  The **organizational dag** is a rooted dag formed by superimposing a collection of trees.  Each **organizational tree** in the collection has a collection of vertices, called **locales**; locales may be shared between different organizational trees.  Each locale has a collection of **regions** that form the basis of a complete lattice of **regional namespaces**.  Each regional namespace has a countably infinite collection of **names** formed by quoting Rholang processes.
 
 ![](https://i.imgur.com/DniUajo.png)
 
@@ -39,11 +39,11 @@ If watchers or validators see deviation from the protocol, they publish that inf
 
 ### Organizational dag
 
-The purpose of the organizational dag is to allow parts of the RChain network to act independently of each other.  This allows for parallelism at the cost of certain security invariants.  Unlike code running in different namespaces within a locale, where every validator trusts a coalition of watchers to check everything that goes on within all the other namespaces to make sure no one's cheating, the locales in the organizational dag do not necessarily watch one another.  They behave much like servers on the internet do today, where clients may provide malicious inputs.  It is the responsibility of code that accepts inputs from outside of the locale to perform input validation.
+The purpose of the organizational dag is to allow parts of the Rhonix network to act independently of each other.  This allows for parallelism at the cost of certain security invariants.  Unlike code running in different namespaces within a locale, where every validator trusts a coalition of watchers to check everything that goes on within all the other namespaces to make sure no one's cheating, the locales in the organizational dag do not necessarily watch one another.  They behave much like servers on the internet do today, where clients may provide malicious inputs.  It is the responsibility of code that accepts inputs from outside of the locale to perform input validation.
 
 The organizational dag grows as organizations mount new locales as children of existing locales of an organizational tree.  The child locale publishes its genesis block in the parent, the validators bond in the parent locale, and optionally bond to validate the locales above the parent in the organizational tree.  It is in the interest of the validators in a locale L to validate the locales above it in an organizational tree so that they can be sure that the ancestor locales do not cheat by transferring or burning the Rev allocated to any subtree containing L.
 
-By becoming validators in the parent locale, validators can propose blocks that deploy new code for interacting with contracts in the parent locale.  In the RChain organizational tree, there will be default contracts for publishing a genesis block and bonding, for Rev tracking in subtrees, and for routing data to other locales.
+By becoming validators in the parent locale, validators can propose blocks that deploy new code for interacting with contracts in the parent locale.  In the Rhonix organizational tree, there will be default contracts for publishing a genesis block and bonding, for Rev tracking in subtrees, and for routing data to other locales.
 
 ## Locales
 

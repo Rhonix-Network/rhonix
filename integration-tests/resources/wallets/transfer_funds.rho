@@ -3,7 +3,7 @@ new
   stdout(`rho:io:stdout`), log
 in {
 
-  rl!(`rho:rchain:revVault`, *RevVaultCh) |
+  rl!(`rho:rhonix:revVault`, *RevVaultCh) |
   for (@(_, RevVault) <- RevVaultCh) {
 
     log!(("3.transfer_funds.rho")) |
@@ -16,7 +16,7 @@ in {
     ) {
       (from, to, amount) => {
 
-        new vaultCh, revVaultkeyCh, deployerId(`rho:rchain:deployerId`) in {
+        new vaultCh, revVaultkeyCh, deployerId(`rho:rhonix:deployerId`) in {
           @RevVault!("findOrCreate", from, *vaultCh) |
           @RevVault!("deployerAuthKey", *deployerId, *revVaultkeyCh) |
           for (@(true, vault) <- vaultCh; key <- revVaultkeyCh) {

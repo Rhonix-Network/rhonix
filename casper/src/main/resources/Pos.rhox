@@ -19,7 +19,7 @@ POS internal state:
 "committedRewards" : Map[Validator, rewards],
 "pendingWithdrawers": Map[Validator, quantinue]
 
-**There are two vaults `posVault` and `coopMultiSigVault` while pos contract have no controll on `coopMultiSigVault` but `posVault`**
+**There are two vaults `posVault` and `rhonixLabsMultiSigVault` while pos contract have no controll on `rhonixLabsMultiSigVault` but `posVault`**
 
 Several crucial calculate points:
 
@@ -48,7 +48,7 @@ User transfer the bonding amount directly to posVault. `allBonds` would update w
 
 
 ## Slashing
-1. Transfer the bonding amount of the slashed validator based on `allBonds` from posVault to coopMultiSigVault.
+1. Transfer the bonding amount of the slashed validator based on `allBonds` from posVault to rhonixLabsMultiSigVault.
 2. Set the bonding amount in `allBonds` of the slashed validator to 0
 3. remove the slashed validator in `activeValidators`
 
@@ -81,9 +81,9 @@ new
   fst,
   deposit,
   rs(`rho:registry:insertSigned:secp256k1`),
-  posId(`rho:rchain:deployerId`),
+  posId(`rho:rhonix:deployerId`),
   sysAuthTokenOps(`sys:authToken:ops`),
-  coopVaultCh,
+  rhonixLabsVaultCh,
   uriOut,
   sumFromPair,
   treeHashMapCh,
@@ -91,18 +91,18 @@ new
   multiSigRevVaultCh,
   listOpsCh,
   currentDeployerData,
-  deployerId(`rho:rchain:deployerId`),
+  deployerId(`rho:rhonix:deployerId`),
   systemContractManagerCh,
   dispatcherCh,
   configPublicKeyCheckCh
 in {
   // Simultaneously retrieves RevVault, ListOps, TreeHashMap, and MultiSigRevVault contracts from the registry.
-  registryLookup!(`rho:rchain:revVault`, *revVaultCh) |
+  registryLookup!(`rho:rhonix:revVault`, *revVaultCh) |
   registryLookup!(`rho:lang:listOps`, *listOpsCh) |
   registryLookup!(`rho:lang:treeHashMap`, *treeHashMapCh) |
-  registryLookup!(`rho:rchain:multiSigRevVault`, *multiSigRevVaultCh) |
+  registryLookup!(`rho:rhonix:multiSigRevVault`, *multiSigRevVaultCh) |
   registryLookup!(`rho:registry:systemContractManager`, *systemContractManagerCh)|
-  registryLookup!(`rho:rchain:configPublicKeyCheck`, *configPublicKeyCheckCh)|
+  registryLookup!(`rho:rhonix:configPublicKeyCheck`, *configPublicKeyCheckCh)|
   for (@(_, RevVault)         <- revVaultCh &
        @(_, ListOps)          <- listOpsCh &
        @(_, TreeHashMap)      <- treeHashMapCh &
@@ -117,14 +117,14 @@ in {
         getUser!(*posId, *posPkCh) |
         for (@posPk <- posPkCh) {
           revAddressOps!("fromPublicKey", posPk, *posDeployerRevAddressCh) |
-          // Creates Coop multisig vault for slashed funds.
-          // Either (false, errorMsg) or (true, (multiSigVault, revAddress, revVault)) are returned on coopVaultCh.
+          // Creates RhonixLabs multisig vault for slashed funds.
+          // Either (false, errorMsg) or (true, (multiSigVault, revAddress, revVault)) are returned on rhonixLabsVaultCh.
           @MultiSigRevVault!(
             "create",
             $$posMultiSigPublicKeys$$,
             [],
             $$posMultiSigQuorum$$,
-            *coopVaultCh
+            *rhonixLabsVaultCh
           )
         }
       } |
@@ -137,7 +137,7 @@ in {
             @RevVault!("findOrCreate", unfAddr, *createRetCh) |
             for (@(true, vault) <- createRetCh){
               contract unfVaultHandle(@"transfer", @targetAddress, @amount, deployerID, transferRet) = {
-                new deployerPubKeyBytesCh, DeployerIdOps(`rho:rchain:deployerId:ops`) in {
+                new deployerPubKeyBytesCh, DeployerIdOps(`rho:rhonix:deployerId:ops`) in {
                   DeployerIdOps!("pubKeyBytes", *deployerID, *deployerPubKeyBytesCh) |
                   for (@deployerPubKeyBytes <- deployerPubKeyBytesCh) {
                     if (deployerPubKeyBytes ==  pubkey.hexToBytes()){
@@ -162,7 +162,7 @@ in {
       for (@(posVaultUnf, posVaultAddr, posVault, humanControlHandle) <- posVaultCh){
         for (@posDeployerRevAddress <- posDeployerRevAddressCh;
             @posDeployerAuthKey    <- posDeployerAuthKeyCh)  {
-          for (@(true, (coopMultiVault, coopMultiVaultAddr, coopVaultHd)) <<- coopVaultCh) {
+          for (@(true, (rhonixLabsMultiVault, rhonixLabsMultiVaultAddr, rhonixLabsVaultHd)) <<- rhonixLabsVaultCh) {
             // Creates PoS Rev vault with sum of initial bonds.
             new bondSumCh in {
               @ListOps!("fold", $$initialBonds$$.toList(), 0, *sumFromPair, *bondSumCh) |
@@ -290,10 +290,10 @@ in {
                     returnCh!(state.get("pendingWithdrawers"))
                   }
                 } |
-                // Exposes Coop multisig vault on returnCh.
-                contract PoS(@"getCoopVault", returnCh) = {
-                  for (@(_, coopVault) <<- coopVaultCh) {
-                    returnCh!((coopMultiVault, coopMultiVaultAddr, coopVaultHd))
+                // Exposes RhonixLabs multisig vault on returnCh.
+                contract PoS(@"getRhonixLabsVault", returnCh) = {
+                  for (@(_, rhonixLabsVault) <<- rhonixLabsVaultCh) {
+                    returnCh!((rhonixLabsMultiVault, rhonixLabsMultiVaultAddr, rhonixLabsVaultHd))
                   }
                 } |
                 // Exposes initial PoS vault on returnCh.
@@ -317,7 +317,7 @@ in {
                   for (@state <<- stateCh) {
                     ret!({
                       "state"     : state,
-                      "coopVault" : (coopMultiVault, coopMultiVaultAddr, coopVaultHd),
+                      "rhonixLabsVault" : (rhonixLabsMultiVault, rhonixLabsMultiVaultAddr, rhonixLabsVaultHd),
                       "posVault"  : (posVaultUnf, posVaultAddr, posVault, humanControlHandle),
                       "currentDeployerData"   : *currentDeployerData
                     })
@@ -453,7 +453,7 @@ in {
                   }
                 } |
                 new commitRewards in {
-                  // Private method which transfers all of a validator's rewards + bond to the Coop vault.
+                  // Private method which transfers all of a validator's rewards + bond to the Rhonix Labs vault.
                   // Slash expects (Boolean, Either[Nil, String]) on returnCh.
                   contract PoS(@"slash", @slashedValidator, @sysAuthToken, returnCh) = {
                     new isValidTokenCh in {
@@ -465,16 +465,16 @@ in {
                             for (@state, stateUpdateCh <- stateProcessCh) {
                               new valBondCh, valRewardCh, posAuthKeyCh in {
                                 // Takes the stake of slashed validator
-                                // - transfer stake of slashed validator from PoS to Coop vault
+                                // - transfer stake of slashed validator from PoS to RhonixLabs vault
                                 // - update state
                                 valBondCh!(state.get("allBonds").get(slashedValidator)) |
                                 @RevVault!("unforgeableAuthKey", posVaultUnf, *posAuthKeyCh) |
                                 for (@valBond <- valBondCh ; @posAuthKey <- posAuthKeyCh) {
-                                  // Transfers slashed funds from PoS vault to Coop vault, then updates state.
+                                  // Transfers slashed funds from PoS vault to RhonixLabs vault, then updates state.
                                   new transferDoneCh in {
                                     @posVault!(
                                       "transfer",
-                                      coopMultiVaultAddr,
+                                      rhonixLabsMultiVaultAddr,
                                       valBond,
                                       posAuthKey,
                                       *transferDoneCh
@@ -710,7 +710,7 @@ in {
         } |
         // Retrieves deployer's public key.
         contract getUser(@deployerId, returnCh) = {
-          new deployerIdOps(`rho:rchain:deployerId:ops`) in {
+          new deployerIdOps(`rho:rhonix:deployerId:ops`) in {
             deployerIdOps!("pubKeyBytes", deployerId, *returnCh)
           }
         } |

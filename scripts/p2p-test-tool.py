@@ -4,7 +4,7 @@
 # python3.6 -m pip install docker argparse pexpect requests
 # Return code of 0 is success on test and 1 is fail.
 # Example below shows how to boot network with 3 nodes, including bootstrap, and run specific test
-# ./p2p-test-tool.py -b -m 2048m -i rchain/rnode:dev -T propose -t
+# ./p2p-test-tool.py -b -m 2048m -i rhonix/rnode:dev -T propose -t
 from pexpect import replwrap
 import subprocess
 import argparse
@@ -42,7 +42,7 @@ parser.add_argument("-d", "--deploy-demo",
 parser.add_argument("-i", "--image",
                     dest='image',
                     type=str,
-                    default="coop.rchain/rnode:latest",
+                    default="io.rhonix/rnode:latest",
                     help="source repo for docker image")
 parser.add_argument("-l", "--logs",
                     action='store_true',
@@ -55,12 +55,12 @@ parser.add_argument("-m", "--memory",
 parser.add_argument("-n", "--network",
                     dest='network',
                     type=str,
-                    default="rchain.coop",
+                    default="rhonix.io",
                     help="set docker network name")
 parser.add_argument("--peer-command",
                     dest='peer_command',
                     type=str,
-                    default="run --bootstrap rnode://cb74ba04085574e9f0102cc13d39f0c72219c5bb@bootstrap.rchain.coop?protocol=40400&discovery=40404",
+                    default="run --bootstrap rnode://cb74ba04085574e9f0102cc13d39f0c72219c5bb@bootstrap.rhonix.io?protocol=40400&discovery=40404",
                     help="peer container run command")
 parser.add_argument("-p", "--peers-amount",
                     dest='peer_amount',
@@ -315,10 +315,10 @@ def test_propose(container):
     for container in client.containers.list(all=True, filters={"name":f".{args.network}"}):
             #Check logs for warnings(WARN) or errors(ERROR) on CASPER    
             for line in container.logs().decode('utf-8').splitlines():
-                if "WARN" in line and "coop.rchain.casper" in line and not "wallets" in line:
+                if "WARN" in line and "io.rhonix.casper" in line and not "wallets" in line:
                     print(f"{container.name}: {line}")
                     retval = 1
-                if "ERROR" in line and "coop.rchain.casper" in line:
+                if "ERROR" in line and "io.rhonix.casper" in line:
                     print(f"{container.name}: {line}")
                     retval = 1
 
@@ -499,7 +499,7 @@ def check_network_convergence(container):
 
 def test_performance():
     # Infinite loop for performance testing via metrics.
-    # Only run parent script "-p 1" so it runs only on one peer, peer0.rchain.coop.
+    # Only run parent script "-p 1" so it runs only on one peer, peer0.rhonix.io.
     print("=====================================================================================")
     print("Preparing to run infinite deploy/propose loop for stress/performance testing and metric collection.")
     print("You will have to cancel or Ctrl-C to exit script.")
@@ -577,7 +577,7 @@ def generate_validator_private_key():
     # import ecdsa # secp256k1 suppport
 
     # Using pre-generated validator key pairs by rnode. We do this because warning below  with python generated keys
-    # WARN  coop.rchain.casper.Validate$ - CASPER: Ignoring block 2cb8fcc56e... because block creator 3641880481... has 0 weight
+    # WARN  io.rhonix.casper.Validate$ - CASPER: Ignoring block 2cb8fcc56e... because block creator 3641880481... has 0 weight
     f=open('scripts/demo-validator-private-public-key-pairs.txt')
     lines=f.readlines()
     line_number = random.randint(1,295)

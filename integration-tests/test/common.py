@@ -9,7 +9,7 @@ from typing import (
     TYPE_CHECKING,
 )
 import dataclasses
-from rchain.crypto import PrivateKey
+from rhonix.crypto import PrivateKey
 
 from docker.client import DockerClient
 

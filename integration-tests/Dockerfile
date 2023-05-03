@@ -1,1 +1,1 @@
-FROM coop.rchain/rnode:latest
+FROM io.rhonix/rnode:latest

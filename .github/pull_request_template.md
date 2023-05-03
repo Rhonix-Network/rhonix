@@ -8,10 +8,10 @@
 
 ### Please make sure that this PR:
 - [x] is at most 200 lines of code (excluding tests),
-- [x] meets [RChain development coding standards](https://rchain.atlassian.net/wiki/spaces/DOC/pages/28082177/Coding+Standards),
+- [x] meets [Rhonix development coding standards](https://rchain.atlassian.net/wiki/spaces/DOC/pages/28082177/Coding+Standards),
 - [x] includes tests for all added features,
 - [x] has a reviewer assigned,
-- [x] has [all commits signed](https://rchain.atlassian.net/wiki/spaces/DOC/pages/498630673/How+to+sign+commits+to+rchain+rchain).
+- [x] has [all commits signed](https://rchain.atlassian.net/wiki/spaces/DOC/pages/498630673/How+to+sign+commits+to+rhonix+rhonix).
 
 ### [Bors](https://bors.tech/) cheat-sheet:
 

@@ -1,8 +1,8 @@
 new 
    return, rl(`rho:registry:lookup`), poSCh, stdout(`rho:io:stdout`), 
-     deployerId(`rho:rchain:deployerId`), transferRetCh 
+     deployerId(`rho:rhonix:deployerId`), transferRetCh 
 in {
-   rl!(`rho:rchain:pos`, *poSCh) |
+   rl!(`rho:rhonix:pos`, *poSCh) |
    stdout!(("start rholang code")) |
    match (
     "%TARGET_ADDR",

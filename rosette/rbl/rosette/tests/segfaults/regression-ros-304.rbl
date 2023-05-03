@@ -1,7 +1,7 @@
 ;; -*- Coding: utf-8; Mode: scheme; -*-
 ;;
 
-;; Regression test for improvement in ROS-304 (https://github.com/rchain/rchain/pull/137).
+;; Regression test for improvement in ROS-304 (https://github.com/rhonixlabs/rhonix/pull/137).
 ;;
 
 ;; This (improper) use of defExpander caused a segfault

@@ -1,6 +1,6 @@
 ---
 name: Request documentation improvement
-about: Suggest an enhancement related to documentation in RChain repository
+about: Suggest an enhancement related to documentation in Rhonix repository
 labels: enhancement
 ---
 
@@ -8,7 +8,7 @@ labels: enhancement
 
 <!-- Please answer these questions before submitting a request. -->
 
-### If this relates to existing RChain documentation, please provide the complete, specific URL and location in the page
+### If this relates to existing Rhonix documentation, please provide the complete, specific URL and location in the page
 
 
 ### Please describe the problem including, missing, unclear or incorrect documentation

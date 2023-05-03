@@ -1,5 +1,5 @@
 RHOLANG_JAR	= ../rholang/target/scala-2.12/rholang-assembly-0.1.0-SNAPSHOT.jar
-RHOLANG_BNFC    = ../rholang/src/main/java/coop/
+RHOLANG_BNFC    = ../rholang/src/main/java/io/
 ROSETTE_BIN	= ../rosette/build.out/src/rosette
 RBL_DIR		= ../rosette/rbl/rosette
 

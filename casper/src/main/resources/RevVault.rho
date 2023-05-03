@@ -30,17 +30,17 @@ new
   _revVault,
   _transferTemplate,
   _depositTemplate,
-  deployerId(`rho:rchain:deployerId`),
+  deployerId(`rho:rhonix:deployerId`),
   systemContractManagerCh,
   dispatcherCh,
   configPublicKeyCheckCh
 in {
-  rl!(`rho:rchain:makeMint`, *MakeMintCh) |
-  rl!(`rho:rchain:authKey`, *AuthKeyCh) |
+  rl!(`rho:rhonix:makeMint`, *MakeMintCh) |
+  rl!(`rho:rhonix:authKey`, *AuthKeyCh) |
   rl!(`rho:lang:either`, *EitherCh) |
   rl!(`rho:lang:treeHashMap`, *TreeHashMapCh) |
   rl!(`rho:registry:systemContractManager`, *systemContractManagerCh) |
-  rl!(`rho:rchain:configPublicKeyCheck`, *configPublicKeyCheckCh)|
+  rl!(`rho:rhonix:configPublicKeyCheck`, *configPublicKeyCheckCh)|
   for (@(_, MakeMint) <- MakeMintCh &
        @(_, AuthKey)  <- AuthKeyCh &
        @(_, Either)   <- EitherCh &
@@ -78,7 +78,7 @@ in {
           } |
 
           contract RevVault(@"deployerAuthKey", deployerId, ret) = {
-            new RevAddress(`rho:rev:address`), DeployerIdOps(`rho:rchain:deployerId:ops`),
+            new RevAddress(`rho:rev:address`), DeployerIdOps(`rho:rhonix:deployerId:ops`),
                 revAddrCh, deployerPubKeyBytesCh
             in {
               DeployerIdOps!("pubKeyBytes", *deployerId, *deployerPubKeyBytesCh) |

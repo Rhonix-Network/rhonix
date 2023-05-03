@@ -3,16 +3,16 @@
 ## Nodes
 ### As a Node Operator, I want to install software from binary artifacts or a Docker image
 #### Install rnode using tarball
-##### documentation: https://github.com/rchain/rchain/#installing-and-running-on-debian-from-deb-package
+##### documentation: https://github.com/rhonixlabs/rhonix/#installing-and-running-on-debian-from-deb-package
 #### Install rnode using docker
-##### documentation: https://github.com/rchain/rchain/#installing-and-running-on-docker
+##### documentation: https://github.com/rhonixlabs/rhonix/#installing-and-running-on-docker
 ### As a Node Operator, I want to run software on Linux, macOS, and in Docker
 #### Run rnode on Linux
-##### documentation: https://github.com/rchain/rchain/#installing-and-running-on-debian-from-deb-package
+##### documentation: https://github.com/rhonixlabs/rhonix/#installing-and-running-on-debian-from-deb-package
 #### Run rnode on macOS
-##### documentation: https://github.com/rchain/rchain/#installing-and-running-on-macos-via-homebrew
+##### documentation: https://github.com/rhonixlabs/rhonix/#installing-and-running-on-macos-via-homebrew
 #### Run rnode on docker
-##### documentation: https://github.com/rchain/rchain/#installing-and-running-on-docker
+##### documentation: https://github.com/rhonixlabs/rhonix/#installing-and-running-on-docker
 ### As a dApp Developer, I want to interface with the Rholang interpreter and evaluate smart contracts independently from the blockchain
 #### A contract being run using rnode eval
 ##### test: test/test_eval.py::test_eval
@@ -36,23 +36,23 @@
 
 * given that `rnode` is running
 * user executes rholang code that is "foo"
-* program exists with 1 and prints out coop.rchain.rholang.interpreter.errorsTopLevelFreeVariablesNotAllowedError
+* program exists with 1 and prints out io.rhonix.rholang.interpreter.errorsTopLevelFreeVariablesNotAllowedError
 
 ### As a Node Operator, I want to have a default configuration and the ability to customize the configuration on the command line
 #### Configure rnode using a default configuration.
-##### documentation: https://github.com/rchain/rchain/#configuration-file
+##### documentation: https://github.com/rhonixlabs/rhonix/#configuration-file
 #### Configure rnode using command line flags
-##### documentation: https://github.com/rchain/rchain/#configuration-flags
+##### documentation: https://github.com/rhonixlabs/rhonix/#configuration-flags
 ### As a Node Operator, I want to monitor the performance, resource consumption, and status of my node
 #### Monitor resource consumption and status
-##### documentation: https://github.com/rchain/rchain/#monitor-resource-consumption
+##### documentation: https://github.com/rhonixlabs/rhonix/#monitor-resource-consumption
 
 #### Monitor performance
-##### documentation: https://github.com/rchain/rchain/#monitor-performance
+##### documentation: https://github.com/rhonixlabs/rhonix/#monitor-performance
 
 ### As a Node Operator, when I start rnode, I want to provide my validator key and wallet key
 #### Start node with validator key and wallet key
-##### documentation: https://github.com/rchain/rchain/#starting-node-as-a-validator
+##### documentation: https://github.com/rhonixlabs/rhonix/#starting-node-as-a-validator
 ## Peer to Peer Network
 ### As a Node operator, I want to be able to bootstrap to the network by connecting to any known node
 #### connecting to existing node
@@ -100,7 +100,7 @@
 * access `nodeA` http endpoint under `/discovered-peers` to list `nodeB` and `nodeC` in JSON format
 
 ## Network Launch
-### As a platform stakeholder, I want a Coop-goverend, community-driven, and independently verifiable successful genesis ceremony
+### As a platform stakeholder, I want a RhonixLabs-goverend, community-driven, and independently verifiable successful genesis ceremony
 #### A successful genesis ceremony 
 ##### test: test/test_genesis_ceremony.py::test_successful_genesis_ceremony 
 ##### steps:
@@ -181,29 +181,29 @@
 ### As a dApp developer, when I make one or more deployments, I want a receipt of the transaction.
 
 ## REV
-### As a platform stakeholder, I want REV to be the currency token for the RChain platform
+### As a platform stakeholder, I want REV to be the currency token for the Rhonix platform
 ### As a REV holder, assuming I maintain control of my keys and properly use the wallet where I store REV, I expect my REV to never be lost
 ## Wallets
-### As a user, I want to be able to configure a coop-supplied wallet so that I can store REV in it
-### As a user, I want to be able to interface with the coop-supplied wallet at the command line.
-### As a user, I want to be able to add REV to my coop-supplied wallet so that I have available REV to pay for goods/services
-### As a user, I want to be able to remove REV from my coop-supplied wallet so that I can pay for goods/services
-### As a user, I want to be able to receive REV from another user by providing that user with the public key for my coop-supplied-wallet.
-### As a user, I want to be able to send REV to the coop-supplied wallet of another user by specifying the public key to the coop-supplied wallet of that user.
-### As a user of a coop-supplied wallet, I want to query a wallet contract (or the blocks) for my public address to get the history of all REV transfers to and/or from it
+### As a user, I want to be able to configure a rhonix-supplied wallet so that I can store REV in it
+### As a user, I want to be able to interface with the rhonix-supplied wallet at the command line.
+### As a user, I want to be able to add REV to my rhonix-supplied wallet so that I have available REV to pay for goods/services
+### As a user, I want to be able to remove REV from my rhonix-supplied wallet so that I can pay for goods/services
+### As a user, I want to be able to receive REV from another user by providing that user with the public key for my rhonix-supplied-wallet.
+### As a user, I want to be able to send REV to the rhonix-supplied wallet of another user by specifying the public key to the rhonix-supplied wallet of that user.
+### As a user of a rhonix-supplied wallet, I want to query a wallet contract (or the blocks) for my public address to get the history of all REV transfers to and/or from it
 ### As a recipient of REV (other than REV at mainnet launch 'genesis'), I can use a co-op supplied dApp to view my REV balance
 ### As a recipient of REV at mainnet launch 'genesis', I can use a co-op supplied wallet to view my REV balance after launch.
 ### As an organization holding REV, I need to have multiple approviesr for any REV transaction.
 ### As a validator, I can move Rev to/from the key-pair for one validator node to the key-pair for another validator node or that of the co-op supplied wallet dApp
-### As a wallet dApp developer, I want to use Ethereum-style addresses for send transactions to specify the recipient, so that a) I can reuse available Ethereum utility libraries; b) so the QR code is smaller and thus faster to scan than it would be for a full public key; c) it is easier for users to verbally confirm their address versus public key; and d) so RChain is more palatable for the Ethereum community
+### As a wallet dApp developer, I want to use Ethereum-style addresses for send transactions to specify the recipient, so that a) I can reuse available Ethereum utility libraries; b) so the QR code is smaller and thus faster to scan than it would be for a full public key; c) it is easier for users to verbally confirm their address versus public key; and d) so Rhonix is more palatable for the Ethereum community
 ### As a wallet dApp developer, I want to discover and connect to rNodes that support a particular version (release number and hash) and have a minimum number of active connections, so that user risks due to interoperability issues and sybil actors are minimized
 ### As a wallet user, I need a command line interface for interacting with wallets.
 ### As a dApp organization, I need to have multiple approvers for any send transaction.
 ## Validation
-### As a RChain validator, I want my validator identity to be different from the identity of my node and from the identity of my wallet
+### As a Rhonix validator, I want my validator identity to be different from the identity of my node and from the identity of my wallet
 #### Documentation of identities
-##### documentation: https://github.com/rchain/rchain/#identities
-### As a RChain validator, I want to know when a block I propose is finalized and with what degree of confidence
+##### documentation: https://github.com/rhonixlabs/rhonix/#identities
+### As a Rhonix validator, I want to know when a block I propose is finalized and with what degree of confidence
 #### Check fault tolerance of block
 ##### test: test/test_dag_correctness.py::test_fault_tolerance
 ##### steps:
@@ -213,9 +213,9 @@
 * duplicate steps in CliqueOracleTest to get get a DAG of known shape
 * run show-block on each block and assert known fault tolerance
 
-### As a RChain validator, I want to expose to the internet only those methods needed for production dApps
+### As a Rhonix validator, I want to expose to the internet only those methods needed for production dApps
 #### external and internal api documentation
-##### documentation: https://github.com/rchain/rchain/#external-and-internal-api
+##### documentation: https://github.com/rhonixlabs/rhonix/#external-and-internal-api
 ## Bonding/Unbonding
 ### As a Node Validator, I want to be able to add my stake to the network and be recognized as a validator so I can participate in proof of stake consensus and be eligible to earn rewards (validating)
 #### Bonding a validator
@@ -227,17 +227,17 @@
 * TBD
 
 ## Validator rewards
-### As a RChain validator, I want to earn rewards by validating on the RChain network.
-### As a RChain validator, I want to receive the rewards I earn by validating on the RChain network.
-### As a RChain validator, I want to retrieve the rewards I earn by validating on the RChain network.
+### As a Rhonix validator, I want to earn rewards by validating on the Rhonix network.
+### As a Rhonix validator, I want to receive the rewards I earn by validating on the Rhonix network.
+### As a Rhonix validator, I want to retrieve the rewards I earn by validating on the Rhonix network.
 
 ## Validator slashing and ejection
-### As a RChain validator and as a platform stakeholder, I want to know that other validators who do not validate according to the slashing API will be slashed (removed as a validator and lose stake) in a process observable to other validators.
-### As a RChain validator, I want to know that if I am slashed then the Coop will hold my bond amount and not distribute it to other validators for a specified period of reconcilliation in the event that my slashing was unjustified.
+### As a Rhonix validator and as a platform stakeholder, I want to know that other validators who do not validate according to the slashing API will be slashed (removed as a validator and lose stake) in a process observable to other validators.
+### As a Rhonix validator, I want to know that if I am slashed then the Rhonix Labs will hold my bond amount and not distribute it to other validators for a specified period of reconcilliation in the event that my slashing was unjustified.
 ### As a platform stakeholder, I want to see the stake of a slashed validator distributed to other validators after the time specified for a hold for reconciliation.
 ### As a platform stakeholder, I want to know that a validator that has been slashed is no longer able to validate.
-### As a RChain validator, I want to update my RNode software without being slashed.
-### As a RChain validator, I want to know that I will not be slashed and that I will be ejected if I meet the criteria as an underperforming validator and not the criteria for slashing.
+### As a Rhonix validator, I want to update my RNode software without being slashed.
+### As a Rhonix validator, I want to know that I will not be slashed and that I will be ejected if I meet the criteria as an underperforming validator and not the criteria for slashing.
 
 ## Consensus
 ### As a Node Validator, who joins existing network, my node can catch up and finalize the same set of blocks that other nodes are finalizing
@@ -282,9 +282,9 @@
 * initiate a validator
 * Calculate interest for the validator's bond based on the scheudle in the mint
 * transfer the earned interest to the validator's wallet
-### As a dApp developer, I use REV to pay the cost to deploy smart contracts on the RChain platform.
-### As a validator, I will yield 0.01% of all transaction fees received to accounts controlled by the Coop.
-### As the RChain coop, I want to receive 0.01% of all transaction fees to accounts controlled by the Coop.
+### As a dApp developer, I use REV to pay the cost to deploy smart contracts on the Rhonix platform.
+### As a validator, I will yield 0.01% of all transaction fees received to accounts controlled by the Rhonix Labs.
+### As the Rhonix labs, I want to receive 0.01% of all transaction fees to accounts controlled by the Rhonix Labs.
 
 ## Name registry
 ### As a dApp developer, I want to predict registry names using readily available crypto libraries.
@@ -293,10 +293,10 @@
 ### As a user of the platform, I want to know the current performance of the network in terms of COMM events per second.
 
 ## Platform administration
-### As the RChain coop, I need to verify how much total phlo over a period of time was paid out of a sending address.
+### As the Rhonix labs, I need to verify how much total phlo over a period of time was paid out of a sending address.
 ## Documentation
 ### As a any type of platform stakeholder, I want a single-source of indexed documenation.
-### As a any type of platform stakeholder, I want to know what I can expect for the performance and reliability of the RChain platform im the form of a production engineering plan.
+### As a any type of platform stakeholder, I want to know what I can expect for the performance and reliability of the Rhonix platform im the form of a production engineering plan.
 ### As a node operator, I want to learn how to install, run, operate, and monitor my node.
 ### As a validator, I want to learn the minimum hardware, infrastructure, and networking requirements to participate as a validator.
 ### As a validator, I want to learn about the slashing API, the conditions and process for slashing, and the conditions and process for ejection.
@@ -306,7 +306,7 @@
 ### As a dApp developer, I need to learn how unforgeable names are generated, how to determine unforgeable names, and how to retrieve the UUID of the unforgeable names.
 ### As a dApp developer, I need a reference for gRPC calls and a description of what they do.
 ### As a dApp developer, want to know how to calculate the costs for the execution of my contracts, including accounting for non-determinism.
-### As an Ehtereum developer familiar with the Infura API, I want to learn how to use the RChain platform.
+### As an Ehtereum developer familiar with the Infura API, I want to learn how to use the Rhonix platform.
 
 ## Not_Grouped
 ### Counting blocks?

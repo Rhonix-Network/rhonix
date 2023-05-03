@@ -4,7 +4,7 @@ The **R**Chain Tuple **Space**
 
 ### Overview
 
-`rspace` is a Scala library that has been designed to provide a disk-backed [tuple space](https://en.wikipedia.org/wiki/Tuple_space) to the [Rholang](http://rchain-architecture.readthedocs.io/en/latest/contracts/contract-design.html#rholang-a-concurrent-language) interpreter.  It is based on an earlier, in-memory implementation written in the Rosette Base Language (RBL) found [here](https://github.com/rchain/rchain/blob/05e3969cc999853ab57fb8c792e732beb92948d3/rosette/rbl/rosette/namespace.rbl).
+`rspace` is a Scala library that has been designed to provide a disk-backed [tuple space](https://en.wikipedia.org/wiki/Tuple_space) to the [Rholang](http://rhonix-architecture.readthedocs.io/en/latest/contracts/contract-design.html#rholang-a-concurrent-language) interpreter.  It is based on an earlier, in-memory implementation written in the Rosette Base Language (RBL) found [here](https://github.com/rhonixlabs/rhonix/blob/05e3969cc999853ab57fb8c792e732beb92948d3/rosette/rbl/rosette/namespace.rbl).
 
 Traditionally, a key-value store provides two main functions for interacting with a given store: *put*, which persists a piece of data at a given key, and *get*, which retrieves the data stored at a particular key.
 
@@ -39,7 +39,7 @@ For more information and detailed instructions on using `rspace`, see the tutori
 To use `rspace` in a Scala project, add the following coordinates your build:
 
 ```
-coop.rchain %% rspace % "0.1.1"
+io.rhonix %% rspace % "0.1.1"
 ```
 
 ### Issues

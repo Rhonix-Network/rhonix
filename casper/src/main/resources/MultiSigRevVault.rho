@@ -23,16 +23,16 @@ new
   RevVaultCh,
   AuthKeyCh,
   ListOpsCh,
-  deployerId(`rho:rchain:deployerId`),
+  deployerId(`rho:rhonix:deployerId`),
   systemContractManagerCh,
   dispatcherCh,
   configPublicKeyCheckCh
 in {
   rl!(`rho:lang:listOps`, *ListOpsCh) |
-  rl!(`rho:rchain:authKey`, *AuthKeyCh) |
-  rl!(`rho:rchain:revVault`, *RevVaultCh) |
+  rl!(`rho:rhonix:authKey`, *AuthKeyCh) |
+  rl!(`rho:rhonix:revVault`, *RevVaultCh) |
   rl!(`rho:registry:systemContractManager`, *systemContractManagerCh)|
-  rl!(`rho:rchain:configPublicKeyCheck`, *configPublicKeyCheckCh)|
+  rl!(`rho:rhonix:configPublicKeyCheck`, *configPublicKeyCheckCh)|
   for(@(_, ListOps) <- ListOpsCh &
       @(_, AuthKey) <- AuthKeyCh &
       @(_, RevVault) <- RevVaultCh &
@@ -68,7 +68,7 @@ in {
     } |
     // Returns a MultiSigRevVault auth key for `deployerId` on `ret`
     contract MultiSigRevVault(@"deployerAuthKey", deployerId, ret) = {
-      new DeployerIdOps(`rho:rchain:deployerId:ops`), deployerPubKeyBytesCh in {
+      new DeployerIdOps(`rho:rhonix:deployerId:ops`), deployerPubKeyBytesCh in {
         DeployerIdOps!("pubKeyBytes", *deployerId, *deployerPubKeyBytesCh) |
         // Create auth token with deployer public key
         for(@deployerPubKeyBytes <- deployerPubKeyBytesCh) {

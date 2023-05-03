@@ -371,7 +371,7 @@ Questo è come se un browser web fosse disposto a eseguire il codice JavaScript 
 
 ## Conclusione
 
-RChain è un linguaggio progettato per l'uso su una blockchain, ma non abbiamo menzionato nulla su nodi, namespace, portafogli, Rev e phlogiston, strutture di rete o Casper. Un prossimo documento affronterà tutte queste questioni e altro ancora.
+Rhonix è un linguaggio progettato per l'uso su una blockchain, ma non abbiamo menzionato nulla su nodi, namespace, portafogli, Rev e phlogiston, strutture di rete o Casper. Un prossimo documento affronterà tutte queste questioni e altro ancora.
 
 Speriamo che i precedenti esempi suscitino il desiderio di scrivere più codice e di dimostrare la facilità di esprimere progetti simultanei.
 

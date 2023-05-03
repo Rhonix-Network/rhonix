@@ -1,5 +1,5 @@
 from random import Random
-from rchain.crypto import PrivateKey
+from rhonix.crypto import PrivateKey
 from docker.client import DockerClient
 
 from . import conftest

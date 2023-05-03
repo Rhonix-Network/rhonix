@@ -62,13 +62,13 @@ in {
   //   }
   // }
   contract configPublicKeyCheck(@deployerId, ret) = {
-    let @coopPubKey <- // fc743bd08a822d544bfbe05a5663fc325039a44c8f0c7fbea95a85517da5c36b private
+    let @rhonixLabsPubKey <- // fc743bd08a822d544bfbe05a5663fc325039a44c8f0c7fbea95a85517da5c36b private
       "04e2eb6b06058d10b30856043c29076e2d2d7c374d2beedded6ecb8d1df585dfa583bd7949085ac6b0761497b0cfd056eb3d0db97efb3940b14c00fff4e53c85bf".hexToBytes()
     in {
-      new DeployerIdOps(`rho:rchain:deployerId:ops`), deployerPubKeyBytesCh in {
+      new DeployerIdOps(`rho:rhonix:deployerId:ops`), deployerPubKeyBytesCh in {
         DeployerIdOps!("pubKeyBytes", deployerId, *deployerPubKeyBytesCh) |
         for (@deployerPubKeyBytes <- deployerPubKeyBytesCh){
-          if (deployerPubKeyBytes == coopPubKey){
+          if (deployerPubKeyBytes == rhonixLabsPubKey){
             ret!((true, Nil))
           } else {
             ret!((false, "You have no permissions to update system contract!"))
@@ -372,11 +372,18 @@ in {
     `rho:lang:either`             : `rho:id:qrh6mgfp5z6orgchgszyxnuonanz7hw3amgrprqtciia6astt66ypn`,
     `rho:lang:listOps`            : `rho:id:6fzorimqngeedepkrizgiqms6zjt76zjeciktt1eifequy4osz35ks`,
     `rho:lang:nonNegativeNumber`  : `rho:id:hxyadh1ffypra47ry9mk6b8r1i33ar1w9wjsez4khfe9huzrfcytx9`,
+    `rho:rhonix:authKey`          : `rho:id:1qw5ehmq1x49dey4eadr1h4ncm361w3536asho7dr38iyookwcsp6i`,
+    `rho:rhonix:makeMint`         : `rho:id:asysrwfgzf8bf7sxkiowp4b3tcsy4f8ombi3w96ysox4u3qdmn1wbc`,
+    `rho:rhonix:pos`              : `rho:id:m3xk7h8r54dtqtwsrnxqzhe81baswey66nzw6m533nyd45ptyoybqr`,
+    `rho:rhonix:revVault`         : `rho:id:6zcfqnwnaqcwpeyuysx1rm48ndr6sgsbbgjuwf45i5nor3io7dr76j`,
+    `rho:rhonix:multiSigRevVault` : `rho:id:b9s6j3xeobgset4ndn64hje64grfcj7a43eekb3fh43yso5ujiecfn`,
+    
+    //Compatibility
     `rho:rchain:authKey`          : `rho:id:1qw5ehmq1x49dey4eadr1h4ncm361w3536asho7dr38iyookwcsp6i`,
     `rho:rchain:makeMint`         : `rho:id:asysrwfgzf8bf7sxkiowp4b3tcsy4f8ombi3w96ysox4u3qdmn1wbc`,
     `rho:rchain:pos`              : `rho:id:m3xk7h8r54dtqtwsrnxqzhe81baswey66nzw6m533nyd45ptyoybqr`,
     `rho:rchain:revVault`         : `rho:id:6zcfqnwnaqcwpeyuysx1rm48ndr6sgsbbgjuwf45i5nor3io7dr76j`,
-    `rho:rchain:multiSigRevVault` : `rho:id:b9s6j3xeobgset4ndn64hje64grfcj7a43eekb3fh43yso5ujiecfn`
+    `rho:rchain:multiSigRevVault` : `rho:id:b9s6j3xeobgset4ndn64hje64grfcj7a43eekb3fh43yso5ujiecfn`,
     } in {
       // Use 4 * 8 = 32-bit paths to leaf nodes.
       TreeHashMap!("init", 4, *_registryStore) |
@@ -386,7 +393,7 @@ in {
           systemContractManager!("createDispatcher", *TreeHashMap, *createDispatcherRet)|
           for (TreeHashMapDispatcher <- createDispatcherRet){
             TreeHashMap!("set", map, `rho:lang:treeHashMap`, (9223372036854775807, bundle+{*TreeHashMapDispatcher}), *ack) |
-            TreeHashMap!("set", map, `rho:rchain:configPublicKeyCheck`, (9223372036854775807, bundle+{*configPublicKeyCheck}), *ack2)
+            TreeHashMap!("set", map, `rho:rhonix:configPublicKeyCheck`, (9223372036854775807, bundle+{*configPublicKeyCheck}), *ack2)
           }
         } |
         // Wait for the set to finish, then register `lookupCh` as the uri/shorthand lookup channel
@@ -431,7 +438,7 @@ in {
         // Verifies signature and inserts data into registry
         // Returns generated uri on `ret`
         contract insertSigned(@(nonce, data), deployerID, ret) = {
-          new uriCh, hashCh, verifyCh, deployerIdOps(`rho:rchain:deployerId:ops`), deployerPubKeyBytesCh in {
+          new uriCh, hashCh, verifyCh, deployerIdOps(`rho:rhonix:deployerId:ops`), deployerPubKeyBytesCh in {
             deployerIdOps!("pubKeyBytes", *deployerID, *deployerPubKeyBytesCh) |
             for (@pubKeyBytes <- deployerPubKeyBytesCh){
               ops!("buildUri", pubKeyBytes, *uriCh) |
@@ -473,8 +480,8 @@ in {
     {
       // ------
       // Update
-      // deployerID: (`rho:rchain:deployerId`)
-      // uri:   the uri you want to update.  `rho:rchain:pos` etc.
+      // deployerID: (`rho:rhonix:deployerId`)
+      // uri:   the uri you want to update.  `rho:rhonix:pos` etc.
       // updateContract:   the update consume which take the old state
       // ret:   channel which returns the update result
       contract systemContractManager(@"update", @securityData, @uri, @updateContract, ret) = {

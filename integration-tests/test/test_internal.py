@@ -1,6 +1,6 @@
 """Tests for the testing code itself."""
 
-from rchain.crypto import PrivateKey
+from rhonix.crypto import PrivateKey
 
 from .conftest import (
     make_wallets_file_lines,

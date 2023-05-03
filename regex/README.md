@@ -1,6 +1,6 @@
 # Regex
 
-FSM and Regex libraries for the RChain blockchain.
+FSM and Regex libraries for the Rhonix blockchain.
 
 ### Prerequisites
 

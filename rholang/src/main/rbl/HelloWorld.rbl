@@ -10,7 +10,7 @@
 ;;; execute the following in the sbt console for the Rholang compiler
 ;;; and compare with (or replace) the HelloWorldContract below.
 ;;;
-;;; import coop.rchain.rho2rose._
+;;; import io.rhonix.rho2rose._
 ;;; Rholang2RosetteCompiler.main(Array("<path_to_Rholang_compiler>/Rholang/examples/HelloWorld.rho"))
 ;;;
 ;;; Expected output of this script:

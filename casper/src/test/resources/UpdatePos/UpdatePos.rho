@@ -1,12 +1,12 @@
 new
-  deployId(`rho:rchain:deployId`),
+  deployId(`rho:rhonix:deployId`),
   updateContract,
   rl(`rho:registry:lookup`),
   rlret,
   _authKey,
   stdout(`rho:io:stdout`),
   updateRet,
-  deployerID(`rho:rchain:deployerId`)
+  deployerID(`rho:rhonix:deployerId`)
 in {
   for (Pos, conRet <- updateContract){
     contract Pos(@"sayHello", ret) = {
@@ -20,7 +20,7 @@ in {
     stdout!(("propose get multisig ok", systemContractManager))|
     @systemContractManager!("update",
                   *deployerID,
-                  `rho:rchain:pos`,
+                  `rho:rhonix:pos`,
                   *updateContract,
                   *updateRet)|
     for (@result <- updateRet){

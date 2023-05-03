@@ -9,7 +9,7 @@ package casper;
 import "scalapb/scalapb.proto";
 
 option (scalapb.options) = {
-  package_name: "coop.rchain.casper.protocol"
+  package_name: "io.rhonix.casper.protocol"
   flat_package: true
   single_file: true
   preserve_unknown_fields: false

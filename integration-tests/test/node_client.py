@@ -9,9 +9,9 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.backends.openssl.ec import _EllipticCurvePrivateKey
 from cryptography.hazmat.primitives.serialization import load_pem_private_key
 from eth_hash.auto import keccak
-from rchain.pb import CasperMessage_pb2
-from rchain.pb.CasperMessage_pb2 import BlockMessageProto as BlockMessage, BlockRequestProto as BlockRequest
-from rchain.pb.routing_pb2 import (
+from rhonix.pb import CasperMessage_pb2
+from rhonix.pb.CasperMessage_pb2 import BlockMessageProto as BlockMessage, BlockRequestProto as BlockRequest
+from rhonix.pb.routing_pb2 import (
     Chunk,
     Header,
     Node,
@@ -21,7 +21,7 @@ from rchain.pb.routing_pb2 import (
     TLRequest,
     TLResponse
 )
-from rchain.pb.routing_pb2_grpc import (
+from rhonix.pb.routing_pb2_grpc import (
     TransportLayerServicer,
     TransportLayerStub,
     add_TransportLayerServicer_to_server

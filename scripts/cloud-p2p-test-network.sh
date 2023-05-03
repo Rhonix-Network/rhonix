@@ -10,9 +10,9 @@ if [[ "${TRAVIS_BRANCH}" == "master"  || \
       "${TRAVIS_BRANCH}" == "dev"  || \
       "${TRAVIS_BRANCH}" == "ops-test" \
    ]] && \
-   [[ "${TRAVIS_PULL_REQUEST}" = "false" && "${TRAVIS_REPO_SLUG}" = "rchain/rchain" ]] ; then
+   [[ "${TRAVIS_PULL_REQUEST}" = "false" && "${TRAVIS_REPO_SLUG}" = "rhonixlabs/rhonix" ]] ; then
 
-  echo "Travis branch ${TRAVIS_BRANCH} matched and from repo rchain/rchain. Updating cloud testnet."
+  echo "Travis branch ${TRAVIS_BRANCH} matched and from repo rhonixlabs/rhonix. Updating cloud testnet."
 
   # Add key to ssh-agent
   eval "$(ssh-agent -s)" #start the ssh agent
@@ -29,7 +29,7 @@ if [[ "${TRAVIS_BRANCH}" == "master"  || \
   cp node/target/*.deb ${artifacts_dir}/rnode_${TRAVIS_BRANCH}_all.deb
   cp node/target/rpm/RPMS/noarch/*.rpm ${artifacts_dir}/rnode-${TRAVIS_BRANCH}.noarch.rpm
   scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
-    -CP 10003 ${artifacts_dir}/* ${SSH_USERNAME}@repo.rchain.space:/usr/share/nginx/html/
+    -CP 10003 ${artifacts_dir}/* ${SSH_USERNAME}@repo.rhonix.space:/usr/share/nginx/html/
 
   # Update rnode test network containers with branch
   for i in {1..4}; do
@@ -44,9 +44,9 @@ if [[ "${TRAVIS_BRANCH}" == "master"  || \
     echo "Updating host package and running rnode"
     ssh_tcp_port=$((40000+$i))
     ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
-      -p ${ssh_tcp_port} ${SSH_USERNAME}@repo.rchain.space " 
+      -p ${ssh_tcp_port} ${SSH_USERNAME}@repo.rhonix.space " 
         rm rnode_${TRAVIS_BRANCH}_all.deb;
-        wget --quiet https://repo.rchain.space/rnode_${TRAVIS_BRANCH}_all.deb;
+        wget --quiet https://repo.rhonix.space/rnode_${TRAVIS_BRANCH}_all.deb;
         pkill -9 java;
         apt -y remove --purge rnode;
         apt -y install ./rnode_${TRAVIS_BRANCH}_all.deb;
@@ -61,7 +61,7 @@ if [[ "${TRAVIS_BRANCH}" == "master"  || \
   for i in {1..4}; do
     ssh_tcp_port=$((40000+$i))
     res=$(ssh -q -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
-      -p ${ssh_tcp_port} ${SSH_USERNAME}@repo.rchain.space "
+      -p ${ssh_tcp_port} ${SSH_USERNAME}@repo.rhonix.space "
       curl -s 127.0.0.1:40403 | grep "^peers ";
       ")
     if [[ "$res" ==  "peers 3.0" ]]; then
@@ -76,5 +76,5 @@ if [[ "${TRAVIS_BRANCH}" == "master"  || \
   fi
 
 else
-  echo "Ignored. P2P test net update skipped as it is not correct branch and from rchain/rchain repo."
+  echo "Ignored. P2P test net update skipped as it is not correct branch and from rhonixlabs/rhonix repo."
 fi

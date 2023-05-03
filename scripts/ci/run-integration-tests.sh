@@ -21,7 +21,7 @@ main () {
 	cd integration-tests
 
 	tag=DRONE-$DRONE_BUILD_NUMBER
-	export DEFAULT_IMAGE=rchain-integration-tests:$tag
+	export DEFAULT_IMAGE=rhonix-integration-tests:$tag
 	sed "s/rnode:latest/rnode:$tag/" Dockerfile |\
 		docker build --quiet --tag "$DEFAULT_IMAGE" --file - .
 

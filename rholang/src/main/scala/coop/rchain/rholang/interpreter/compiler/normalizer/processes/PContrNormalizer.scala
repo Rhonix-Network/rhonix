@@ -59,8 +59,7 @@ object PContrNormalizer {
                                  (
                                    result.par +: acc._1,
                                    result.freeMap,
-                                   acc._3 | ParLocallyFree
-                                     .locallyFree(result.par, input.boundMapChain.depth + 1)
+                                   acc._3 | result.par.locallyFree
                                  )
                              )
                          }
@@ -88,13 +87,11 @@ object PContrNormalizer {
           persistent = true,
           peek = false,
           bindCount = boundCount,
-          locallyFree = ParLocallyFree
-            .locallyFree(nameMatchResult.par, input.boundMapChain.depth) | formalsResults._3
+          locallyFree = nameMatchResult.par.locallyFree | formalsResults._3
             | (bodyResult.par.locallyFree
               .rangeFrom(boundCount)
               .map(x => x - boundCount)),
-          connectiveUsed = ParLocallyFree
-            .connectiveUsed(nameMatchResult.par) || bodyResult.par.connectiveUsed
+          connectiveUsed = nameMatchResult.par.connectiveUsed || bodyResult.par.connectiveUsed
         )
       ),
       bodyResult.freeMap

@@ -81,16 +81,16 @@ object SpatialMatcher extends SpatialMatcherInstances {
           case None =>
             MonoidK[F].empty[Seq[T]]
           case Some(Var(FreeVar(level))) => {
-            def freeCheck(trem: Seq[T], level: Int, acc: Seq[T]): F[Seq[T]] =
+            def freeCheck(trem: Seq[T], acc: Seq[T]): F[Seq[T]] =
               trem match {
                 case Nil => acc.pure[F]
                 case item +: rem =>
                   if (lft.locallyFree(item, 0).isEmpty)
-                    freeCheck(rem, level, acc :+ item)
+                    freeCheck(rem, acc :+ item)
                   else
                     MonoidK[F].empty[Seq[T]]
               }
-            freeCheck(trem, level, Vector.empty[T])
+            freeCheck(trem, Vector.empty[T])
           }
           case Some(Var(Wildcard(_))) => Seq.empty[T].pure[F]
           case _                      => MonoidK[F].empty[Seq[T]]
@@ -160,13 +160,13 @@ object SpatialMatcher extends SpatialMatcherInstances {
   )(implicit lf: HasLocallyFree[T], sm: SpatialMatcher[F, T, T]): F[Unit] = {
 
     sealed trait Pattern
-    final case class Term(term: T)         extends Pattern
-    final case class Remainder(level: Int) extends Pattern
+    final case class Term(term: T) extends Pattern
+    final case class Remainder()   extends Pattern
 
     val remainderPatterns: Seq[Pattern] = remainder.fold(
       Seq.empty[Pattern]
     )(
-      level => Seq.fill(targets.size - patterns.size)(Remainder(level))
+      _ => Seq.fill(targets.size - patterns.size)(Remainder())
     )
     val allPatterns = remainderPatterns ++ patterns.map(Term)
 
@@ -180,7 +180,7 @@ object SpatialMatcher extends SpatialMatcherInstances {
             } else {
               spatialMatch(t, p)
             }
-          case Remainder(_) =>
+          case Remainder() =>
             //Remainders can't match non-concrete terms, because they can't be captured.
             //They match everything that's concrete though.
             Alternative_[F].guard(lf.locallyFree(t, 0).isEmpty)

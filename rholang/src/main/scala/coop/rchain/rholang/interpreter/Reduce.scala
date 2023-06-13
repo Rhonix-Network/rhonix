@@ -351,7 +351,7 @@ class DebruijnInterpreter[M[_]: Sync: Parallel: CostStateRef](
     def addToEnv(env: Env[Par], freeMap: Map[Int, Par], freeCount: Int): Env[Par] =
       Range(0, freeCount).foldLeft(env)((acc, e) => acc.put(freeMap.getOrElse(e, Par())))
 
-    def firstMatch(target: Par, cases: Seq[MatchCase])(implicit env: Env[Par]): M[Unit] = {
+    def firstMatch(target: Par, cases: Seq[MatchCase], env: Env[Par]): M[Unit] = {
       def firstMatchM(
           state: (Par, Seq[MatchCase])
       ): M[Either[(Par, Seq[MatchCase]), Unit]] = {
@@ -383,7 +383,7 @@ class DebruijnInterpreter[M[_]: Sync: Parallel: CostStateRef](
       evaledTarget <- evalExpr(mat.target)
       // TODO(kyle): Make the matcher accept an environment, instead of substituting it.
       substTarget <- substituteAndCharge[Par, M](evaledTarget, depth = 0, env)
-      _           <- firstMatch(substTarget, mat.cases)
+      _           <- firstMatch(substTarget, mat.cases, env)
     } yield ()
   }
 

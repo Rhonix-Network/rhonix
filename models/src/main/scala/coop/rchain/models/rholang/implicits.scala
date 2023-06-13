@@ -398,7 +398,7 @@ object implicits {
         case ETupleBody(e)                                => e.connectiveUsed
         case ESetBody(e)                                  => e.connectiveUsed
         case EMapBody(e)                                  => e.connectiveUsed
-        case EVarBody(EVar(v))                            => VarLocallyFree.connectiveUsed(v)
+        case EVarBody(EVar(v))                            => VarInstanceLocallyFree.connectiveUsed(v.varInstance)
         case ENotBody(ENot(p))                            => p.connectiveUsed
         case ENegBody(ENeg(p))                            => p.connectiveUsed
         case EMultBody(EMult(p1, p2))                     => p1.connectiveUsed || p2.connectiveUsed
@@ -436,7 +436,7 @@ object implicits {
         case ETupleBody(e)                                => e.locallyFree
         case ESetBody(e)                                  => e.locallyFree.value
         case EMapBody(e)                                  => e.locallyFree.value
-        case EVarBody(EVar(v))                            => VarLocallyFree.locallyFree(v, depth)
+        case EVarBody(EVar(v))                            => VarInstanceLocallyFree.locallyFree(v.varInstance, depth)
         case ENotBody(ENot(p))                            => p.locallyFree
         case ENegBody(ENeg(p))                            => p.locallyFree
         case EMultBody(EMult(p1, p2))                     => p1.locallyFree | p2.locallyFree
@@ -468,30 +468,6 @@ object implicits {
     def locallyFree(n: New, depth: Int) = n.locallyFree
   }
 
-  implicit val VarInstanceLocallyFree: HasLocallyFree[VarInstance] =
-    new HasLocallyFree[VarInstance] {
-      def connectiveUsed(v: VarInstance) =
-        v match {
-          case BoundVar(_)       => false
-          case FreeVar(_)        => true
-          case Wildcard(_)       => true
-          case VarInstance.Empty => false
-        }
-
-      def locallyFree(v: VarInstance, depth: Int) =
-        v match {
-          case BoundVar(index)   => if (depth == 0) BitSet(index) else BitSet()
-          case FreeVar(_)        => BitSet()
-          case Wildcard(_)       => BitSet()
-          case VarInstance.Empty => BitSet()
-        }
-    }
-
-  implicit val VarLocallyFree: HasLocallyFree[Var] = new HasLocallyFree[Var] {
-    def connectiveUsed(v: Var)          = VarInstanceLocallyFree.connectiveUsed(v.varInstance)
-    def locallyFree(v: Var, depth: Int) = VarInstanceLocallyFree.locallyFree(v.varInstance, depth)
-  }
-
   implicit val ReceiveLocallyFree: HasLocallyFree[Receive] =
     new HasLocallyFree[Receive] {
       def connectiveUsed(r: Receive)          = r.connectiveUsed
@@ -501,12 +477,12 @@ object implicits {
   implicit val ReceiveBindLocallyFree: HasLocallyFree[ReceiveBind] =
     new HasLocallyFree[ReceiveBind] {
       def connectiveUsed(rb: ReceiveBind) =
-        ParLocallyFree.connectiveUsed(rb.source)
+        rb.source.connectiveUsed
 
       def locallyFree(rb: ReceiveBind, depth: Int) =
-        ParLocallyFree.locallyFree(rb.source, depth) |
+        rb.source.locallyFree |
           rb.patterns.foldLeft(BitSet()) { (acc, pat) =>
-            acc | ParLocallyFree.locallyFree(pat, depth + 1)
+            acc | pat.locallyFree
           }
     }
 
@@ -520,9 +496,32 @@ object implicits {
     new HasLocallyFree[MatchCase] {
       def connectiveUsed(mc: MatchCase) = mc.source.connectiveUsed
       def locallyFree(mc: MatchCase, depth: Int) =
-        mc.source.locallyFree | ParLocallyFree.locallyFree(mc.pattern, depth + 1)
+        mc.source.locallyFree | mc.pattern.locallyFree
     }
 
+  // Locally free is about variables so here is how they are collected
+
+  // Variable declaration
+  implicit val VarInstanceLocallyFree: HasLocallyFree[VarInstance] =
+    new HasLocallyFree[VarInstance] {
+      def connectiveUsed(v: VarInstance) =
+        v match {
+          case BoundVar(_)       => false
+          case FreeVar(_)        => true
+          case Wildcard(_)       => true
+          case VarInstance.Empty => false // This should throw error
+        }
+
+      def locallyFree(v: VarInstance, depth: Int) =
+        v match {
+          case BoundVar(index)   => if (depth == 0) BitSet(index) else BitSet()
+          case FreeVar(_)        => BitSet()
+          case Wildcard(_)       => BitSet()
+          case VarInstance.Empty => BitSet() // This should throw error
+        }
+    }
+
+  // Variable reference
   implicit val ConnectiveLocallyFree: HasLocallyFree[Connective] =
     new HasLocallyFree[Connective] {
       def connectiveUsed(conn: Connective) =
@@ -537,7 +536,7 @@ object implicits {
           case _: ConnString            => true
           case _: ConnUri               => true
           case _: ConnByteArray         => true
-          case ConnectiveInstance.Empty => false
+          case ConnectiveInstance.Empty => false // This should throw error
         }
       def locallyFree(conn: Connective, depth: Int) =
         conn.connectiveInstance match {

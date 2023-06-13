@@ -152,8 +152,8 @@ object PInputNormalizer {
                     (
                       vectorPar :+ par,
                       knownFree,
-                      locallyFree | ParLocallyFree.locallyFree(par, input.boundMapChain.depth),
-                      connectiveUsed || ParLocallyFree.connectiveUsed(par)
+                      locallyFree | par.locallyFree,
+                      connectiveUsed || par.connectiveUsed
                     )
                 }
           }
@@ -179,8 +179,7 @@ object PInputNormalizer {
                               (
                                 vectorPar :+ par,
                                 knownFree,
-                                locallyFree | ParLocallyFree
-                                  .locallyFree(par, input.boundMapChain.depth + 1)
+                                locallyFree | par.locallyFree
                               ).pure[F]
                           )
                     }

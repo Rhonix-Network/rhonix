@@ -82,10 +82,13 @@ object CollectionNormalizeMatcher {
           }
         }
         .map { folded =>
-          val resultKnownFree         = folded._2
-          val remainderConnectiveUsed = remainder.exists(HasLocallyFree[Var].connectiveUsed(_))
+          val resultKnownFree = folded._2
+          val remainderConnectiveUsed =
+            remainder.exists(v => VarInstanceLocallyFree.connectiveUsed(v.varInstance))
           val remainderLocallyFree =
-            remainder.map(HasLocallyFree[Var].locallyFree(_, depth = 0)).getOrElse(BitSet())
+            remainder
+              .map(r => VarInstanceLocallyFree.locallyFree(r.varInstance, depth = 0))
+              .getOrElse(BitSet())
 
           CollectVisitOutputs(
             ParMap(

@@ -56,7 +56,7 @@ class InterpreterImpl[F[_]: Sync: Span: CostStateRef](mergeChs: Ref[F, Set[Par]]
       _ <- Span[F].traceI("charge-parsing-cost") { charge[F](parsingCost) }
       parsed <- Span[F].traceI("build-normalized-term") {
                  Compiler[F]
-                   .sourceToADT(term, normalizerEnv)
+                   .sourceToADT(term)
                    .handleErrorWith {
                      case err: InterpreterError => ParserError(err).raiseError[F, Par]
                    }

@@ -279,14 +279,12 @@ object MultiParentCasper {
 
   def deploy[F[_]: Sync: BlockDagStorage: Log](
       d: Signed[DeployData]
-  ): F[Either[ParsingError, DeployId]] = {
-    import coop.rchain.models.rholang.implicits._
+  ): F[Either[ParsingError, DeployId]] =
     InterpreterUtil
-      .mkTerm(d.data.term, NormalizerEnv(d))
+      .mkTerm(d.data.term)
       .flatMap(_ => addDeploy(d))
       .attempt
       .map(_.leftMap(err => parsingError(s"Error in parsing term: \n$err")))
-  }
 
   private def addDeploy[F[_]: Sync: BlockDagStorage: Log](deploy: Signed[DeployData]): F[DeployId] =
     for {

@@ -21,10 +21,9 @@ import coop.rchain.crypto.hash.Blake2b512Random
 import coop.rchain.crypto.signatures.Signed
 import coop.rchain.metrics.{Metrics, Span}
 import coop.rchain.models.BlockHash.BlockHash
-import coop.rchain.models.NormalizerEnv.ToEnvMap
 import coop.rchain.models.Validator.Validator
 import coop.rchain.models.syntax._
-import coop.rchain.models.{BlockMetadata, NormalizerEnv, Par}
+import coop.rchain.models.{BlockMetadata, Par}
 import coop.rchain.rholang.interpreter.SystemProcesses.BlockData
 import coop.rchain.rholang.interpreter.compiler.Compiler
 import coop.rchain.rholang.interpreter.errors.InterpreterError
@@ -44,9 +43,7 @@ object InterpreterUtil {
   private[this] val ReplayBlockMetricsSource =
     Metrics.Source(CasperMetricsSource, "replay-block")
 
-  def mkTerm[F[_]: Sync, Env](rho: String, normalizerEnv: NormalizerEnv[Env])(
-      implicit ev: ToEnvMap[Env]
-  ): F[Par] = Compiler[F].sourceToADT(rho, normalizerEnv.toEnv)
+  def mkTerm[F[_]: Sync, Env](rho: String): F[Par] = Compiler[F].sourceToADT(rho)
 
   // TODO: most of this function is legacy code, it should be refactored with separation of errors that are
   //  handled (with included data e.g. hash not equal) and fatal errors which should NOT be handled

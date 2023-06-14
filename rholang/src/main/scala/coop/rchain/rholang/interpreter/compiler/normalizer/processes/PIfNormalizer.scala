@@ -3,7 +3,7 @@ package coop.rchain.rholang.interpreter.compiler.normalizer.processes
 import cats.syntax.all._
 import cats.effect.Sync
 import coop.rchain.models.Expr.ExprInstance.GBool
-import coop.rchain.models.{Match, MatchCase, Par}
+import coop.rchain.models.{Match, MatchCase}
 import coop.rchain.models.rholang.implicits._
 import coop.rchain.rholang.interpreter.compiler.ProcNormalizeMatcher.normalizeMatch
 import coop.rchain.rholang.interpreter.compiler.{ProcVisitInputs, ProcVisitOutputs}
@@ -17,8 +17,6 @@ object PIfNormalizer {
       trueBodyProc: Proc,
       falseBodyProc: Proc,
       input: ProcVisitInputs
-  )(
-      implicit env: Map[String, Par]
   ): F[ProcVisitOutputs] =
     for {
       targetResult <- normalizeMatch[F](valueProc, input)

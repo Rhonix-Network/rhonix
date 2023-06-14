@@ -6,7 +6,6 @@ import coop.rchain.models.{Par, Receive, Var}
 import coop.rchain.models.rholang.implicits._
 import coop.rchain.rholang.interpreter.compiler.ProcNormalizeMatcher.normalizeMatch
 import coop.rchain.rholang.interpreter.compiler.{
-  FreeContext,
   FreeMap,
   NameVisitInputs,
   NameVisitOutputs,
@@ -16,7 +15,6 @@ import coop.rchain.rholang.interpreter.compiler.{
   VarSort
 }
 import coop.rchain.rholang.interpreter.errors.{
-  NormalizerError,
   ReceiveOnSameChannelsError,
   UnexpectedReuseOfNameContextFree
 }
@@ -33,9 +31,7 @@ import java.util.UUID
 
 object PInputNormalizer {
   @SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
-  def normalize[F[_]: Sync](p: PInput, input: ProcVisitInputs)(
-      implicit env: Map[String, Par]
-  ): F[ProcVisitOutputs] = {
+  def normalize[F[_]: Sync](p: PInput, input: ProcVisitInputs): F[ProcVisitOutputs] = {
     if (p.listreceipt_.size() > 1) {
       normalizeMatch[F](
         p.listreceipt_.asScala.reverse.foldLeft(p.proc_) { (proc, receipt) =>

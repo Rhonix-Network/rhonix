@@ -15,9 +15,7 @@ import coop.rchain.rholang.interpreter.compiler.normalizer.NameNormalizeMatcher
 import scala.collection.immutable.{BitSet, Vector}
 
 object PSendNormalizer {
-  def normalize[F[_]: Sync](p: PSend, input: ProcVisitInputs)(
-      implicit env: Map[String, Par]
-  ): F[ProcVisitOutputs] =
+  def normalize[F[_]: Sync](p: PSend, input: ProcVisitInputs): F[ProcVisitOutputs] =
     for {
       nameMatchResult <- NameNormalizeMatcher.normalizeMatch[F](
                           p.name_,

@@ -36,7 +36,7 @@ object ListenAtName {
   private def buildParId[F[_]: Sync](name: Name): F[Par] =
     name match {
       case PubName(content) =>
-        InterpreterUtil.mkTerm(content, NormalizerEnv.Empty)
+        InterpreterUtil.mkTerm(content)
       case PrivName(content) =>
         Sync[F].delay {
           RhoName(content.getBytes)

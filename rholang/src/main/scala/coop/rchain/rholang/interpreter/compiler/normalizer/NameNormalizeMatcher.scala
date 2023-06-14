@@ -4,7 +4,7 @@ import cats.effect.Sync
 import cats.syntax.all._
 import coop.rchain.models.Var.VarInstance.{BoundVar, FreeVar, Wildcard}
 import coop.rchain.models.rholang.implicits.{VectorPar, _}
-import coop.rchain.models.{EVar, Par, Var}
+import coop.rchain.models.{EVar, Var}
 import coop.rchain.rholang.ast.rholang_mercury.Absyn.{Name, NameQuote, NameVar, NameWildcard}
 import coop.rchain.rholang.interpreter.compiler.{
   BoundContext,
@@ -23,9 +23,7 @@ import coop.rchain.rholang.interpreter.errors.{
 }
 
 object NameNormalizeMatcher {
-  def normalizeMatch[F[_]: Sync](n: Name, input: NameVisitInputs)(
-      implicit env: Map[String, Par]
-  ): F[NameVisitOutputs] =
+  def normalizeMatch[F[_]: Sync](n: Name, input: NameVisitInputs): F[NameVisitOutputs] =
     n match {
       case wc: NameWildcard =>
         val wildcardBindResult =

@@ -2,7 +2,7 @@ package coop.rchain.rholang.interpreter.compiler.normalizer.processes
 
 import cats.syntax.all._
 import cats.effect.Sync
-import coop.rchain.models.{BundleOps, Par}
+import coop.rchain.models.BundleOps
 import coop.rchain.models.rholang.implicits._
 import coop.rchain.rholang.interpreter.compiler.ProcNormalizeMatcher.normalizeMatch
 import coop.rchain.rholang.interpreter.compiler.{
@@ -22,9 +22,7 @@ import coop.rchain.rholang.ast.rholang_mercury.Absyn.{
 import coop.rchain.models.Bundle
 
 object PBundleNormalizer {
-  def normalize[F[_]: Sync](b: PBundle, input: ProcVisitInputs)(
-      implicit env: Map[String, Par]
-  ): F[ProcVisitOutputs] = {
+  def normalize[F[_]: Sync](b: PBundle, input: ProcVisitInputs): F[ProcVisitOutputs] = {
     def error(targetResult: ProcVisitOutputs): F[ProcVisitOutputs] = {
       val errMsg = {
         def at(variable: String, sourcePosition: SourcePosition): String =

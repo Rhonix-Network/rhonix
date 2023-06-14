@@ -22,8 +22,9 @@ import scala.jdk.CollectionConverters._
 import scala.collection.immutable.{BitSet, Vector}
 
 object CollectionNormalizeMatcher {
-  def normalizeMatch[F[_]: Sync](c: Collection, input: CollectVisitInputs)(
-      implicit env: Map[String, Par]
+  def normalizeMatch[F[_]: Sync](
+      c: Collection,
+      input: CollectVisitInputs
   ): F[CollectVisitOutputs] = {
     def foldMatch[T](
         knownFree: FreeMap[VarSort],

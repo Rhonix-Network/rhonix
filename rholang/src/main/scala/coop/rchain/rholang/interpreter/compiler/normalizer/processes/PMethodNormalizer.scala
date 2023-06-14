@@ -12,9 +12,7 @@ import scala.jdk.CollectionConverters._
 import scala.collection.immutable.BitSet
 
 object PMethodNormalizer {
-  def normalize[F[_]: Sync](p: PMethod, input: ProcVisitInputs)(
-      implicit env: Map[String, Par]
-  ): F[ProcVisitOutputs] =
+  def normalize[F[_]: Sync](p: PMethod, input: ProcVisitInputs): F[ProcVisitOutputs] =
     for {
       targetResult <- normalizeMatch[F](p.proc_, input.copy(par = Par()))
       target       = targetResult.par

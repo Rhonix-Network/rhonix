@@ -15,20 +15,11 @@ import java.io.{Reader, StringReader}
 trait Compiler[F[_]] {
 
   def sourceToADT(source: String): F[Par] =
-    sourceToADT(source, Map.empty[String, Par])
+    sourceToADT(new StringReader(source))
 
-  def sourceToADT(source: String, normalizerEnv: Map[String, Par]): F[Par] =
-    sourceToADT(new StringReader(source), normalizerEnv)
+  def sourceToADT(reader: Reader): F[Par]
 
-  def sourceToADT(reader: Reader): F[Par] =
-    sourceToADT(reader, Map.empty[String, Par])
-
-  def sourceToADT(reader: Reader, normalizerEnv: Map[String, Par]): F[Par]
-
-  def astToADT(proc: Proc): F[Par] =
-    astToADT(proc, Map.empty[String, Par])
-
-  def astToADT(proc: Proc, normalizerEnv: Map[String, Par]): F[Par]
+  def astToADT(proc: Proc): F[Par]
 
   def sourceToAST(source: String): F[Proc] =
     sourceToAST(new StringReader(source))
@@ -43,15 +34,15 @@ object Compiler {
 
   implicit def parBuilder[F[_]](implicit F: Sync[F]): Compiler[F] = new Compiler[F] {
 
-    def sourceToADT(reader: Reader, normalizerEnv: Map[String, Par]): F[Par] =
+    def sourceToADT(reader: Reader): F[Par] =
       for {
         proc <- sourceToAST(reader)
-        par  <- astToADT(proc, normalizerEnv)
+        par  <- astToADT(proc)
       } yield par
 
-    def astToADT(proc: Proc, normalizerEnv: Map[String, Par]): F[Par] =
+    def astToADT(proc: Proc): F[Par] =
       for {
-        par       <- normalizeTerm(proc)(normalizerEnv)
+        par       <- normalizeTerm(proc)
         sortedPar <- Sortable[Par].sortMatch(par)
       } yield sortedPar.term
 
@@ -75,7 +66,7 @@ object Compiler {
                }
       } yield proc
 
-    private def normalizeTerm(term: Proc)(implicit normalizerEnv: Map[String, Par]): F[Par] =
+    private def normalizeTerm(term: Proc): F[Par] =
       ProcNormalizeMatcher
         .normalizeMatch[F](
           term,

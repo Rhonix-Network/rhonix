@@ -14,14 +14,13 @@ object TestUtil {
   def eval[F[_]: Sync, Env](
       source: CompiledRholangSource[Env],
       runtime: RhoRuntime[F]
-  )(implicit rand: Blake2b512Random): F[Unit] = eval(source.code, runtime, source.env)
+  )(implicit rand: Blake2b512Random): F[Unit] = eval(source.code, runtime)
 
   def eval[F[_]: Sync](
       code: String,
-      runtime: RhoRuntime[F],
-      normalizerEnv: Map[String, Par]
+      runtime: RhoRuntime[F]
   )(implicit rand: Blake2b512Random): F[Unit] =
-    Compiler[F].sourceToADT(code, normalizerEnv) >>= (evalTerm(_, runtime))
+    Compiler[F].sourceToADT(code) >>= (evalTerm(_, runtime))
 
   private def evalTerm[F[_]: FlatMap](
       term: Par,

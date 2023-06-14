@@ -12,7 +12,7 @@ import cats.syntax.all._
 object ParBuilderUtil {
 
   def mkTerm(rho: String): Either[Throwable, Par] =
-    Compiler[Eval].sourceToADT(rho, Map.empty[String, Par]).attempt.value
+    Compiler[Eval].sourceToADT(rho).attempt.value
 
   def assertCompiledEqual(s: String, t: String): Assertion =
     ParBuilderUtil.mkTerm(s).value shouldBe ParBuilderUtil.mkTerm(t).value

@@ -205,7 +205,7 @@ object RholangCLI {
 
     import coop.rchain.catscontrib.effect.implicits.sEval
     Compiler[Eval]
-      .sourceToADT(source, Map.empty[String, Par])
+      .sourceToADT(source)
       .attempt
       .value
       .toTry

@@ -23,9 +23,7 @@ import scala.jdk.CollectionConverters._
 import scala.collection.immutable.{BitSet, Vector}
 
 object PContrNormalizer {
-  def normalize[F[_]: Sync](p: PContr, input: ProcVisitInputs)(
-      implicit env: Map[String, Par]
-  ): F[ProcVisitOutputs] =
+  def normalize[F[_]: Sync](p: PContr, input: ProcVisitInputs): F[ProcVisitOutputs] =
     // A free variable can only be used once in any of the parameters.
     // And we start with the empty free variable map because these free
     // variables aren't free in the surrounding context: they're binders

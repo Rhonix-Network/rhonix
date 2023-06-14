@@ -14,7 +14,7 @@ abstract class CompiledRholangSource[Env](val code: String, val normalizerEnv: N
   val path: String
 
   import coop.rchain.catscontrib.effect.implicits.sEval
-  val term: Par = Compiler[Eval].sourceToADT(code, normalizerEnv.toEnv).value
+  val term: Par = Compiler[Eval].sourceToADT(code).value
   final def env = normalizerEnv.toEnv
 }
 

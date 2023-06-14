@@ -17,9 +17,7 @@ import coop.rchain.rholang.interpreter.compiler.{
 import scala.jdk.CollectionConverters._
 
 object PNewNormalizer {
-  def normalize[F[_]: Sync](p: PNew, input: ProcVisitInputs)(
-      implicit env: Map[String, Par]
-  ): F[ProcVisitOutputs] = {
+  def normalize[F[_]: Sync](p: PNew, input: ProcVisitInputs): F[ProcVisitOutputs] = {
 
     // TODO: bindings within a single new shouldn't have overlapping names.
     val newTaggedBindings = p.listnamedecl_.asScala.toVector.map {
@@ -47,7 +45,6 @@ object PNewNormalizer {
           bindCount = newCount,
           p = bodyResult.par,
           uri = uris,
-          injections = env,
           locallyFree = bodyResult.par.locallyFree.rangeFrom(newCount).map(x => x - newCount)
         )
         ProcVisitOutputs(input.par.prepend(resultNew), bodyResult.freeMap)

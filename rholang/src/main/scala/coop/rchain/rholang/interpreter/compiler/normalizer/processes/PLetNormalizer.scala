@@ -26,9 +26,7 @@ import scala.jdk.CollectionConverters._
 
 object PLetNormalizer {
   @SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
-  def normalize[F[_]: Sync](p: PLet, input: ProcVisitInputs)(
-      implicit env: Map[String, Par]
-  ): F[ProcVisitOutputs] =
+  def normalize[F[_]: Sync](p: PLet, input: ProcVisitInputs): F[ProcVisitOutputs] =
     p.decls_ match {
 
       case concDeclsImpl: ConcDeclsImpl =>

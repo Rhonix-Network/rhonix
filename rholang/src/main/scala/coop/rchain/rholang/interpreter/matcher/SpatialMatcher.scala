@@ -83,12 +83,13 @@ object SpatialMatcher extends SpatialMatcherInstances {
           case Some(Var(FreeVar(level))) => {
             def freeCheck(trem: Seq[T], acc: Seq[T]): F[Seq[T]] =
               trem match {
-                case Nil => acc.pure[F]
+                case Nil         => acc.pure[F]
                 case item +: rem =>
-                  if (lft.locallyFree(item, 0).isEmpty)
-                    freeCheck(rem, acc :+ item)
-                  else
-                    MonoidK[F].empty[Seq[T]]
+//                  if (lft.locallyFree(item, 0).isEmpty)
+//                    freeCheck(rem, acc :+ item)
+//                  else
+//                    MonoidK[F].empty[Seq[T]]
+                  freeCheck(rem, acc :+ item)
               }
             freeCheck(trem, Vector.empty[T])
           }
@@ -141,10 +142,11 @@ object SpatialMatcher extends SpatialMatcherInstances {
       else if (plen == 0 && tlen == 0 && remainder.isEmpty)
         ().pure[F]
       else if (plen == 0 && remainder.isDefined) {
-        if (tlist.forall(lf.locallyFree(_, 0).isEmpty))
-          handleRemainder[F, T](tlist, remainder.get, merger)
-        else
-          MonoidK[F].empty[Unit]
+//        if (tlist.forall(lf.locallyFree(_, 0).isEmpty))
+//            handleRemainder[F, T](tlist, remainder.get, merger)
+//        else
+//          MonoidK[F].empty[Unit]
+        handleRemainder[F, T](tlist, remainder.get, merger)
       } else
         listMatch[F, T](tlist, plist, merger, remainder, wildcard)
 
@@ -183,7 +185,8 @@ object SpatialMatcher extends SpatialMatcherInstances {
           case Remainder() =>
             //Remainders can't match non-concrete terms, because they can't be captured.
             //They match everything that's concrete though.
-            Alternative_[F].guard(lf.locallyFree(t, 0).isEmpty)
+//            Alternative_[F].guard(lf.locallyFree(t, 0).isEmpty)
+            Alternative_[F].guard(true)
         }
         attemptOpt[F, FreeMap](isolateState[F, FreeMap](matchEffect))
       }

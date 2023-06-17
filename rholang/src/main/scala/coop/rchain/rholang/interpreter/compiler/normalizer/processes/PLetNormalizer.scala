@@ -175,10 +175,7 @@ object PLetNormalizer {
                           (
                             par +: vectorPar,
                             updatedKnownFree,
-                            // Use input.env.depth + 1 because the pattern was evaluated w.r.t input.env.push,
-                            // and more generally because locally free variables become binders in the pattern position
-                            locallyFree | ParLocallyFree
-                              .locallyFree(par, input.boundMapChain.depth + 1)
+                            locallyFree | par.locallyFree
                           )
                       }
                 }

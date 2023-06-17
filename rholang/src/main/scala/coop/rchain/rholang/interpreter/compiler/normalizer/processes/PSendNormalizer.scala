@@ -56,9 +56,8 @@ object PSendNormalizer {
           nameMatchResult.par,
           dataResults._1,
           persistent,
-          ParLocallyFree
-            .locallyFree(nameMatchResult.par, input.boundMapChain.depth) | dataResults._3,
-          ParLocallyFree.connectiveUsed(nameMatchResult.par) || dataResults._4
+          nameMatchResult.par.locallyFree | dataResults._3,
+          nameMatchResult.par.connectiveUsed || dataResults._4
         )
       ),
       dataResults._2.freeMap

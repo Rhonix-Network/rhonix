@@ -10,6 +10,8 @@ import coop.rchain.models.Var.VarInstance._
 import coop.rchain.models._
 import coop.rchain.models.rholang.implicits._
 import coop.rchain.models.rholang.sorter._
+import coop.rchain.models.rholangN.Bindings._
+import coop.rchain.models.rholangN._
 import coop.rchain.rholang.interpreter.accounting.CostAccounting.CostStateRef
 import coop.rchain.rholang.interpreter.accounting._
 import coop.rchain.rholang.interpreter.errors.SubstituteError
@@ -177,15 +179,13 @@ object Substitute {
       override def substituteNoSort(term: Send)(implicit depth: Int, env: Env[Par]): M[Send] =
         for {
           channelsSub <- substitutePar[M].substituteNoSort(term.chan)
-          parsSub     <- term.data.toVector.traverse(substitutePar[M].substituteNoSort(_))
-          send = Send(
-            chan = channelsSub,
-            data = parsSub,
-            persistent = term.persistent,
-            locallyFree = term.locallyFree.rangeUntil(env.shift),
-            connectiveUsed = term.connectiveUsed
+          parsSub     <- term.data.traverse(substitutePar[M].substituteNoSort(_))
+          send = SendN(
+            chan = fromProto(channelsSub),
+            data = fromProto(parsSub),
+            persistent = term.persistent
           )
-        } yield send
+        } yield toProtoSend(send)
       override def substitute(term: Send)(implicit depth: Int, env: Env[Par]): M[Send] =
         substituteNoSort(term).flatMap(Sortable.sortMatch(_)).map(_.term)
     }
@@ -194,7 +194,7 @@ object Substitute {
     new Substitute[M, Receive] {
       override def substituteNoSort(term: Receive)(implicit depth: Int, env: Env[Par]): M[Receive] =
         for {
-          bindsSub <- term.binds.toVector.traverse {
+          bindsSub <- term.binds.traverse {
                        case ReceiveBind(patterns, chan, rem, freeCount) =>
                          for {
                            subChannel <- substitutePar[M].substituteNoSort(chan)
@@ -203,22 +203,27 @@ object Substitute {
                                              substitutePar[M]
                                                .substituteNoSort(pattern)(depth + 1, env)
                                          )
-                         } yield ReceiveBind(subPatterns, subChannel, rem, freeCount)
+                         } yield ReceiveBindN(
+                           fromProto(subPatterns),
+                           fromProto(subChannel),
+                           fromProtoVarOpt(rem),
+                           freeCount
+                         )
                      }
-          bodySub <- substitutePar[M].substituteNoSort(term.body)(
-                      depth,
-                      env.shift(term.bindCount)
-                    )
-          rec = Receive(
+          bodySub <- substitutePar[M]
+                      .substituteNoSort(term.body)(
+                        depth,
+                        env.shift(term.bindCount)
+                      )
+                      .map(fromProto)
+          rec = ReceiveN(
             binds = bindsSub,
             body = bodySub,
             persistent = term.persistent,
             peek = term.peek,
-            bindCount = term.bindCount,
-            locallyFree = term.locallyFree.rangeUntil(env.shift),
-            connectiveUsed = term.connectiveUsed
+            bindCount = term.bindCount
           )
-        } yield rec
+        } yield toProtoReceive(rec)
       override def substitute(term: Receive)(implicit depth: Int, env: Env[Par]): M[Receive] =
         substituteNoSort(term).flatMap(Sortable.sortMatch(_)).map(_.term)
 
@@ -226,19 +231,22 @@ object Substitute {
 
   implicit def substituteNew[M[_]: Sync]: Substitute[M, New] =
     new Substitute[M, New] {
+      private def fromProtoInjections(ps: Seq[(String, Par)]): Seq[(String, ParN)] =
+        ps.map(kv => (kv._1, fromProto(kv._2)))
+
       override def substituteNoSort(term: New)(implicit depth: Int, env: Env[Par]): M[New] =
         substitutePar[M]
           .substituteNoSort(term.p)(depth, env.shift(term.bindCount))
           .map(
             newSub =>
-              New(
+              NewN(
                 bindCount = term.bindCount,
-                p = newSub,
+                p = fromProto(newSub),
                 uri = term.uri,
-                injections = term.injections,
-                locallyFree = term.locallyFree.rangeUntil(env.shift)
+                injections = fromProtoInjections(term.injections.toSeq)
               )
           )
+          .map(toProtoNew)
       override def substitute(term: New)(implicit depth: Int, env: Env[Par]): M[New] =
         substituteNoSort(term).flatMap(Sortable.sortMatch(_)).map(_.term)
     }
@@ -247,22 +255,24 @@ object Substitute {
     new Substitute[M, Match] {
       override def substituteNoSort(term: Match)(implicit depth: Int, env: Env[Par]): M[Match] =
         for {
-          targetSub <- substitutePar[M].substituteNoSort(term.target)
+          targetSub <- substitutePar[M].substituteNoSort(term.target).map(fromProto)
           casesSub <- term.cases.toVector.traverse {
                        case MatchCase(_case, _par, freeCount) =>
                          for {
-                           par <- substitutePar[M].substituteNoSort(_par)(
-                                   depth,
-                                   env.shift(freeCount)
-                                 )
-                           subCase <- substitutePar[M].substituteNoSort(_case)(depth + 1, env)
-                         } yield MatchCase(subCase, par, freeCount)
+                           par <- substitutePar[M]
+                                   .substituteNoSort(_par)(
+                                     depth,
+                                     env.shift(freeCount)
+                                   )
+                                   .map(fromProto)
+                           subCase <- substitutePar[M]
+                                       .substituteNoSort(_case)(depth + 1, env)
+                                       .map(fromProto)
+                         } yield MatchCaseN(subCase, par, freeCount)
                      }
-          mat = Match(
+          mat = MatchN(
             targetSub,
-            casesSub,
-            term.locallyFree.rangeUntil(env.shift),
-            term.connectiveUsed
+            casesSub
           )
         } yield mat
       override def substitute(term: Match)(implicit depth: Int, env: Env[Par]): M[Match] =

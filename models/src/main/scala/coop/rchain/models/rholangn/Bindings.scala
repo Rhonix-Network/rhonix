@@ -1,5 +1,6 @@
 package coop.rchain.models.rholangn
 
+import coop.rchain.models.Expr.ExprInstance.GBool
 import coop.rchain.models._
 
 object Bindings {
@@ -12,6 +13,12 @@ object Bindings {
   def toProtoUnforgeable(u: UnforgeableN): GUnforgeable = BindingsToProto.toUnforgeable(u)
   def toProtoConnective(c: ConnectiveN): Connective     = BindingsToProto.toConnective(c)
 
+  def toProtoSend(x: SendN): Send          = BindingsToProto.toSend(x)
+  def toProtoReceive(x: ReceiveN): Receive = BindingsToProto.toReceive(x)
+  def toProtoMatch(x: MatchN): Match       = BindingsToProto.toMatch(x)
+  def toProtoNew(x: NewN): New             = BindingsToProto.toNew(x)
+  def toProtoBool(x: GBoolN): GBool        = BindingsToProto.toGBool(x)
+
   def fromProto(p: Par): ParN                             = BindingsFromProto.fromProto(p)
   def fromProto(ps: Seq[Par]): Seq[ParN]                  = ps.map(fromProto)
   def fromProto(pOpt: Option[Par]): Option[ParN]          = pOpt.map(fromProto)
@@ -20,4 +27,11 @@ object Bindings {
   def fromProtoVar(v: Var): VarN                          = BindingsFromProto.fromVar(v)
   def fromProtoUnforgeable(u: GUnforgeable): UnforgeableN = BindingsFromProto.fromUnforgeable(u)
   def fromProtoConnective(c: Connective): ConnectiveN     = BindingsFromProto.fromConnective(c)
+
+  def fromProtoSend(x: Send): SendN          = BindingsFromProto.fromSend(x)
+  def fromProtoReceive(x: Receive): ReceiveN = BindingsFromProto.fromReceive(x)
+  def fromProtoMatch(x: Match): MatchN       = BindingsFromProto.fromMatch(x)
+  def fromProtoNew(x: New): NewN             = BindingsFromProto.fromNew(x)
+  def fromProtoBool(x: GBool): GBoolN        = BindingsFromProto.fromGBool(x)
+
 }

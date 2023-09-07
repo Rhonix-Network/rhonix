@@ -2,32 +2,33 @@ package coop.rchain.models.rholangn.parmanager
 
 import coop.rchain.models.rholangn._
 
-private[parmanager] object SubstituteRequired {
-  private def sReq(p: RhoTypeN): Boolean = p.substituteRequired
-  private def sReq(kv: (RhoTypeN, RhoTypeN)): Boolean =
-    kv._1.substituteRequired || kv._2.substituteRequired
-  private def sReq(ps: Seq[RhoTypeN]): Boolean                         = ps.exists(sReq)
-  private def sReqKVPairs(kVPairs: Seq[(RhoTypeN, RhoTypeN)]): Boolean = kVPairs.exists(sReq)
+object SubstituteRequired {
+  def sReq(p: RhoTypeN): Boolean                               = p.substituteRequired
+  def sReq(kv: (RhoTypeN, RhoTypeN)): Boolean                  = kv._1.substituteRequired || kv._2.substituteRequired
+  def sReq(ps: Seq[RhoTypeN]): Boolean                         = ps.exists(sReq)
+  def sReqKVPairs(kVPairs: Seq[(RhoTypeN, RhoTypeN)]): Boolean = kVPairs.exists(sReq)
+  def sReqReceiveBind(p: ReceiveBindN): Boolean                = sReq(p.patterns) || sReq(p.source)
+  def sReqMatchCase(p: MatchCaseN): Boolean                    = sReq(p.pattern) || sReq(p.source)
 
   @SuppressWarnings(Array("org.wartremover.warts.Throw"))
-  def substituteRequiredFn(p: RhoTypeN): Boolean = p match {
+  def substituteRequiredFn(input: RhoTypeN): Boolean = input match {
 
     /** Basic types */
-    case _: NilN.type      => false
-    case pProc: ParProcN   => sReq(pProc.ps)
-    case send: SendN       => sReq(send.chan) || sReq(send.data)
-    case receive: ReceiveN => sReq(receive.binds) || sReq(receive.body)
-    case m: MatchN         => sReq(m.target) || sReq(m.cases)
-    case n: NewN           => sReq(n.p)
+    case _: NilN.type => false
+    case p: ParProcN  => sReq(p.ps)
+    case p: SendN     => sReq(p.chan) || sReq(p.args)
+    case p: ReceiveN  => p.binds.exists(sReqReceiveBind) || sReq(p.body)
+    case p: MatchN    => sReq(p.target) || p.cases.exists(sReqMatchCase)
+    case p: NewN      => sReq(p.p)
 
     /** Ground types */
     case _: GroundN => false
 
     /** Collections */
-    case eList: EListN   => sReq(eList.ps)
-    case eTuple: ETupleN => sReq(eTuple.ps)
-    case eSet: ESetN     => sReq(eSet.sortedPs)
-    case eMap: EMapN     => sReqKVPairs(eMap.sortedPs)
+    case p: EListN  => sReq(p.ps)
+    case p: ETupleN => sReq(p.ps)
+    case p: ESetN   => sReq(p.ps.toSeq)
+    case p: EMapN   => sReqKVPairs(p.ps.toSeq)
 
     /** Vars */
     case _: BoundVarN      => true
@@ -35,28 +36,24 @@ private[parmanager] object SubstituteRequired {
     case _: WildcardN.type => false
 
     /** Operations */
-    case op: Operation1ParN  => sReq(op.p)
-    case op: Operation2ParN  => sReq(op.p1) || sReq(op.p2)
-    case eMethod: EMethodN   => sReq(eMethod.target) || sReq(eMethod.arguments)
-    case eMatches: EMatchesN => sReq(eMatches.target) || sReq(eMatches.pattern)
+    case p: Operation1ParN => sReq(p.p)
+    case p: Operation2ParN => sReq(p.p1) || sReq(p.p2)
+    case p: EMethodN       => sReq(p.target) || sReq(p.args)
+    case p: EMatchesN      => sReq(p.target) || sReq(p.pattern)
 
     /** Unforgeable names */
     case _: UnforgeableN => false
 
     /** Connective */
     case _: ConnectiveSTypeN => false
-    case connNot: ConnNotN   => sReq(connNot.p)
-    case connAnd: ConnAndN   => sReq(connAnd.ps)
-    case connOr: ConnOrN     => sReq(connOr.ps)
+    case p: ConnNotN         => sReq(p.p)
+    case p: ConnAndN         => sReq(p.ps)
+    case p: ConnOrN          => sReq(p.ps)
     case _: ConnVarRefN      => true
 
-    /** Auxiliary types */
-    case bind: ReceiveBindN => sReq(bind.patterns) || sReq(bind.source)
-    case mCase: MatchCaseN  => sReq(mCase.pattern) || sReq(mCase.source)
-
     /** Other types */
-    case bundle: BundleN => sReq(bundle.body)
+    case p: BundleN => sReq(p.body)
 
-    case x => throw new Exception(s"Undefined type $x")
+    case p => throw new Exception(s"Undefined type $p")
   }
 }

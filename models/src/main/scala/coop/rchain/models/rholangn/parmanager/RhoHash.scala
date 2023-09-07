@@ -1,173 +1,171 @@
 package coop.rchain.models.rholangn.parmanager
 
 import cats.Eval
+import cats.syntax.all._
 import coop.rchain.models.rholangn._
 import coop.rchain.models.rholangn.parmanager.Constants._
-import coop.rchain.models.rholangn.parmanager.primitive.PrimitiveWriter
-import cats.syntax.all._
+import coop.rchain.models.rholangn.parmanager.protobuf.ProtoBlakeHashing._
 
-private[parmanager] object RhoHash {
+object RhoHash {
 
-  /**
-    * Serialization of the Rholang AST types.
+  /** Creates singleton byte array with supplied byte. */
+  def arE(b: Byte): Eval[Array[Byte]] = Eval.now(Array[Byte](b))
+
+  /** Hashes Rholang AST node wrapped in Option. */
+  def hashOpt(opt: Option[ParN]): Eval[Array[Byte]] =
+    opt.map(x => (HASH_TRUE, x.rhoHash).mapN(_ ++ _)).getOrElse(HASH_FALSE)
+
+  /** Hashes [[ReceiveBindN]] object part of the [[ReceiveN]] Rholang constructor. */
+  def hashReceiveBind(p: ReceiveBindN): Eval[Array[Byte]] =
+    (arE(RECEIVE_BIND)
+      +++ p.patterns.traverse(_.rhoHash)
+      ++ hash(p.freeCount)
+      ++ p.source.rhoHash
+      ++ hashOpt(p.remainder))
+      .map(hash)
+
+  /** Hashes [[MatchCaseN]] object part of the [[MatchN]] Rholang constructor. */
+  def hashMatchCase(p: MatchCaseN): Eval[Array[Byte]] =
+    (arE(MATCH_CASE) ++ p.pattern.rhoHash ++ p.source.rhoHash ++ hash(p.freeCount)).map(hash)
+
+  /** ==Computes the hash of the Rholang AST types.==
     *
-    * @param p    Rholang AST root object
-    * @param wrt  Writer of primitive types
-    * @param memo Use memoization for all children fields recursively
+    * This function represents the specification of the hashing algorithm for the Rholang core types (AST).
+    *
+    * ===How to read the code?===
+    *
+    * To make the specification more succinct three combinator functions are defined `++`, `+++` and `+|+`.
+    * These functions are lifted to work on the `Eval` type level which means combining types are wrapped in `Eval`.
+    *
+    * They are used to combine bytes representing hashes of the object tree being hashed.
+    *
+    * ===Concatenates two byte arrays===
+    *
+    * {{{ ++ : Eval[Array[Byte]] => Eval[Array[Byte]] => Eval[Array[Byte]] }}}
+    * Concatenates two byte arrays. It works the same as Scala concat (`++`) function, but wrapped in `Eval`.
+    *
+    * ===Prepends a byte array to the sequence of byte arrays===
+    *
+    * {{{ +++ : Eval[Array[Byte]] => Eval[Seq[Array[Byte]] => Eval[Array[Byte]] }}}
+    * Prepends the byte array to the concatenated and hashed sequence of byte arrays.
+    *
+    * ===Prepends a byte array to the sequence of byte arrays with sorting===
+    *
+    * {{{ +|+ : Eval[Array[Byte]] => Eval[Seq[Array[Byte]] => Eval[Array[Byte]] }}}
+    * The same as `+++`, but the sequence is first sorted before concatenation.
+    *
+    * @param input Rholang AST root object
     */
   // TODO: Properly handle errors with return type (remove throw)
   @SuppressWarnings(Array("org.wartremover.warts.Throw"))
-  def serializeForHash(p: RhoTypeN, wrt: PrimitiveWriter[Eval]): Eval[Unit] =
-    Eval.defer {
-      val rhoWriter: RhoRecWriter[Eval] = RhoRecWriter(wrt, _.rhoHash.flatMap(wrt.writeRaw))
-      import rhoWriter._
-      import wrt._
+  def calcHash(input: RhoTypeN): Eval[Array[Byte]] = Eval.defer {
+    input match {
 
-      p match {
+      /* Terminal expressions (0-arity constructors) */
+      /* =========================================== */
 
-        /* Terminal expressions (0-arity constructors) */
-        /* =========================================== */
+      case _: NilN.type | _: GBoolN | _: GIntN | _: GBigIntN | _: GStringN | _: GByteArrayN |
+          _: GUriN | _: WildcardN.type
+          /* Unforgeable names */
+          | _: UnforgeableN
+          /* Vars */
+          | _: BoundVarN | _: FreeVarN | _: ConnVarRefN
+          /* Simple types */
+          | _: ConnBoolN.type | _: ConnIntN.type | _: ConnBigIntN.type | _: ConnStringN.type |
+          _: ConnUriN.type | _: ConnByteArrayN.type =>
+        // Terminals use serialized value as a source for hashing (AST base case)
+        input.serialized.map(hash)
 
-        case _: NilN.type            => write(NIL)
-        case gBool: GBoolN           => write(GBOOL) *> write(gBool.v)
-        case gInt: GIntN             => write(GINT) *> write(gInt.v)
-        case gBigInt: GBigIntN       => write(GBIG_INT) *> writeBigInt(gBigInt.v)
-        case gString: GStringN       => write(GSTRING) *> write(gString.v)
-        case gByteArray: GByteArrayN => write(GBYTE_ARRAY) *> write(gByteArray.v)
-        case gUri: GUriN             => write(GURI) *> write(gUri.v)
-        case _: WildcardN.type       => write(WILDCARD)
+      /* Unary expressions (1-arity constructors) */
+      /* ======================================== */
 
-        /* Unforgeable names */
-        case unf: UnforgeableN =>
-          val unfKind = unf match {
-            case _: UPrivateN      => UPRIVATE
-            case _: UDeployIdN     => UDEPLOY_ID
-            case _: UDeployerIdN   => UDEPLOYER_ID
-            case _: USysAuthTokenN => SYS_AUTH_TOKEN
-          }
-          write(unfKind) *> write(unf.v)
+      case p: Operation1ParN =>
+        val (tag, op) = p match {
+          case e: ENegN => (ENEG, e.p)
+          case e: ENotN => (ENOT, e.p)
+        }
+        (arE(tag) ++ op.rhoHash).map(hash)
 
-        /* Vars */
-        case bVar: BoundVarN => write(BOUND_VAR) *> write(bVar.idx)
-        case fVar: FreeVarN  => write(FREE_VAR) *> write(fVar.idx)
-        case rVar: ConnVarRefN =>
-          write(CONNECTIVE_VARREF) *> write(rVar.index) *> write(rVar.depth)
+      case p: BundleN => (arE(BUNDLE) ++ p.body.rhoHash).map(hash)
 
-        /* Simple types */
-        case _: ConnBoolN.type      => write(CONNECTIVE_BOOL)
-        case _: ConnIntN.type       => write(CONNECTIVE_INT)
-        case _: ConnBigIntN.type    => write(CONNECTIVE_BIG_INT)
-        case _: ConnStringN.type    => write(CONNECTIVE_STRING)
-        case _: ConnUriN.type       => write(CONNECTIVE_URI)
-        case _: ConnByteArrayN.type => write(CONNECTIVE_BYTEARRAY)
+      /* Connective */
+      case p: ConnNotN => (arE(CONNECTIVE_NOT) ++ p.p.rhoHash).map(hash)
 
-        /* Unary expressions (1-arity constructors) */
-        /* ======================================== */
+      /* Binary expressions (2-arity constructors) */
+      /* ========================================= */
 
-        case op: Operation1ParN =>
-          val tag = op match {
-            case _: ENegN => ENEG
-            case _: ENotN => ENOT
-          }
-          write(tag) *> writePar(op.p)
+      case p: Operation2ParN =>
+        val tag = p match {
+          case _: EPlusN           => EPLUS
+          case _: EMinusN          => EMINUS
+          case _: EMultN           => EMULT
+          case _: EDivN            => EDIV
+          case _: EModN            => EMOD
+          case _: ELtN             => ELT
+          case _: ELteN            => ELTE
+          case _: EGtN             => EGT
+          case _: EGteN            => EGTE
+          case _: EEqN             => EEQ
+          case _: ENeqN            => ENEQ
+          case _: EAndN            => EAND
+          case _: EShortAndN       => ESHORTAND
+          case _: EOrN             => EOR
+          case _: EShortOrN        => ESHORTOR
+          case _: EPlusPlusN       => EPLUSPLUS
+          case _: EMinusMinusN     => EMINUSMINUS
+          case _: EPercentPercentN => EPERCENT
+        }
+        (arE(tag) ++ p.p1.rhoHash ++ p.p2.rhoHash).map(hash)
 
-        case b: BundleN =>
-          write(BUNDLE) *> writePar(b.body) *> write(b.writeFlag) *> write(b.readFlag)
+      case p: EMatchesN => (arE(EMATCHES) ++ p.target.rhoHash ++ p.pattern.rhoHash).map(hash)
 
-        /* Connective */
-        case connNot: ConnNotN => write(CONNECTIVE_NOT) *> writePar(connNot.p)
+      /* N-ary parameter expressions (N-arity constructors) */
+      /* ================================================== */
 
-        /* Binary expressions (2-arity constructors) */
-        /* ========================================= */
+      case p: ParProcN => (arE(PARPROC) +|+ p.ps.traverse(_.rhoHash)).map(hash)
 
-        case op: Operation2ParN =>
-          val tag = op match {
-            case _: EPlusN           => EPLUS
-            case _: EMinusN          => EMINUS
-            case _: EMultN           => EMULT
-            case _: EDivN            => EDIV
-            case _: EModN            => EMOD
-            case _: ELtN             => ELT
-            case _: ELteN            => ELTE
-            case _: EGtN             => EGT
-            case _: EGteN            => EGTE
-            case _: EEqN             => EEQ
-            case _: ENeqN            => ENEQ
-            case _: EAndN            => EAND
-            case _: EShortAndN       => ESHORTAND
-            case _: EOrN             => EOR
-            case _: EShortOrN        => ESHORTOR
-            case _: EPlusPlusN       => EPLUSPLUS
-            case _: EMinusMinusN     => EMINUSMINUS
-            case _: EPercentPercentN => EPERCENT
-          }
-          write(tag) *> writePar(op.p1) *> writePar(op.p2)
+      case p: SendN =>
+        (arE(SEND) ++ p.chan.rhoHash ++ hash(p.persistent) +|+ p.args.traverse(_.rhoHash)).map(hash)
 
-        case eMatches: EMatchesN =>
-          write(EMATCHES) *> writePar(eMatches.target) *> writePar(eMatches.pattern)
+      case p: ReceiveN =>
+        (arE(RECEIVE)
+          ++ hash(p.persistent)
+          ++ hash(p.peek)
+          ++ hash(p.bindCount)
+          +|+ p.binds.traverse(_.rhoHash)
+          ++ p.body.rhoHash)
+          .map(hash)
 
-        /* N-ary parameter expressions (N-arity constructors) */
-        /* ================================================== */
+      case p: MatchN => (arE(MATCH) ++ p.target.rhoHash +++ p.cases.traverse(_.rhoHash)).map(hash)
 
-        case pProc: ParProcN => write(PARPROC) *> writeSeq(pProc.sortedPs)
+      case p: NewN =>
+        (arE(NEW)
+          ++ hash(p.bindCount)
+          +|+ p.uri.traverse(_.rhoHash)
+          +|+ p.injections.toSeq.traverse(_.bimap(_.rhoHash, _.rhoHash).mapN(_ ++ _))
+          ++ p.p.rhoHash)
+          .map(hash)
 
-        case send: SendN =>
-          write(SEND) *>
-            writePar(send.chan) *>
-            writeSeq(send.data) *>
-            write(send.persistent)
+      /* Collections */
+      case p: ETupleN => (arE(ETUPLE) +++ p.ps.traverse(_.rhoHash)).map(hash)
+      case p: EListN  => (arE(ELIST) +++ p.ps.traverse(_.rhoHash) ++ hashOpt(p.remainder)).map(hash)
+      case p: ESetN =>
+        (arE(ESET) +|+ p.ps.toSeq.traverse(_.rhoHash) ++ hashOpt(p.remainder)).map(hash)
+      case p: EMapN =>
+        (arE(EMAP)
+          +|+ p.ps.toSeq.traverse(_.bimap(_.rhoHash, _.rhoHash).mapN(_ ++ _))
+          ++ hashOpt(p.remainder))
+          .map(hash)
 
-        case receive: ReceiveN =>
-          write(RECEIVE) *>
-            writeSeq(receive.sortedBinds) *>
-            writePar(receive.body) *>
-            write(receive.persistent) *>
-            write(receive.peek) *>
-            write(receive.bindCount)
+      /* Connective */
+      case p: ConnAndN => (arE(CONNECTIVE_AND) +++ p.ps.traverse(_.rhoHash)).map(hash)
+      case p: ConnOrN  => (arE(CONNECTIVE_OR) +++ p.ps.traverse(_.rhoHash)).map(hash)
 
-        case m: MatchN => write(MATCH) *> writePar(m.target) *> writeSeq(m.cases, writePar)
+      case p: EMethodN =>
+        (arE(EMETHOD) ++ hash(p.methodName) +++ p.args.traverse(_.rhoHash) ++ p.target.rhoHash)
+          .map(hash)
 
-        case n: NewN =>
-          write(NEW) *>
-            write(n.bindCount) *>
-            writePar(n.p) *>
-            writeSeq[String](n.sortedUri, write) *>
-            writeSeq[(String, ParN)](n.sortedInjections, writeTupleStringPar(_))
-
-        /* Collections */
-        case eList: EListN   => write(ELIST) *> writeSeq(eList.ps) *> writeOpt(eList.remainder)
-        case eTuple: ETupleN => write(ETUPLE) *> writeSeq(eTuple.ps)
-        case eSet: ESetN     => write(ESET) *> writeSeq(eSet.sortedPs) *> writeOpt(eSet.remainder)
-        case eMap: EMapN =>
-          write(EMAP) *>
-            writeSeq[(ParN, ParN)](eMap.sortedPs, writeTuplePar(_)) *>
-            writeOpt(eMap.remainder)
-
-        /* Connective */
-        case connAnd: ConnAndN => write(CONNECTIVE_AND) *> writeSeq(connAnd.ps)
-        case connOr: ConnOrN   => write(CONNECTIVE_OR) *> writeSeq(connOr.ps)
-
-        case eMethod: EMethodN =>
-          write(EMETHOD) *>
-            write(eMethod.methodName) *>
-            writePar(eMethod.target) *>
-            writeSeq(eMethod.arguments)
-
-        /* Auxiliary types */
-        case bind: ReceiveBindN =>
-          write(RECEIVE_BIND) *>
-            writeSeq(bind.patterns) *>
-            writePar(bind.source) *>
-            writeOpt(bind.remainder) *>
-            write(bind.freeCount)
-
-        case mCase: MatchCaseN =>
-          write(MATCH_CASE) *>
-            writePar(mCase.pattern) *>
-            writePar(mCase.source) *>
-            write(mCase.freeCount)
-
-        case unknownType => throw new Exception(s"Unknown type `$unknownType`")
-      }
+      case p => throw new Exception(s"Unknown type `$p`")
     }
+  }
 }

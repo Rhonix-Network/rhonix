@@ -5,11 +5,12 @@ import cats.syntax.all._
 import cats.{Applicative, Monad}
 import coop.rchain.models.Connective.ConnectiveInstance
 import coop.rchain.models.Connective.ConnectiveInstance._
-import coop.rchain.models.Expr.ExprInstance._
 import coop.rchain.models.Var.VarInstance._
 import coop.rchain.models._
 import coop.rchain.models.rholang.implicits._
 import coop.rchain.models.rholang.sorter._
+import coop.rchain.models.rholangn.Bindings._
+import coop.rchain.models.rholangn._
 import coop.rchain.rholang.interpreter.accounting.CostAccounting.CostStateRef
 import coop.rchain.rholang.interpreter.accounting._
 import coop.rchain.rholang.interpreter.errors.SubstituteError
@@ -100,54 +101,61 @@ object Substitute {
 
   implicit def substitutePar[M[_]: Sync]: Substitute[M, Par] =
     new Substitute[M, Par] {
-      def subExp(exprs: Seq[Expr])(implicit depth: Int, env: Env[Par]): M[Par] =
-        exprs.toList.reverse.foldM(VectorPar()) { (par, expr) =>
-          expr.exprInstance match {
-            case EVarBody(e) =>
-              maybeSubstitute[M](e).map {
-                case Left(_e)    => par.prepend(_e, depth)
-                case Right(_par) => _par ++ par
+      def subExp(exprs: Seq[ExprN])(implicit depth: Int, env: Env[Par]): M[ParN] =
+        exprs.toList.reverse.foldM(NilN: ParN) { (par, expr) =>
+          expr match {
+            case x: VarN =>
+              maybeSubstitute[M](toProtoVar(x)).map {
+                case Left(_e)    => par.combine(fromProtoVar(_e))
+                case Right(_par) => par.combine(fromProto(_par))
               }
-            case _ => substituteExpr[M].substituteNoSort(expr).map(par.prepend(_, depth))
+            case _ =>
+              substituteExpr[M]
+                .substituteNoSort(toProtoExpr(expr))
+                .map(x => par.combine(fromProtoExpr(x): ParN))
           }
         }
 
-      def subConn(conns: Seq[Connective])(implicit depth: Int, env: Env[Par]): M[Par] =
-        conns.toList.reverse.foldM(VectorPar()) { (par, conn) =>
-          conn.connectiveInstance match {
-            case VarRefBody(v) =>
-              maybeSubstitute[M](v).map {
-                case Left(_)       => par.prepend(conn, depth)
-                case Right(newPar) => newPar ++ par
+      private def toVarRefBody(x: ConnVarRefN): VarRefBody = {
+        val index = x.index
+        val depth = x.depth
+        VarRefBody(VarRef(index, depth))
+      }
+
+      def subConn(conns: Seq[ConnectiveN])(implicit depth: Int, env: Env[Par]): M[ParN] =
+        conns.toList.reverse.foldM(NilN: ParN) { (par, conn) =>
+          conn match {
+            case x: ConnVarRefN =>
+              maybeSubstitute[M](toVarRefBody(x).value).map {
+                case Left(_)       => par.combine(conn: ParN)
+                case Right(newPar) => par.combine(fromProto(newPar))
               }
-            case ConnectiveInstance.Empty => par.pure[M]
-            case ConnAndBody(ConnectiveBody(ps)) =>
-              ps.toVector
-                .traverse(substitutePar[M].substituteNoSort(_))
-                .map(ps => par.prepend(Connective(ConnAndBody(ConnectiveBody(ps))), depth))
-            case ConnOrBody(ConnectiveBody(ps)) =>
-              ps.toVector
-                .traverse(substitutePar[M].substituteNoSort(_))
-                .map(ps => par.prepend(Connective(ConnOrBody(ConnectiveBody(ps))), depth))
-            case ConnNotBody(p) =>
+            case x: ConnAndN =>
+              x.ps.toVector
+                .traverse(y => substitutePar[M].substituteNoSort(toProto(y)).map(fromProto))
+                .map(ps => par.combine(ConnAndN(ps)))
+            case x: ConnOrN =>
+              x.ps.toVector
+                .traverse(y => substitutePar[M].substituteNoSort(toProto(y)).map(fromProto))
+                .map(ps => par.combine(ConnOrN(ps)))
+            case x: ConnNotN =>
               substitutePar[M]
-                .substituteNoSort(p)
-                .map(p => Connective(ConnNotBody(p)))
-                .map(par.prepend(_, depth))
-            case c: ConnBool      => par.prepend(Connective(c), depth).pure[M]
-            case c: ConnInt       => par.prepend(Connective(c), depth).pure[M]
-            case c: ConnBigInt    => par.prepend(Connective(c), depth).pure[M]
-            case c: ConnString    => par.prepend(Connective(c), depth).pure[M]
-            case c: ConnUri       => par.prepend(Connective(c), depth).pure[M]
-            case c: ConnByteArray => par.prepend(Connective(c), depth).pure[M]
+                .substituteNoSort(toProto(x.p))
+                .map(p => par.combine(ConnNotN(fromProto(p))))
+            case _: ConnBoolN.type      => par.combine(ConnBoolN).pure[M]
+            case _: ConnIntN.type       => par.combine(ConnIntN).pure[M]
+            case _: ConnBigIntN.type    => par.combine(ConnBigIntN).pure[M]
+            case _: ConnStringN.type    => par.combine(ConnStringN).pure[M]
+            case _: ConnUriN.type       => par.combine(ConnUriN).pure[M]
+            case _: ConnByteArrayN.type => par.combine(ConnByteArrayN).pure[M]
           }
         }
 
       override def substituteNoSort(term: Par)(implicit depth: Int, env: Env[Par]): M[Par] =
         for {
           _           <- Sync[M].delay(()) // TODO why removing this breaks StackSafetySpec?
-          exprs       <- subExp(term.exprs)
-          connectives <- subConn(term.connectives)
+          exprs       <- subExp(term.exprs.map(fromProtoExpr)).map(toProto)
+          connectives <- subConn(term.connectives.map(fromProtoConnective)).map(toProto)
           sends       <- term.sends.toVector.traverse(substituteSend[M].substituteNoSort(_))
           bundles     <- term.bundles.toVector.traverse(substituteBundle[M].substituteNoSort(_))
           receives    <- term.receives.toVector.traverse(substituteReceive[M].substituteNoSort(_))
@@ -177,15 +185,13 @@ object Substitute {
       override def substituteNoSort(term: Send)(implicit depth: Int, env: Env[Par]): M[Send] =
         for {
           channelsSub <- substitutePar[M].substituteNoSort(term.chan)
-          parsSub     <- term.data.toVector.traverse(substitutePar[M].substituteNoSort(_))
-          send = Send(
-            chan = channelsSub,
-            data = parsSub,
-            persistent = term.persistent,
-            locallyFree = term.locallyFree.rangeUntil(env.shift),
-            connectiveUsed = term.connectiveUsed
+          parsSub     <- term.data.traverse(substitutePar[M].substituteNoSort(_))
+          send = SendN(
+            chan = fromProto(channelsSub),
+            data = fromProto(parsSub),
+            persistent = term.persistent
           )
-        } yield send
+        } yield toProtoSend(send)
       override def substitute(term: Send)(implicit depth: Int, env: Env[Par]): M[Send] =
         substituteNoSort(term).flatMap(Sortable.sortMatch(_)).map(_.term)
     }
@@ -194,7 +200,7 @@ object Substitute {
     new Substitute[M, Receive] {
       override def substituteNoSort(term: Receive)(implicit depth: Int, env: Env[Par]): M[Receive] =
         for {
-          bindsSub <- term.binds.toVector.traverse {
+          bindsSub <- term.binds.traverse {
                        case ReceiveBind(patterns, chan, rem, freeCount) =>
                          for {
                            subChannel <- substitutePar[M].substituteNoSort(chan)
@@ -203,22 +209,27 @@ object Substitute {
                                              substitutePar[M]
                                                .substituteNoSort(pattern)(depth + 1, env)
                                          )
-                         } yield ReceiveBind(subPatterns, subChannel, rem, freeCount)
+                         } yield ReceiveBindN(
+                           fromProto(subPatterns),
+                           fromProto(subChannel),
+                           fromProtoVarOpt(rem),
+                           freeCount
+                         )
                      }
-          bodySub <- substitutePar[M].substituteNoSort(term.body)(
-                      depth,
-                      env.shift(term.bindCount)
-                    )
-          rec = Receive(
+          bodySub <- substitutePar[M]
+                      .substituteNoSort(term.body)(
+                        depth,
+                        env.shift(term.bindCount)
+                      )
+                      .map(fromProto)
+          rec = ReceiveN(
             binds = bindsSub,
             body = bodySub,
             persistent = term.persistent,
             peek = term.peek,
-            bindCount = term.bindCount,
-            locallyFree = term.locallyFree.rangeUntil(env.shift),
-            connectiveUsed = term.connectiveUsed
+            bindCount = term.bindCount
           )
-        } yield rec
+        } yield toProtoReceive(rec)
       override def substitute(term: Receive)(implicit depth: Int, env: Env[Par]): M[Receive] =
         substituteNoSort(term).flatMap(Sortable.sortMatch(_)).map(_.term)
 
@@ -226,19 +237,22 @@ object Substitute {
 
   implicit def substituteNew[M[_]: Sync]: Substitute[M, New] =
     new Substitute[M, New] {
+      private def fromProtoInjections(ps: Seq[(String, Par)]): Seq[(String, ParN)] =
+        ps.map(kv => (kv._1, fromProto(kv._2)))
+
       override def substituteNoSort(term: New)(implicit depth: Int, env: Env[Par]): M[New] =
         substitutePar[M]
           .substituteNoSort(term.p)(depth, env.shift(term.bindCount))
           .map(
             newSub =>
-              New(
+              NewN(
                 bindCount = term.bindCount,
-                p = newSub,
+                p = fromProto(newSub),
                 uri = term.uri,
-                injections = term.injections,
-                locallyFree = term.locallyFree.rangeUntil(env.shift)
+                injections = fromProtoInjections(term.injections.toSeq)
               )
           )
+          .map(toProtoNew)
       override def substitute(term: New)(implicit depth: Int, env: Env[Par]): M[New] =
         substituteNoSort(term).flatMap(Sortable.sortMatch(_)).map(_.term)
     }
@@ -247,24 +261,26 @@ object Substitute {
     new Substitute[M, Match] {
       override def substituteNoSort(term: Match)(implicit depth: Int, env: Env[Par]): M[Match] =
         for {
-          targetSub <- substitutePar[M].substituteNoSort(term.target)
+          targetSub <- substitutePar[M].substituteNoSort(term.target).map(fromProto)
           casesSub <- term.cases.toVector.traverse {
                        case MatchCase(_case, _par, freeCount) =>
                          for {
-                           par <- substitutePar[M].substituteNoSort(_par)(
-                                   depth,
-                                   env.shift(freeCount)
-                                 )
-                           subCase <- substitutePar[M].substituteNoSort(_case)(depth + 1, env)
-                         } yield MatchCase(subCase, par, freeCount)
+                           par <- substitutePar[M]
+                                   .substituteNoSort(_par)(
+                                     depth,
+                                     env.shift(freeCount)
+                                   )
+                                   .map(fromProto)
+                           subCase <- substitutePar[M]
+                                       .substituteNoSort(_case)(depth + 1, env)
+                                       .map(fromProto)
+                         } yield MatchCaseN(subCase, par, freeCount)
                      }
-          mat = Match(
+          mat = MatchN(
             targetSub,
-            casesSub,
-            term.locallyFree.rangeUntil(env.shift),
-            term.connectiveUsed
+            casesSub
           )
-        } yield mat
+        } yield toProtoMatch(mat)
       override def substitute(term: Match)(implicit depth: Int, env: Env[Par]): M[Match] =
         substituteNoSort(term).flatMap(mat => Sortable.sortMatch(mat)).map(_.term)
     }
@@ -272,109 +288,64 @@ object Substitute {
   implicit def substituteExpr[M[_]: Sync]: Substitute[M, Expr] =
     new Substitute[M, Expr] {
       private[this] def substituteDelegate(
-          term: Expr,
-          s1: Par => M[Par],
-          s2: (Par, Par) => ((Par, Par) => Expr) => M[Expr]
-      )(implicit env: Env[Par]): M[Expr] =
-        term.exprInstance match {
-          case ENotBody(ENot(par)) => s1(par).map(ENot(_))
-          case ENegBody(ENeg(par)) => s1(par).map(ENeg(_))
-          case EMultBody(EMult(par1, par2)) =>
-            s2(par1, par2)(EMult(_, _))
-          case EDivBody(EDiv(par1, par2)) =>
-            s2(par1, par2)(EDiv(_, _))
-          case EModBody(EMod(par1, par2)) =>
-            s2(par1, par2)(EMod(_, _))
-          case EPercentPercentBody(EPercentPercent(par1, par2)) =>
-            s2(par1, par2)(EPercentPercent(_, _))
-          case EPlusBody(EPlus(par1, par2)) =>
-            s2(par1, par2)(EPlus(_, _))
-          case EMinusBody(EMinus(par1, par2)) =>
-            s2(par1, par2)(EMinus(_, _))
-          case EPlusPlusBody(EPlusPlus(par1, par2)) =>
-            s2(par1, par2)(EPlusPlus(_, _))
-          case EMinusMinusBody(EMinusMinus(par1, par2)) =>
-            s2(par1, par2)(EMinusMinus(_, _))
-          case ELtBody(ELt(par1, par2)) =>
-            s2(par1, par2)(ELt(_, _))
-          case ELteBody(ELte(par1, par2)) =>
-            s2(par1, par2)(ELte(_, _))
-          case EGtBody(EGt(par1, par2)) =>
-            s2(par1, par2)(EGt(_, _))
-          case EGteBody(EGte(par1, par2)) =>
-            s2(par1, par2)(EGte(_, _))
-          case EEqBody(EEq(par1, par2)) =>
-            s2(par1, par2)(EEq(_, _))
-          case ENeqBody(ENeq(par1, par2)) =>
-            s2(par1, par2)(ENeq(_, _))
-          case EAndBody(EAnd(par1, par2)) =>
-            s2(par1, par2)(EAnd(_, _))
-          case EOrBody(EOr(par1, par2)) =>
-            s2(par1, par2)(EOr(_, _))
-          case EShortAndBody(EShortAnd(par1, par2)) =>
-            s2(par1, par2)(EShortAnd(_, _))
-          case EShortOrBody(EShortOr(par1, par2)) =>
-            s2(par1, par2)(EShortOr(_, _))
-          case EMatchesBody(EMatches(target, pattern)) =>
-            s2(target, pattern)(EMatches(_, _))
-          case EListBody(EList(ps, locallyFree, connectiveUsed, rem)) =>
+          term: ExprN,
+          s1: ParN => M[ParN],
+          s2: (ParN, ParN) => ((ParN, ParN) => ExprN) => M[ExprN]
+      ): M[ExprN] =
+        term match {
+          case x: ENotN            => s1(x.p).map(ENotN(_))
+          case x: ENegN            => s1(x.p).map(ENegN(_))
+          case x: EMultN           => s2(x.p1, x.p2)(EMultN(_, _))
+          case x: EDivN            => s2(x.p1, x.p2)(EDivN(_, _))
+          case x: EModN            => s2(x.p1, x.p2)(EModN(_, _))
+          case x: EPercentPercentN => s2(x.p1, x.p2)(EPercentPercentN(_, _))
+          case x: EPlusN           => s2(x.p1, x.p2)(EPlusN(_, _))
+          case x: EMinusN          => s2(x.p1, x.p2)(EMinusN(_, _))
+          case x: EPlusPlusN       => s2(x.p1, x.p2)(EPlusPlusN(_, _))
+          case x: EMinusMinusN     => s2(x.p1, x.p2)(EMinusMinusN(_, _))
+          case x: ELtN             => s2(x.p1, x.p2)(ELtN(_, _))
+          case x: ELteN            => s2(x.p1, x.p2)(ELteN(_, _))
+          case x: EGtN             => s2(x.p1, x.p2)(EGtN(_, _))
+          case x: EGteN            => s2(x.p1, x.p2)(EGteN(_, _))
+          case x: EEqN             => s2(x.p1, x.p2)(EEqN(_, _))
+          case x: ENeqN            => s2(x.p1, x.p2)(ENeqN(_, _))
+          case x: EAndN            => s2(x.p1, x.p2)(EAndN(_, _))
+          case x: EOrN             => s2(x.p1, x.p2)(EOrN(_, _))
+          case x: EShortAndN       => s2(x.p1, x.p2)(EShortAndN(_, _))
+          case x: EShortOrN        => s2(x.p1, x.p2)(EShortOrN(_, _))
+          case x: EMatchesN        => s2(x.target, x.pattern)(EMatchesN(_, _))
+          case x: EListN           => x.ps.toVector.traverse(s1).map(EListN(_, x.remainder))
+          case x: ETupleN          => x.ps.toVector.traverse(s1).map(ETupleN(_))
+          case x: ESetN            => x.sortedPs.toVector.traverse(s1).map(ESetN(_, x.remainder))
+          case x: EMapN =>
+            x.sortedPs.toVector.traverse(_.bimap(s1, s1).bisequence).map(EMapN(_, x.remainder))
+          case x: EMethodN =>
             for {
-              pss            <- ps.toVector.traverse(s1)
-              newLocallyFree = locallyFree.rangeUntil(env.shift)
-            } yield Expr(exprInstance = EListBody(EList(pss, newLocallyFree, connectiveUsed, rem)))
+              subTarget    <- s1(x.target)
+              subArguments <- x.arguments.toVector.traverse(s1)
+            } yield EMethodN(x.methodName, subTarget, subArguments)
 
-          case ETupleBody(ETuple(ps, locallyFree, connectiveUsed)) =>
-            for {
-              pss            <- ps.toVector.traverse(s1)
-              newLocallyFree = locallyFree.rangeUntil(env.shift)
-            } yield Expr(exprInstance = ETupleBody(ETuple(pss, newLocallyFree, connectiveUsed)))
-
-          case ESetBody(ParSet(shs, connectiveUsed, locallyFree, remainder)) =>
-            for {
-              pss <- shs.sortedPars.traverse(s1)
-            } yield Expr(
-              exprInstance = ESetBody(
-                ParSet(
-                  SortedParHashSet(pss),
-                  connectiveUsed,
-                  locallyFree.map(_.rangeUntil(env.shift)),
-                  remainder
-                )
-              )
-            )
-
-          case EMapBody(ParMap(spm, connectiveUsed, locallyFree, remainder)) =>
-            for {
-              kvps <- spm.sortedList.traverse(_.bimap(s1, s1).bisequence)
-            } yield Expr(
-              exprInstance = EMapBody(
-                ParMap(kvps, connectiveUsed, locallyFree.map(_.rangeUntil(env.shift)), remainder)
-              )
-            )
-          case EMethodBody(EMethod(mtd, target, arguments, locallyFree, connectiveUsed)) =>
-            for {
-              subTarget    <- s1(target)
-              subArguments <- arguments.toVector.traverse(p => s1(p))
-            } yield Expr(
-              exprInstance = EMethodBody(
-                EMethod(
-                  mtd,
-                  subTarget,
-                  subArguments,
-                  locallyFree.rangeUntil(env.shift),
-                  connectiveUsed
-                )
-              )
-            )
           case g @ _ => Applicative[M].pure(term)
         }
       override def substitute(term: Expr)(implicit depth: Int, env: Env[Par]): M[Expr] =
-        substituteDelegate(term, substitutePar[M].substitute, substitute2[M, Par, Par, Expr])
+        substituteDelegate(
+          fromProtoExpr(term),
+          p => substitutePar[M].substitute(toProto(p)).map(fromProto),
+          (p11, p12) =>
+            f =>
+              substitute2(toProto(p11), toProto(p12))(
+                (p21, p22) => f(fromProto(p21), fromProto(p22))
+              )
+        ).map(toProtoExpr)
       override def substituteNoSort(term: Expr)(implicit depth: Int, env: Env[Par]): M[Expr] =
         substituteDelegate(
-          term,
-          substitutePar[M].substituteNoSort,
-          substituteNoSort2[M, Par, Par, Expr]
-        )
+          fromProtoExpr(term),
+          p => substitutePar[M].substituteNoSort(toProto(p)).map(fromProto),
+          (p11, p12) =>
+            f =>
+              substituteNoSort2(toProto(p11), toProto(p12))(
+                (p21, p22) => f(fromProto(p21), fromProto(p22))
+              )
+        ).map(toProtoExpr)
     }
 }
